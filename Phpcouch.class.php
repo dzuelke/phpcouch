@@ -20,8 +20,15 @@ class Phpcouch
 		self::$path = dirname(__FILE__);
 		
 		self::$autoloads = array(
-			'PhpcouchDatabase' => self::$path . '/PhpcouchDatabase.class.php',
-			'PhpcouchDocument' => self::$path . '/PhpcouchDocument.class.php',
+			'PhpcouchAdapter'               => self::$path . '/Adapter.class.php',
+			'PhpcouchCurlAdapter'           => self::$path . '/Adapter/Curl.class.php',
+			'PhpcouchPeclhttpAdapter'       => self::$path . '/Adapter/Peclhttp.class.php',
+			'PhpcouchZendhttpclientAdapter' => self::$path . '/Adapter/Zendhttpclient.class.php',
+			'PhpcouchConnection'            => self::$path . '/PhpcouchConnection.class.php',
+			'PhpcouchDatabase'              => self::$path . '/PhpcouchDatabase.class.php',
+			'PhpcouchDocument'              => self::$path . '/PhpcouchDocument.class.php',
+			'PhpcouchException'             => self::$path . '/PhpcouchException.class.php',
+			'PhpcouchServerException'       => self::$path . '/Exception/Server.class.php',
 		);
 		
 		spl_autoload_register(array('PhpCouch', 'autoload'));
@@ -30,9 +37,9 @@ class Phpcouch
 		);
 	}
 	
-	public static function registerConnection($name, array $options)
+	public static function registerConnection($name, PhpcouchConnection $connection)
 	{
-		self::$connections[$name] = $options;
+		self::$connections[$name] = $connection;
 	}
 	
 	public static function unregisterConnection($name)
