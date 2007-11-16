@@ -2,7 +2,7 @@
 
 set_include_path(get_include_path() . ':' . '/Users/dzuelke/Downloads/ZendFramework-1.0.2/library');
 
-require('Phpcouch.php');
+require('../lib/Phpcouch.php');
 
 PhpCouch::registerConnection('default', $con = new PhpcouchConnection(new PhpcouchPeclhttpAdapter(array('database' => 'hellohans'))));
 
