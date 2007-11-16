@@ -20,15 +20,15 @@ class Phpcouch
 		self::$path = dirname(__FILE__);
 		
 		self::$autoloads = array(
-			'PhpcouchAdapter'               => self::$path . '/Adapter.class.php',
-			'PhpcouchCurlAdapter'           => self::$path . '/Adapter/Curl.class.php',
-			'PhpcouchPeclhttpAdapter'       => self::$path . '/Adapter/Peclhttp.class.php',
-			'PhpcouchZendhttpclientAdapter' => self::$path . '/Adapter/Zendhttpclient.class.php',
-			'PhpcouchConnection'            => self::$path . '/PhpcouchConnection.class.php',
-			'PhpcouchDatabase'              => self::$path . '/PhpcouchDatabase.class.php',
-			'PhpcouchDocument'              => self::$path . '/PhpcouchDocument.class.php',
-			'PhpcouchException'             => self::$path . '/PhpcouchException.class.php',
-			'PhpcouchServerException'       => self::$path . '/Exception/Server.class.php',
+			'PhpcouchAdapter'               => self::$path . '/Phpcouch/Adapter.class.php',
+			'PhpcouchCurlAdapter'           => self::$path . '/Phpcouch/Adapter/Curl.class.php',
+			'PhpcouchPeclhttpAdapter'       => self::$path . '/Phpcouch/Adapter/Peclhttp.class.php',
+			'PhpcouchZendhttpclientAdapter' => self::$path . '/Phpcouch/Adapter/Zendhttpclient.class.php',
+			'PhpcouchConnection'            => self::$path . '/Phpcouch/Connection.class.php',
+			'PhpcouchDatabase'              => self::$path . '/Phpcouch/Database.class.php',
+			'PhpcouchDocument'              => self::$path . '/Phpcouch/Document.class.php',
+			'PhpcouchException'             => self::$path . '/Phpcouch/Exception.class.php',
+			'PhpcouchServerException'       => self::$path . '/Phpcouch/Exception/Server.class.php',
 		);
 		
 		spl_autoload_register(array('PhpCouch', 'autoload'));
