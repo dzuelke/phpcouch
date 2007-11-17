@@ -2,7 +2,7 @@
 
 class PhpcouchZendhttpclientAdapter extends PhpcouchAdapter
 {
-	public function __construct(array $options)
+	public function __construct(array $options = array())
 	{
 		parent::__construct($options);
 		
@@ -10,79 +10,77 @@ class PhpcouchZendhttpclientAdapter extends PhpcouchAdapter
 			require('Zend/Http/Client.php');
 		}
 		
+		$options = array_merge(array(
+			'keepalive'    => true,
+			'useragent'    => Phpcouch::getVersionInfo(),
+		), $options);
+		
 		$this->client = new Zend_Http_Client();
-		$this->client->setConfig(array(
-			'maxredirects' => 2,
-			'timeout' => 30,
-			'useragent' => 'PHPCouch',
-		));
+		$this->client->setConfig($options);
 		$this->client->setEncType('application/json');
 	}
 	
-	public function put($json, array $info = array(), array $options = array())
+	protected function getClient($reset = true)
 	{
-		$uri = $this->buildUri($info, $options);
-		
-		$r = new HttpRequest($uri, HTTP_METH_PUT);
-		$r->setPutData($json);
-		
+		if($reset) {
+			$this->client->resetParameters();
+		}
+		return $this->client;
+	}
+	
+	protected function doRequest($method = 'GET')
+	{
 		try {
-			return $r->send()->getBody();
-		} catch (HttpException $e) {
-			var_dump($e->getMessage());
-			var_dump($r->getRawRequestMessage());
-			var_dump($r->getRawResponseMessage());
-			die('ZOMG PUT');
+			$r = $this->getClient()->request('PUT');
+		} catch(Zend_Http_Client_Exception $e) {
+			throw new PhpcouchAdapterException($e->getMessage());
+		}
+		
+		if($r->isError()) {
+			if($r->getStatus() % 500 < 100) {
+				throw new PhpcouchServerErrorException();
+			} else {
+				throw new PhpcouchClientErrorException();
+			}
+		} elseif($r->isRedirect()) {
+			throw new PhpcouchAdapterException('Too many redirects');
+		} else {
+			return $r->getBody();
 		}
 	}
 	
-	public function get(array $info, array $options = array())
+	public function put($uri, $data)
 	{
-		$uri = $this->buildUri($info, $options);
+		$c = $this->getClient();
+		$c->setUri($uri);
+		$c->setRawData($data);
 		
-		$r = new HttpRequest($uri, HTTP_METH_GET);
-		
-		try {
-			return $r->send()->getBody();
-		} catch (HttpException $e) {
-			var_dump($e->getMessage());
-			var_dump($r->getRawRequestMessage());
-			var_dump($r->getRawResponseMessage());
-			die('ZOMG GET');
-		}
+		return $this->doRequest('PUT');
 	}
 	
-	public function post($json, array $info = array(), array $options = array())
+	public function get($uri)
 	{
-		$uri = $this->buildUri($info, $options);
+		$c = $this->getClient();
+		$c->setUri($uri);
 		
-		$r = new HttpRequest($uri, HTTP_METH_POST);
-		$r->setRawPostData($json);
-		
-		try {
-			return $r->send()->getBody();
-		} catch (HttpException $e) {
-			var_dump($e->getMessage());
-			var_dump($r->getRawRequestMessage());
-			var_dump($r->getRawResponseMessage());
-			die('ZOMG POST');
-		}
+		return $this->doRequest('GET');
 	}
 	
-	public function delete(array $info, array $options = array())
+	public function post($uri, $data)
 	{
-		$uri = $this->buildUri($info, $options);
+		$c = $this->getClient();
+		$c->setUri($uri);
+		$c->setRawData($data);
 		
-		$r = new HttpRequest($uri, HTTP_METH_DELETE);
+		return $this->doRequest('POST');
+	}
+	
+	public function delete($url)
+	{
+		$c = $this->getClient();
+		$c->setUri($uri);
 		
-		try {
-			return $r->send()->getBody();
-		} catch (HttpException $e) {
-			var_dump($e->getMessage());
-			var_dump($r->getRawRequestMessage());
-			var_dump($r->getRawResponseMessage());
-			die('ZOMG DELETE');
-		}
+		return $this->doRequest('DELETE');
 	}
 }
 

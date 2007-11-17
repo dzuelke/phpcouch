@@ -4,19 +4,36 @@ class PhpcouchConnection
 {
 	protected $adapter = null;
 	
-	public function __construct(PhpcouchAdapter $adapter)
+	protected $database = null;
+	
+	protected $url = '';
+	
+	public function __construct(array $connectionInfo, PhpcouchAdapter $adapter = null)
 	{
-		$this->adapter = $adapter;
+		if($adapter !== null) {
+			$this->adapter = $adapter;
+		} else {
+			$this->adapter = new PhpcouchPhpAdapter();
+		}
+		
+		$connectionInfo = array_merge(array(
+			'scheme' => 'http',
+			'host'   => 'localhost',
+			'port'   => '8888'
+		), $connectionInfo);
+		
+		if(!isset($connectionInfo['database'])) {
+			throw new PhpcouchException('No database configured');
+		}
+		
+		$this->setDatabase($connectionInfo['database']);
+		
+		$this->url = sprintf('%s://%s:%s/%s', $connectionInfo['scheme'], $connectionInfo['host'], $connectionInfo['port'], $this->getDatabase());
 	}
 	
-	public function getDatabase()
+	protected function buildUri(array $info = array())
 	{
-		return $this->adapter->getDatabase();
-	}
-	
-	public function setDatabase($database)
-	{
-		return $this->adapter->setDatabase($database);
+		return $this->url . (isset($info['id']) ? '/' . $info['id'] : '');
 	}
 	
 	protected function sanitize(array &$data)
@@ -34,29 +51,66 @@ class PhpcouchConnection
 		}
 	}
 	
+	public function getAdapter()
+	{
+		return $this->adapter;
+	}
+	
+	public function setAdapter(PhpcouchAdapter $adapter)
+	{
+		$this->adapter = $adapter;
+	}
+	
+	public function getDatabase()
+	{
+		return $this->database;
+	}
+	
+	public function setDatabase($database)
+	{
+		$this->database = $database;
+	}
+	
 	public function create(PhpcouchDocument $document)
 	{
 		$values = $document->dehydrate();
 		
 		$this->sanitize($values);
 		
-		$options = array();
-		// if(isset($values['_id'])) {
-		// 	$options = array('id' => $values['_id']);
-		// }
+		$values = json_encode($values);
 		
-		$result = json_decode($this->adapter->post(json_encode($values), $options));
-		
-		if(isset($result->ok) && $result->ok === true) {
-			$document->hydrate(array(PhpcouchDocument::ID_FIELD => $result->id, PhpcouchDocument::REVISION_FIELD => $result->rev));
-		} else {
-			// error
+		try {
+			if($document->_id) {
+				// create a named document
+				$uri = $this->buildUri(array('id' => $document->_id));
+				$result = $this->adapter->put($uri, $values);
+			} else {
+				// let couchdb create an ID
+				$uri = $this->buildUri();
+				$result = $this->adapter->post($uri, $values);
+			}
+			
+			$result = json_decode($result);
+			
+			if(isset($result->ok) && $result->ok === true) {
+				$document->hydrate(array(PhpcouchDocument::ID_FIELD => $result->id, PhpcouchDocument::REVISION_FIELD => $result->rev));
+				return;
+			} else {
+				throw new PhpcouchSaveException();
+				// TODO: add $result
+			}
+		} catch(PhpcouchServerException $e) {
+			$result = json_decode($e->getServerResponse());
+			throw new PhpcouchSaveException();
+			// TODO: add $result
 		}
 	}
 	
 	public function retrieve($id, $revision = null)
 	{
-		$result = json_decode($this->adapter->get(array('id' => $id, 'revision' => $revision), array('_rev_info' => true)));
+		$uri = $this->buildUri(array('id' => $id), array('rev' => $revision, '_revs_info' => true));
+		
+		$result = json_decode($this->adapter->get($uri));
 		
 		if(isset($result->_id)) {
 			$document = $this->newDocument();
@@ -76,7 +130,9 @@ class PhpcouchConnection
 			}
 		}
 		
-		return $this->adapter->get(array('id' => $id, 'revision' => $revision), array('attachment' => $name));
+		$uri = $this->buildUri(array('id' => $id), array('rev' => $revision, 'attachment' => $name));
+		
+		return $this->adapter->get($uri);
 	}
 	
 	public function update(PhpcouchDocument $document)
@@ -87,10 +143,12 @@ class PhpcouchConnection
 		
 		$payload = json_encode($values);
 		
-		$result = json_decode($this->adapter->put($payload, array('id' => $document->_id)));
+		$uri = $this->buildUri(array('id' => $document->_id));
+		
+		$result = json_decode($this->adapter->put($uri, $payload));
 		
 		if(isset($result->ok) && $result->ok === true) {
-			$document->_rev = $result->_rev;
+			$document->_rev = $result->rev;
 		} else {
 			// error
 		}
@@ -102,7 +160,9 @@ class PhpcouchConnection
 			$id = $id->_id;
 		}
 		
-		return json_decode($this->adapter->delete(array('id' => $id)));
+		$uri = $this->buildUri(array('id' => $id));
+		
+		return json_decode($this->adapter->delete($uri));
 	}
 	
 	public function newDocument()

@@ -2,6 +2,9 @@
 
 class Phpcouch
 {
+	const VERSION_NUMBER = '1.0.0';
+	const VERSION_STATUS = 'dev';
+	
 	protected static $autoloads = array();
 	protected static $connections = array();
 	protected static $path = null;
@@ -11,7 +14,7 @@ class Phpcouch
 	public static function autoload($className)
 	{
 		if(isset(self::$autoloads[$className])) {
-			require(self::$autoloads[$className]);
+			require(self::$path . '/' . self::$autoloads[$className]);
 		}
 	}
 	
@@ -20,21 +23,40 @@ class Phpcouch
 		self::$path = dirname(__FILE__);
 		
 		self::$autoloads = array(
-			'PhpcouchAdapter'               => self::$path . '/Phpcouch/Adapter.class.php',
-			'PhpcouchCurlAdapter'           => self::$path . '/Phpcouch/Adapter/Curl.class.php',
-			'PhpcouchPeclhttpAdapter'       => self::$path . '/Phpcouch/Adapter/Peclhttp.class.php',
-			'PhpcouchZendhttpclientAdapter' => self::$path . '/Phpcouch/Adapter/Zendhttpclient.class.php',
-			'PhpcouchConnection'            => self::$path . '/Phpcouch/Connection.class.php',
-			'PhpcouchDatabase'              => self::$path . '/Phpcouch/Database.class.php',
-			'PhpcouchDocument'              => self::$path . '/Phpcouch/Document.class.php',
-			'PhpcouchException'             => self::$path . '/Phpcouch/Exception.class.php',
-			'PhpcouchServerException'       => self::$path . '/Phpcouch/Exception/Server.class.php',
+			'PhpcouchAdapter'               => 'Phpcouch/Adapter.class.php',
+			'PhpcouchCurlAdapter'           => 'Phpcouch/Adapter/Curl.class.php',
+			'PhpcouchPeclhttpAdapter'       => 'Phpcouch/Adapter/Peclhttp.class.php',
+			'PhpcouchZendhttpclientAdapter' => 'Phpcouch/Adapter/Zendhttpclient.class.php',
+			'PhpcouchConnection'            => 'Phpcouch/Connection.class.php',
+			'PhpcouchDatabase'              => 'Phpcouch/Database.class.php',
+			'PhpcouchDocument'              => 'Phpcouch/Document.class.php',
+			'PhpcouchException'             => 'Phpcouch/Exception.class.php',
+			'PhpcouchAdapterException'      => 'Phpcouch/Exception/Adapter.class.php',
+			'PhpcouchErrorException'        => 'Phpcouch/Exception/Error.class.php',
+			'PhpcouchClientErrorException'  => 'Phpcouch/Exception/Error/Client.class.php',
+			'PhpcouchServerErrorException'  => 'Phpcouch/Exception/Error/Server.class.php',
 		);
 		
 		spl_autoload_register(array('PhpCouch', 'autoload'));
 		
 		self::$options = array(
 		);
+	}
+	
+	public static function getVersionInfo()
+	{
+		$retval = self::VERSION_NUMBER;
+		
+		if(self::VERSION_STATUS !== null) {
+			$retval .= '-' . self::VERSION_STATUS;
+		}
+		
+		return $retval;
+	}
+	
+	public static function getVersionString()
+	{
+		return 'PHPCouch/' . self::getVersionInfo();
 	}
 	
 	public static function registerConnection($name, PhpcouchConnection $connection)
