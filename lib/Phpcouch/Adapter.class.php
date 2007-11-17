@@ -6,11 +6,11 @@ abstract class PhpcouchAdapter
 	{
 	}
 	
-	abstract public function put($url, $data);
+	abstract public function put($url, $data = null);
 	
 	abstract public function get($url);
 	
-	abstract public function post($url, $data);
+	abstract public function post($url, $data = null);
 	
 	abstract public function delete($url);
 }

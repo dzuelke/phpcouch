@@ -67,7 +67,7 @@ class PhpcouchDocument
 		$this->fromArray($data);
 		
 		$this->isNew = false;
-		$this->isSaved = true;
+		$this->isModified = false;
 	}
 	
 	public function dehydrate()
@@ -108,9 +108,9 @@ class PhpcouchDocument
 		return $this->isNew;
 	}
 	
-	public function isSaved()
+	public function isModified()
 	{
-		return $this->isSaved;
+		return $this->isModified;
 	}
 	
 	public function getAttachments()

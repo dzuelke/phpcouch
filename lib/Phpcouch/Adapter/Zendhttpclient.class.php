@@ -12,12 +12,11 @@ class PhpcouchZendhttpclientAdapter extends PhpcouchAdapter
 		
 		$options = array_merge(array(
 			'keepalive'    => true,
-			'useragent'    => Phpcouch::getVersionInfo(),
+			'useragent'    => Phpcouch::getVersionString(),
 		), $options);
 		
 		$this->client = new Zend_Http_Client();
 		$this->client->setConfig($options);
-		$this->client->setEncType('application/json');
 	}
 	
 	protected function getClient($reset = true)
@@ -28,59 +27,53 @@ class PhpcouchZendhttpclientAdapter extends PhpcouchAdapter
 		return $this->client;
 	}
 	
-	protected function doRequest($method = 'GET')
+	protected function doRequest($uri, $method = 'GET', $data = null)
 	{
+		$c = $this->getClient();
+		
+		$c->setUri($uri);
+		
+		if($data !== null) {
+			$data = $c->setRawData(json_encode($data), 'application/json');
+		}
+		
 		try {
-			$r = $this->getClient()->request('PUT');
+			$r = $c->request($method);
 		} catch(Zend_Http_Client_Exception $e) {
 			throw new PhpcouchAdapterException($e->getMessage());
 		}
 		
 		if($r->isError()) {
 			if($r->getStatus() % 500 < 100) {
-				throw new PhpcouchServerErrorException();
+				throw new PhpcouchServerErrorException($r->getMessage(), $r->getStatus(), json_decode($r->getBody()));
 			} else {
-				throw new PhpcouchClientErrorException();
+				throw new PhpcouchClientErrorException($r->getMessage(), $r->getStatus(), json_decode($r->getBody()));
 			}
 		} elseif($r->isRedirect()) {
 			throw new PhpcouchAdapterException('Too many redirects');
 		} else {
-			return $r->getBody();
+			return json_decode($r->getBody());
 		}
 	}
 	
-	public function put($uri, $data)
+	public function put($uri, $data = null)
 	{
-		$c = $this->getClient();
-		$c->setUri($uri);
-		$c->setRawData($data);
-		
-		return $this->doRequest('PUT');
+		return $this->doRequest($uri, 'PUT', $data);
 	}
 	
 	public function get($uri)
 	{
-		$c = $this->getClient();
-		$c->setUri($uri);
-		
-		return $this->doRequest('GET');
+		return $this->doRequest($uri, 'GET');
 	}
 	
-	public function post($uri, $data)
+	public function post($uri, $data = null)
 	{
-		$c = $this->getClient();
-		$c->setUri($uri);
-		$c->setRawData($data);
-		
-		return $this->doRequest('POST');
+		return $this->doRequest($uri, 'POST', $data);
 	}
 	
-	public function delete($url)
+	public function delete($uri)
 	{
-		$c = $this->getClient();
-		$c->setUri($uri);
-		
-		return $this->doRequest('DELETE');
+		return $this->doRequest($uri, 'DELETE');
 	}
 }
 

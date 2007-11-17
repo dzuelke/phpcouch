@@ -4,9 +4,9 @@ class PhpcouchConnection
 {
 	protected $adapter = null;
 	
-	protected $database = null;
+	protected $database = '';
 	
-	protected $url = '';
+	protected $baseUrl = '';
 	
 	public function __construct(array $connectionInfo, PhpcouchAdapter $adapter = null)
 	{
@@ -19,21 +19,24 @@ class PhpcouchConnection
 		$connectionInfo = array_merge(array(
 			'scheme' => 'http',
 			'host'   => 'localhost',
-			'port'   => '8888'
+			'port'   => '8888',
 		), $connectionInfo);
 		
-		if(!isset($connectionInfo['database'])) {
-			throw new PhpcouchException('No database configured');
+		$this->baseUrl = sprintf('%s://%s:%s/', $connectionInfo['scheme'], $connectionInfo['host'], $connectionInfo['port']);
+		
+		if(isset($connectionInfo['database'])) {
+			$this->setDatabase($connectionInfo['database']);
 		}
-		
-		$this->setDatabase($connectionInfo['database']);
-		
-		$this->url = sprintf('%s://%s:%s/%s', $connectionInfo['scheme'], $connectionInfo['host'], $connectionInfo['port'], $this->getDatabase());
 	}
 	
 	protected function buildUri(array $info = array())
 	{
-		return $this->url . (isset($info['id']) ? '/' . $info['id'] : '');
+		if(isset($info['database'])) {
+			$database = $info['database'];
+		} elseif(!($database = $this->getDatabase())) {
+			throw new PhpcouchException('No database set on connection');
+		}
+		return $this->baseUrl . $database . (isset($info['id']) ? '/' . $info['id'] : '');
 	}
 	
 	protected function sanitize(array &$data)
@@ -48,6 +51,12 @@ class PhpcouchConnection
 		
 		foreach($remove as $key) {
 			unset($data[$key]);
+		}
+		
+		foreach(array('_revs_info', '_revs') as $key) {
+			if(array_key_exists($key, $data)) {
+				unset($data[$key]);
+			}
 		}
 	}
 	
@@ -68,7 +77,27 @@ class PhpcouchConnection
 	
 	public function setDatabase($database)
 	{
-		$this->database = $database;
+		$this->database = (string)$database;
+	}
+	
+	public function createDatabase($name)
+	{
+		// result doesn't matter here
+		$this->adapter->put($this->buildUri(array('database' => $name)));
+		return $this->retrieveDatabase($name);
+		// TODO: catch exceptions?
+	}
+	
+	public function retrieveDatabase($name)
+	{
+		$result = $this->adapter->get($this->buildUri(array('database' => $name)));
+		return new PhpcouchDatabase($result->db_name, $result->doc_count, $result->update_seq);
+	}
+	
+	public function deleteDatabase($name)
+	{
+		$result = $this->adapter->delete($this->buildUri(array('database' => $name)));
+		return $result;
 	}
 	
 	public function create(PhpcouchDocument $document)
@@ -76,8 +105,9 @@ class PhpcouchConnection
 		$values = $document->dehydrate();
 		
 		$this->sanitize($values);
-		
-		$values = json_encode($values);
+		if(isset($values['_id'])) {
+			unset($values['_id']);
+		}
 		
 		try {
 			if($document->_id) {
@@ -89,8 +119,6 @@ class PhpcouchConnection
 				$uri = $this->buildUri();
 				$result = $this->adapter->post($uri, $values);
 			}
-			
-			$result = json_decode($result);
 			
 			if(isset($result->ok) && $result->ok === true) {
 				$document->hydrate(array(PhpcouchDocument::ID_FIELD => $result->id, PhpcouchDocument::REVISION_FIELD => $result->rev));
@@ -110,7 +138,7 @@ class PhpcouchConnection
 	{
 		$uri = $this->buildUri(array('id' => $id), array('rev' => $revision, '_revs_info' => true));
 		
-		$result = json_decode($this->adapter->get($uri));
+		$result = $this->adapter->get($uri);
 		
 		if(isset($result->_id)) {
 			$document = $this->newDocument();
@@ -141,11 +169,9 @@ class PhpcouchConnection
 		
 		$this->sanitize($values);
 		
-		$payload = json_encode($values);
-		
 		$uri = $this->buildUri(array('id' => $document->_id));
 		
-		$result = json_decode($this->adapter->put($uri, $payload));
+		$result = $this->adapter->put($uri, $values);
 		
 		if(isset($result->ok) && $result->ok === true) {
 			$document->_rev = $result->rev;
@@ -162,7 +188,7 @@ class PhpcouchConnection
 		
 		$uri = $this->buildUri(array('id' => $id));
 		
-		return json_decode($this->adapter->delete($uri));
+		return $this->adapter->delete($uri);
 	}
 	
 	public function newDocument()
