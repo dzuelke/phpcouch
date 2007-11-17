@@ -4,8 +4,6 @@ class PhpcouchZendhttpclientAdapter implements PhpcouchIAdapter
 {
 	public function __construct(array $options = array())
 	{
-		parent::__construct($options);
-		
 		if(!class_exists('Zend_Http_Client')) {
 			require('Zend/Http/Client.php');
 		}

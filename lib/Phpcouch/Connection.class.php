@@ -8,7 +8,7 @@ class PhpcouchConnection
 	
 	protected $baseUrl = '';
 	
-	public function __construct(array $connectionInfo, PhpcouchAdapter $adapter = null)
+	public function __construct(array $connectionInfo, PhpcouchIAdapter $adapter = null)
 	{
 		if($adapter !== null) {
 			$this->adapter = $adapter;
@@ -65,7 +65,7 @@ class PhpcouchConnection
 		return $this->adapter;
 	}
 	
-	public function setAdapter(PhpcouchAdapter $adapter)
+	public function setAdapter(PhpcouchIAdapter $adapter)
 	{
 		$this->adapter = $adapter;
 	}

@@ -32,6 +32,11 @@ class PhpcouchDatabase
 	{
 		return $this->update_seq;
 	}
+	
+	public function listDocuments()
+	{
+		
+	}
 }
 
 ?>
