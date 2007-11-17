@@ -1,6 +1,6 @@
 <?php
 
-class PhpcouchZendhttpclientAdapter extends PhpcouchAdapter
+class PhpcouchZendhttpclientAdapter implements PhpcouchIAdapter
 {
 	public function __construct(array $options = array())
 	{

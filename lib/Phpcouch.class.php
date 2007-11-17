@@ -23,7 +23,7 @@ class Phpcouch
 		self::$path = dirname(__FILE__);
 		
 		self::$autoloads = array(
-			'PhpcouchAdapter'               => 'Phpcouch/Adapter.class.php',
+			'PhpcouchIAdapter'               => 'Phpcouch/Adapter.class.php',
 			'PhpcouchCurlAdapter'           => 'Phpcouch/Adapter/Curl.class.php',
 			'PhpcouchPeclhttpAdapter'       => 'Phpcouch/Adapter/Peclhttp.class.php',
 			'PhpcouchZendhttpclientAdapter' => 'Phpcouch/Adapter/Zendhttpclient.class.php',

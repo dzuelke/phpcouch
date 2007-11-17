@@ -1,18 +1,16 @@
 <?php
 
-abstract class PhpcouchAdapter
+interface PhpcouchIAdapter
 {
-	public function __construct(array $options = array())
-	{
-	}
+	public function __construct(array $options = array());
 	
-	abstract public function put($url, $data = null);
+	public function put($url, $data = null);
 	
-	abstract public function get($url);
+	public function get($url);
 	
-	abstract public function post($url, $data = null);
+	public function post($url, $data = null);
 	
-	abstract public function delete($url);
+	public function delete($url);
 }
 
 ?>
