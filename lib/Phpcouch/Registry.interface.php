@@ -12,7 +12,7 @@ interface PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function getOption($name, $default = null);
+	public function getOption($name, $default = null);
 
 	/**
 	 * Check if a configuration directive has been set.
@@ -24,7 +24,7 @@ interface PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function hasOption($name);
+	public function hasOption($name);
 
 	/**
 	 * Check if a configuration directive has been set as read-only.
@@ -36,7 +36,7 @@ interface PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function isOptionReadonly($name);
+	public function isOptionReadonly($name);
 
 	/**
 	 * Set a configuration value.
@@ -51,7 +51,7 @@ interface PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function setOption($name, $value, $overwrite = true, $readonly = false);
+	public function setOption($name, $value, $overwrite = true, $readonly = false);
 
 	/**
 	 * Remove a configuration value.
@@ -63,7 +63,7 @@ interface PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function removeOption($name);
+	public function removeOption($name);
 
 	/**
 	 * Import a list of configuration directives.
@@ -73,7 +73,7 @@ interface PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function setOptions($data);
+	public function setOptions($data);
 
 	/**
 	 * Get all configuration directives and values.
@@ -83,7 +83,7 @@ interface PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function getOptions();
+	public function getOptions();
 
 	/**
 	 * Clear the configuration.
@@ -91,7 +91,7 @@ interface PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function clearOptions();
+	public function clearOptions();
 }
 
 ?>

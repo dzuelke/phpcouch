@@ -2,8 +2,8 @@
 
 class PhpcouchConfigurable implements PhpcouchIRegistry
 {
-	protected static $options = array();
-	protected static $readonlies = array();
+	protected $options = array();
+	protected $readonlies = array();
 	
 	/**
 	 * Get a configuration value.
@@ -15,7 +15,7 @@ class PhpcouchConfigurable implements PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function getOption($name, $default = null)
+	public function getOption($name, $default = null)
 	{
 		if(isset(self::$options[$name])) {
 			return self::$options[$name];
@@ -34,7 +34,7 @@ class PhpcouchConfigurable implements PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function hasOption($name)
+	public function hasOption($name)
 	{
 		return isset(self::$options[$name]);
 	}
@@ -49,7 +49,7 @@ class PhpcouchConfigurable implements PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function isOptionReadonly($name)
+	public function isOptionReadonly($name)
 	{
 		return isset(self::$readonlies[$name]);
 	}
@@ -67,7 +67,7 @@ class PhpcouchConfigurable implements PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function setOption($name, $value, $overwrite = true, $readonly = false)
+	public function setOption($name, $value, $overwrite = true, $readonly = false)
 	{
 		$retval = false;
 		if(($overwrite || !isset(self::$options[$name])) && !isset(self::$readonlies[$name])) {
@@ -90,7 +90,7 @@ class PhpcouchConfigurable implements PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function removeOption($name)
+	public function removeOption($name)
 	{
 		$retval = false;
 		if(isset(self::$options[$name]) && !isset(self::$readonlies[$name])) {
@@ -108,7 +108,7 @@ class PhpcouchConfigurable implements PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function setOptions($data)
+	public function setOptions($data)
 	{
 		self::$options = array_merge(array_merge(self::$options, $data), self::$readonlies);
 	}
@@ -121,7 +121,7 @@ class PhpcouchConfigurable implements PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function getOptions()
+	public function getOptions()
 	{
 		return self::$options;
 	}
@@ -132,7 +132,7 @@ class PhpcouchConfigurable implements PhpcouchIRegistry
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public static function clearOptions()
+	public function clearOptions()
 	{
 		$restore = array_intersect_assoc(self::$readonlies, self::$options);
 		self::$options = $restore;
