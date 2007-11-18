@@ -20,7 +20,28 @@ class Phpcouch
 	/**
 	 * @var        array An array of class names and file paths for autoloading.
 	 */
-	protected static $autoloads = array();
+	protected static $autoloads = array(
+		'PhpcouchIAdapter'              => 'Phpcouch/Adapter.interface.php',
+		'PhpcouchCurlAdapter'           => 'Phpcouch/Adapter/Curl.class.php',
+		'PhpcouchPeclhttpAdapter'       => 'Phpcouch/Adapter/Peclhttp.class.php',
+		'PhpcouchPhpAdapter'            => 'Phpcouch/Adapter/Php.class.php',
+		'PhpcouchZendhttpclientAdapter' => 'Phpcouch/Adapter/Zendhttpclient.class.php',
+		'PhpcouchConfigurable'          => 'Phpcouch/Configurable.class.php',
+		'PhpcouchConnection'            => 'Phpcouch/Connection.class.php',
+		'PhpcouchDatabase'              => 'Phpcouch/Database.class.php',
+		'PhpcouchIDocument'             => 'Phpcouch/Document.interface.php',
+		'PhpcouchDocument'              => 'Phpcouch/Document.class.php',
+		'PhpcouchException'             => 'Phpcouch/Exception.class.php',
+		'PhpcouchAdapterException'      => 'Phpcouch/Exception/Adapter.class.php',
+		'PhpcouchErrorException'        => 'Phpcouch/Exception/Error.class.php',
+		'PhpcouchClientErrorException'  => 'Phpcouch/Exception/Error/Client.class.php',
+		'PhpcouchServerErrorException'  => 'Phpcouch/Exception/Error/Server.class.php',
+		'PhpcouchIRecord'               => 'Phpcouch/Record.interface.php',
+		'PhpcouchIMutableRecord'        => 'Phpcouch/Record/Mutable.interface.php',
+		'PhpcouchRecord'                => 'Phpcouch/Record.class.php',
+		'PhpcouchMutableRecord'         => 'Phpcouch/Record/Mutable.class.php',
+		'PhpcouchIRegistry'             => 'Phpcouch/Registry.interface.php',
+	);
 	
 	/**
 	 * @var        array An array of registered connections.
@@ -65,29 +86,7 @@ class Phpcouch
 		// grab the base path where we are located
 		self::$path = dirname(__FILE__);
 		
-		self::$autoloads = array(
-			'PhpcouchIAdapter'              => 'Phpcouch/Adapter.interface.php',
-			'PhpcouchCurlAdapter'           => 'Phpcouch/Adapter/Curl.class.php',
-			'PhpcouchPeclhttpAdapter'       => 'Phpcouch/Adapter/Peclhttp.class.php',
-			'PhpcouchZendhttpclientAdapter' => 'Phpcouch/Adapter/Zendhttpclient.class.php',
-			'PhpcouchConfigurable'          => 'Phpcouch/Configurable.class.php',
-			'PhpcouchConnection'            => 'Phpcouch/Connection.class.php',
-			'PhpcouchDatabase'              => 'Phpcouch/Database.class.php',
-			'PhpcouchIDocument'             => 'Phpcouch/Document.interface.php',
-			'PhpcouchDocument'              => 'Phpcouch/Document.class.php',
-			'PhpcouchException'             => 'Phpcouch/Exception.class.php',
-			'PhpcouchAdapterException'      => 'Phpcouch/Exception/Adapter.class.php',
-			'PhpcouchErrorException'        => 'Phpcouch/Exception/Error.class.php',
-			'PhpcouchClientErrorException'  => 'Phpcouch/Exception/Error/Client.class.php',
-			'PhpcouchServerErrorException'  => 'Phpcouch/Exception/Error/Server.class.php',
-			'PhpcouchIRecord'               => 'Phpcouch/Record.interface.php',
-			'PhpcouchIMutableRecord'        => 'Phpcouch/Record/Mutable.interface.php',
-			'PhpcouchRecord'                => 'Phpcouch/Record.class.php',
-			'PhpcouchMutableRecord'         => 'Phpcouch/Record/Mutable.class.php',
-			'PhpcouchIRegistry'             => 'Phpcouch/Registry.interface.php',
-		);
-		
-		// and register our autoloads
+		// and register our autoloader
 		spl_autoload_register(array('PhpCouch', 'autoload'));
 	}
 	
