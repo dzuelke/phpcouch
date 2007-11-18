@@ -1,6 +1,6 @@
 <?php
 
-class PhpcouchConnection
+class PhpcouchConnection extends PhpcouchConfigurable
 {
 	protected $adapter = null;
 	
