@@ -1,6 +1,6 @@
 <?php
 
-class PhpcouchDocument extends PhpcouchResult implements PhpcouchIDocument
+class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocument
 {
 	const ATTACHMENTS_FIELD = '_attachments';
 	const ID_FIELD = '_id';
