@@ -1,8 +1,27 @@
 <?php
 
-class PhpcouchConfigurable implements PhpcouchIRegistry
+/**
+ * A base class for extension that implements the PHPCouch Registry interface.
+ *
+ * @package    PHPCouch
+ *
+ * @author     David Zülke <dz@bitxtender.com>
+ * @copyright  bitXtender GbR
+ *
+ * @since      1.0.0
+ *
+ * @version    $Id$
+ */
+abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 {
+	/**
+	 * @var        array An array of configuration options set on this object.
+	 */
 	protected $options = array();
+	
+	/**
+	 * @var        array An array of configuration options that are read-only.
+	 */
 	protected $readonlies = array();
 	
 	/**
