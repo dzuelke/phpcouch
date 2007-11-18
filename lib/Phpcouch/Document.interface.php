@@ -2,8 +2,9 @@
 
 interface PhpcouchIDocument extends PhpcouchIMutableRecord
 {
+	public function getAttachments();
+	public function hasAttachments();
 	public function retrieveAttachment($name);
-	public function listAttachments();
 	public function retrieveRevision($revision);
 }
 

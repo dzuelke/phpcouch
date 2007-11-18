@@ -23,7 +23,10 @@ class Phpcouch
 		self::$path = dirname(__FILE__);
 		
 		self::$autoloads = array(
-			'PhpcouchIAdapter'               => 'Phpcouch/Adapter.class.php',
+			'PhpcouchIAdapter'              => 'Phpcouch/Adapter.interface.php',
+			'PhpcouchIDocument'             => 'Phpcouch/Document.interface.php',
+			'PhpcouchIRecord'               => 'Phpcouch/Record.interface.php',
+			'PhpcouchIMutableRecord'        => 'Phpcouch/Record/Mutable.interface.php',
 			'PhpcouchCurlAdapter'           => 'Phpcouch/Adapter/Curl.class.php',
 			'PhpcouchPeclhttpAdapter'       => 'Phpcouch/Adapter/Peclhttp.class.php',
 			'PhpcouchZendhttpclientAdapter' => 'Phpcouch/Adapter/Zendhttpclient.class.php',
@@ -35,6 +38,8 @@ class Phpcouch
 			'PhpcouchErrorException'        => 'Phpcouch/Exception/Error.class.php',
 			'PhpcouchClientErrorException'  => 'Phpcouch/Exception/Error/Client.class.php',
 			'PhpcouchServerErrorException'  => 'Phpcouch/Exception/Error/Server.class.php',
+			'PhpcouchRecord'                => 'Phpcouch/Record.class.php',
+			'PhpcouchMutableRecord'         => 'Phpcouch/Record/Mutable.class.php',
 		);
 		
 		spl_autoload_register(array('PhpCouch', 'autoload'));

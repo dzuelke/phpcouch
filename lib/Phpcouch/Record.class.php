@@ -69,7 +69,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 		return $this->connection;
 	}
 	
-	public function setConnection(PhpcouchConnection $connection)
+	public function setConnection(PhpcouchConnection $connection = null)
 	{
 		if($connection === null) {
 			$connection = Phpcouch::getConnection();
