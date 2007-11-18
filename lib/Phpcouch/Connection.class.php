@@ -91,7 +91,9 @@ class PhpcouchConnection
 	public function retrieveDatabase($name)
 	{
 		$result = $this->adapter->get($this->buildUri(array('database' => $name)));
-		return new PhpcouchDatabase($result->db_name, $result->doc_count, $result->update_seq);
+		$database = new PhpcouchDatabase();
+		$database->hydrate($result);
+		return $database;
 	}
 	
 	public function deleteDatabase($name)
