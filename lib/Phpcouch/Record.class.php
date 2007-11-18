@@ -1,6 +1,6 @@
 <?php
 
-class PhpcouchRecord implements PhpcouchIRecord
+abstract class PhpcouchRecord implements PhpcouchIRecord
 {
 	protected $connection = null;
 	protected $data = array();
@@ -20,21 +20,6 @@ class PhpcouchRecord implements PhpcouchIRecord
 	public function __isset($name)
 	{
 		return isset($this->data[$name]);
-	}
-	
-	public function __set($name, $value)
-	{
-		if(!isset($this->data[$name]) || $this->data[$name] !== $value) {
-			$this->isModified = true;
-		}
-		$this->data[$name] = $value;
-	}
-	
-	public function __unset($name)
-	{
-		if(array_key_exists($this->data[$name])) {
-			unset($this->data[$name]);
-		}
 	}
 	
 	public function hydrate($data)
