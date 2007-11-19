@@ -32,7 +32,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	
 	public function __unset($name)
 	{
-		if(array_key_exists($this->data[$name])) {
+		if(array_key_exists($name, $this->data)) {
 			unset($this->data[$name]);
 		}
 	}
