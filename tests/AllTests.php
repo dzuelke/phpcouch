@@ -18,6 +18,9 @@ class AllTests extends PHPUnit_Framework_TestSuite
 	{
 		$suite = new AllTests('PHPCouch Test Suite');
 		
+		require_once('Phpcouch/AllTests.php');
+		$suite->addTest(Phpcouch_AllTests::suite());
+		
 		require_once('Connection/AllTests.php');
 		$suite->addTest(Connection_AllTests::suite());
 		

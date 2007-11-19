@@ -7,7 +7,7 @@ if(!defined('PHPUnit_MAIN_METHOD')) {
 require_once('PHPUnit/Framework.php');
 require_once('PHPUnit/TextUI/TestRunner.php');
  
-class Connection_AllTests extends PHPUnit_Framework_TestSuite
+class Phpcouch_AllTests extends PHPUnit_Framework_TestSuite
 {
 	public static function main()
 	{
@@ -16,10 +16,16 @@ class Connection_AllTests extends PHPUnit_Framework_TestSuite
 	
 	public static function suite()
 	{
-		$suite = new PHPUnit_Framework_TestSuite('PHPCouch Connection Test Suite');
+		$suite = new PHPUnit_Framework_TestSuite('PHPCouch Main Test Suite');
 		
-		require_once('Connection/ConnectionTest.php');
-		$suite->addTestSuite('Connection_ConnectionTest');
+		require_once('Phpcouch/PhpcouchTest.php');
+		$suite->addTestSuite('Phpcouch_PhpcouchTest');
+		
+		require_once('Phpcouch/ConfigurableTest.php');
+		$suite->addTestSuite('Phpcouch_ConfigurableTest');
+		
+		require_once('Phpcouch/RecordTest.php');
+		$suite->addTestSuite('Phpcouch_RecordTest');
 		
 		return $suite;
 	}
