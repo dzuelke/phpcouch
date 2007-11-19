@@ -1,6 +1,6 @@
 <?php
 
-class PhpcouchPeclhttpAdapter extends PhpcouchAdapter
+class PhpcouchPeclhttpAdapter
 {
 	public function put($json, array $info = array(), array $options = array())
 	{

@@ -1,8 +1,8 @@
 <?php
 
-class PhpcouchCurlAdapter extends PhpcouchAdapter
+class PhpcouchCurlAdapter
 {
-	protected function makeCurl($uri);
+	protected function makeCurl($uri)
 	{
 		$r = curl_init($uri);
 	}
