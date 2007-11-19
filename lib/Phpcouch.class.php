@@ -140,10 +140,6 @@ class Phpcouch
 	 */
 	public static function registerConnection($name, PhpcouchConnection $connection, $default = true)
 	{
-		if(!$default && !self::$connections) {
-			$default = true;
-		}
-		
 		self::$connections[$name] = $connection;
 		
 		if($default) {
@@ -167,6 +163,10 @@ class Phpcouch
 			// remember the value we are about to remove...
 			$retval = self::$connections[$name];
 			unset(self::$connections[$name]);
+			if($name == self::$defaultConnection) {
+				// clear the default connection
+				self::$defaultConnection = null;
+			}
 			// ...and return it
 			return $retval;
 		}
@@ -190,12 +190,20 @@ class Phpcouch
 			$name = self::$defaultConnection;
 		}
 		
-		if($name && isset(self::$connections[$name])) {
+		if($name !== null && isset(self::$connections[$name])) {
 			return self::$connections[$name];
+		} elseif($name === null) {
+			throw new PhpcouchException(sprintf('No default connection defined.'));
 		} else {
-			// no default connection set and name was empty, or name is invalid
 			throw new PhpcouchException(sprintf('Connection "%s" not configured.', $name));
 		}
+	}
+	
+	public static function clearConnections()
+	{
+		self::$connections = array();
+		
+		self::$defaultConnection = null;
 	}
 }
 
