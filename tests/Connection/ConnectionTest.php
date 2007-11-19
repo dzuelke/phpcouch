@@ -13,7 +13,7 @@ class Connection_ConnectionTest extends PHPUnit_Framework_TestCase
 	
 	public function testGetDatabase()
 	{
-		$c = new PHPUnit_Framework_Constraint_IsInstanceOf('PhpcouchConnection'); 
+		$c = new PHPUnit_Framework_Constraint_IsInstanceOf('PhpcouchConnection');
 		$this->assertThat(Phpcouch::getConnection('foo'), $c);
 	}
 }
