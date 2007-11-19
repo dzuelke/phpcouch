@@ -27,31 +27,18 @@ interface PhpcouchIRegistry
 	public function hasOption($name);
 
 	/**
-	 * Check if a configuration directive has been set as read-only.
-	 *
-	 * @param      string The name of the configuration directive.
-	 *
-	 * @return     bool Whether the directive is read-only.
-	 *
-	 * @author     David Zülke <dz@bitxtender.com>
-	 * @since      1.0.0
-	 */
-	public function isOptionReadonly($name);
-
-	/**
 	 * Set a configuration value.
 	 *
 	 * @param      string The name of the configuration directive.
 	 * @param      mixed  The configuration value.
 	 * @param      bool   Whether or not an existing value should be overwritten.
-	 * @param      bool   Whether or not this value should be read-only once set.
 	 *
 	 * @return     bool   Whether or not the configuration directive has been set.
 	 *
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public function setOption($name, $value, $overwrite = true, $readonly = false);
+	public function setOption($name, $value, $overwrite = true);
 
 	/**
 	 * Remove a configuration value.

@@ -20,11 +20,6 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	protected $options = array();
 	
 	/**
-	 * @var        array An array of configuration options that are read-only.
-	 */
-	protected $readonlies = array();
-	
-	/**
 	 * Get a configuration value.
 	 *
 	 * @param      string The name of the configuration directive.
@@ -36,11 +31,10 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	 */
 	public function getOption($name, $default = null)
 	{
-		if(isset(self::$options[$name])) {
-			return self::$options[$name];
-		} else {
-			return $default;
+		if(isset($this->options[$name])) {
+			return $this->options[$name];
 		}
+		return $default;
 	}
 
 	/**
@@ -55,22 +49,7 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	 */
 	public function hasOption($name)
 	{
-		return isset(self::$options[$name]);
-	}
-
-	/**
-	 * Check if a configuration directive has been set as read-only.
-	 *
-	 * @param      string The name of the configuration directive.
-	 *
-	 * @return     bool Whether the directive is read-only.
-	 *
-	 * @author     David Zülke <dz@bitxtender.com>
-	 * @since      1.0.0
-	 */
-	public function isOptionReadonly($name)
-	{
-		return isset(self::$readonlies[$name]);
+		return isset($this->options[$name]);
 	}
 
 	/**
@@ -79,21 +58,17 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	 * @param      string The name of the configuration directive.
 	 * @param      mixed  The configuration value.
 	 * @param      bool   Whether or not an existing value should be overwritten.
-	 * @param      bool   Whether or not this value should be read-only once set.
 	 *
 	 * @return     bool   Whether or not the configuration directive has been set.
 	 *
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public function setOption($name, $value, $overwrite = true, $readonly = false)
+	public function setOption($name, $value, $overwrite = true)
 	{
 		$retval = false;
-		if(($overwrite || !isset(self::$options[$name])) && !isset(self::$readonlies[$name])) {
-			self::$options[$name] = $value;
-			if($readonly) {
-				self::$readonlies[$name] = $value;
-			}
+		if(($overwrite || !isset($this->options[$name]))) {
+			$this->options[$name] = $value;
 			$retval = true;
 		}
 		return $retval;
@@ -112,8 +87,8 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	public function removeOption($name)
 	{
 		$retval = false;
-		if(isset(self::$options[$name]) && !isset(self::$readonlies[$name])) {
-			unset(self::$options[$name]);
+		if(isset($this->options[$name])) {
+			unset($this->options[$name]);
 			$retval = true;
 		}
 		return $retval;
@@ -129,7 +104,7 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	 */
 	public function setOptions($data)
 	{
-		self::$options = array_merge(array_merge(self::$options, $data), self::$readonlies);
+		$this->options = array_merge($this->options, $data);
 	}
 
 	/**
@@ -142,7 +117,7 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	 */
 	public function getOptions()
 	{
-		return self::$options;
+		return $this->options;
 	}
 
 	/**
@@ -153,8 +128,7 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	 */
 	public function clearOptions()
 	{
-		$restore = array_intersect_assoc(self::$readonlies, self::$options);
-		self::$options = $restore;
+		$this->options = array();
 	}
 }
 
