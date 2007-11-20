@@ -24,7 +24,7 @@ class Connection_AllTests extends PHPUnit_Framework_TestSuite
 		return $suite;
 	}
 }
- 
+
 if(PHPUnit_MAIN_METHOD == 'Framework_AllTests::main') {
 	Framework_AllTests::main();
 }
