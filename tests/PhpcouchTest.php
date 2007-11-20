@@ -1,8 +1,6 @@
 <?php
 
-require_once('PHPUnit/Framework.php');
-
-class Phpcouch_PhpcouchTest extends PHPUnit_Framework_TestCase
+class PhpcouchTest extends PHPUnit_Framework_TestCase
 {
 	public function setExpectedException($exceptionName, $autoload = true)
 	{

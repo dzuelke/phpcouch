@@ -18,11 +18,17 @@ class AllTests extends PHPUnit_Framework_TestSuite
 	{
 		$suite = new AllTests('PHPCouch Test Suite');
 		
-		require_once('Phpcouch/AllTests.php');
-		$suite->addTest(Phpcouch_AllTests::suite());
+		require_once('PhpcouchTest.php');
+		$suite->addTestSuite('PhpcouchTest');
+		
+		require_once('Configurable/AllTests.php');
+		$suite->addTest(Configurable_AllTests::suite());
 		
 		require_once('Connection/AllTests.php');
 		$suite->addTest(Connection_AllTests::suite());
+		
+		require_once('Record/AllTests.php');
+		$suite->addTest(Record_AllTests::suite());
 		
 		return $suite;
 	}

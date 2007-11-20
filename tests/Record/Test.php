@@ -2,7 +2,7 @@
 
 require_once('PHPUnit/Framework.php');
 
-class Phpcouch_RecordTest extends PHPUnit_Framework_TestCase
+class Record_Test extends PHPUnit_Framework_TestCase
 {
 	protected $record;
 	
@@ -19,8 +19,10 @@ class Phpcouch_RecordTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array(), $this->record->toArray());
 	}
 	
-	public function testMutators()
+	public function testOverloads()
 	{
+		$this->assertNull($this->record->zomg);
+		
 		$this->record->foo = 'bar';
 		
 		$this->assertEquals('bar', $this->record->foo);

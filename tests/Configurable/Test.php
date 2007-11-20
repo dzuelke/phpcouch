@@ -1,8 +1,6 @@
 <?php
 
-require_once('PHPUnit/Framework.php');
-
-class Phpcouch_ConfigurableTest extends PHPUnit_Framework_TestCase
+class Configurable_Test extends PHPUnit_Framework_TestCase
 {
 	protected $configurable;
 	
