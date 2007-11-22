@@ -24,9 +24,6 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	
 	public function __set($name, $value)
 	{
-		if(!isset($this->data[$name]) || $this->data[$name] !== $value) {
-			$this->isModified = true;
-		}
 		$this->data[$name] = $value;
 	}
 	
@@ -39,16 +36,13 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	
 	public function hydrate($data)
 	{
-		if(is_object($data)) {
+		if($data instanceof PhpcouchIRecord) {
+			$data = $data->toArray();
+		} elseif(is_object($data)) {
 			$data = get_object_vars($data);
 		}
 		
 		$this->fromArray($data);
-	}
-	
-	public function dehydrate()
-	{
-		return $this->toArray();
 	}
 	
 	public function fromArray(array $data)

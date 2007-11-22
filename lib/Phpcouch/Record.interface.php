@@ -10,7 +10,6 @@ interface PhpcouchIRecord
 	public function __unset($name);
 	
 	public function hydrate($data);
-	public function dehydrate();
 	
 	public function getConnection();
 	public function setConnection(PhpcouchConnection $connection = null);

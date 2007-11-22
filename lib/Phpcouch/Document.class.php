@@ -7,9 +7,6 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 	const REVISION_FIELD = '_rev';
 	const REVISIONS_INFO_FIELD = '_revs_info';
 	
-	protected $isNew = true;
-	protected $isModified = false;
-	
 	public $_attachments = null;
 	public $_id = null;
 	public $_rev = null;
@@ -21,16 +18,6 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 		
 		$this->isNew = false;
 		$this->isModified = false;
-	}
-	
-	public function isNew()
-	{
-		return $this->isNew;
-	}
-	
-	public function isModified()
-	{
-		return $this->isModified;
 	}
 	
 	public function getAttachments()
