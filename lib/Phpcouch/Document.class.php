@@ -57,7 +57,7 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 	{
 		if($this->isNew()) {
 			return $this->connection->create($this);
-		} else {
+		} elseif($this->isModified()) {
 			return $this->connection->update($this);
 		}
 	}

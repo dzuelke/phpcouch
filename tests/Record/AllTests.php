@@ -10,7 +10,7 @@ class Record_AllTests extends PHPUnit_Framework_TestSuite
 		$suite->addTestSuite('Record_Test');
 		
 		require_once('Record/MutableTest.php');
-		// $suite->addTestSuite('Record_MutableTest');
+		$suite->addTestSuite('Record_MutableTest');
 		
 		return $suite;
 	}

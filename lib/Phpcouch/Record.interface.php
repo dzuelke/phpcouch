@@ -9,6 +9,9 @@ interface PhpcouchIRecord
 	public function __set($name, $value);
 	public function __unset($name);
 	
+	public function fromArray($data);
+	public function toArray();
+	
 	public function hydrate($data);
 	
 	public function getConnection();

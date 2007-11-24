@@ -36,17 +36,19 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	
 	public function hydrate($data)
 	{
+		$this->data = array();
+		
+		$this->fromArray($data);
+	}
+	
+	public function fromArray($data)
+	{
 		if($data instanceof PhpcouchIRecord) {
 			$data = $data->toArray();
 		} elseif(is_object($data)) {
 			$data = get_object_vars($data);
 		}
 		
-		$this->fromArray($data);
-	}
-	
-	public function fromArray(array $data)
-	{
 		foreach($data as $key => $value) {
 			if(strpos($key, '_') === 0) {
 				$this->{$key} = $value;

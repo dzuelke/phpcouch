@@ -89,6 +89,15 @@ class Record_Test extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array('_id' => null, 'foo' => 'bar'), $this->record->toArray());
 	}
 	
+	public function testHydrateClearsBeforeImport()
+	{
+		$this->record->foo = 'bar';
+		
+		$this->record->hydrate(array('bar' => 'baz'));
+		
+		$this->assertEquals(array('_id' => null, 'bar' => 'baz'), $this->record->toArray());
+	}
+	
 	public function testHydrateFromObject()
 	{
 		$x = new stdClass();
