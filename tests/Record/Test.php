@@ -6,8 +6,8 @@ class Record_Test extends PHPUnit_Framework_TestCase
 	
 	public function setUp()
 	{
-		require_once('lib/TestPhpcouchDummyConnection.class.php');
-		require_once('lib/TestPhpcouchRecord.class.php');
+		require_once('lib/Connection/Dummy.class.php');
+		require_once('lib/Record.class.php');
 		
 		$this->record = new TestPhpcouchRecord(new TestPhpcouchDummyConnection(array()));
 	}

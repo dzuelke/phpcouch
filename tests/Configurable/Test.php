@@ -6,7 +6,7 @@ class Configurable_Test extends PHPUnit_Framework_TestCase
 	
 	public function setUp()
 	{
-		require_once('lib/TestPhpcouchConfigurable.class.php');
+		require_once('lib/Configurable.class.php');
 		
 		$this->configurable = new TestPhpcouchConfigurable();
 	}
