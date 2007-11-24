@@ -14,9 +14,39 @@ class Record_Test extends PHPUnit_Framework_TestCase
 		$this->record = new TestPhpcouchRecord(new TestPhpcouchDummyConnection(array()));
 	}
 	
+	public function testGetConnection()
+	{
+		$ret = $this->record->getConnection();
+		
+		$c = new PHPUnit_Framework_Constraint_IsInstanceOf('PhpcouchConnection');
+		$this->assertThat($ret, $c);
+	}
+	
+	public function testSetConnection()
+	{
+		$con = new TestPhpcouchDummyConnection(array());
+		
+		$this->record->setConnection($con);
+		
+		$this->assertSame($con, $this->record->getConnection());
+	}
+	
+	public function testSetDefaultConnection()
+	{
+		$cname = uniqid();
+		$con = new TestPhpcouchDummyConnection(array());
+		Phpcouch::registerConnection($cname, $con, true);
+		
+		$this->record->setConnection();
+		
+		$this->assertSame($con, $this->record->getConnection());
+		
+		Phpcouch::unregisterConnection($cname);
+	}
+	
 	public function testIsInitiallyEmpty()
 	{
-		$this->assertEquals(array(), $this->record->toArray());
+		$this->assertEquals(array('_id' => null), $this->record->toArray());
 	}
 	
 	public function testOverloads()
@@ -42,22 +72,23 @@ class Record_Test extends PHPUnit_Framework_TestCase
 		
 		$this->record->fromArray(array('bar' => 'baz', 'baz' => 'baz'));
 		
-		$this->assertEquals(array('foo' => 'foo', 'bar' => 'baz', 'baz' => 'baz'), $this->record->toArray());
+		$this->assertEquals(array('_id' => null, 'foo' => 'foo', 'bar' => 'baz', 'baz' => 'baz'), $this->record->toArray());
 	}
 	
 	public function testToArray()
 	{
+		$this->record->_id = '123';
 		$this->record->foo = 'foo';
 		$this->record->bar = 'bar';
 		
-		$this->assertEquals(array('foo' => 'foo', 'bar' => 'bar'), $this->record->toArray());
+		$this->assertEquals(array('_id' => '123', 'foo' => 'foo', 'bar' => 'bar'), $this->record->toArray());
 	}
 	
 	public function testHydrate()
 	{
 		$this->record->hydrate(array('foo' => 'bar'));
 		
-		$this->assertEquals(array('foo' => 'bar'), $this->record->toArray());
+		$this->assertEquals(array('_id' => null, 'foo' => 'bar'), $this->record->toArray());
 	}
 	
 	public function testHydrateFromObject()
@@ -68,7 +99,7 @@ class Record_Test extends PHPUnit_Framework_TestCase
 		
 		$this->record->hydrate($x);
 		
-		$this->assertEquals(array('foo' => 'foo', 'bar' => 'bar'), $this->record->toArray());
+		$this->assertEquals(array('_id' => null, 'foo' => 'foo', 'bar' => 'bar'), $this->record->toArray());
 	}
 	
 	public function testHydrateFromRecord()
@@ -79,7 +110,7 @@ class Record_Test extends PHPUnit_Framework_TestCase
 		
 		$this->record->hydrate($x);
 		
-		$this->assertEquals(array('foo' => 'foo', 'bar' => 'bar'), $this->record->toArray());
+		$this->assertEquals(array('_id' => null, 'foo' => 'foo', 'bar' => 'bar'), $this->record->toArray());
 	}
 }
 
