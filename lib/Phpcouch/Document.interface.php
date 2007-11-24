@@ -1,6 +1,6 @@
 <?php
 
-interface PhpcouchIDocument extends PhpcouchIMutableRecord
+interface PhpcouchIDocument
 {
 	public function getAttachments();
 	public function hasAttachments();

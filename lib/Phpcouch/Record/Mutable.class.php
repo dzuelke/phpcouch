@@ -1,6 +1,6 @@
 <?php
 
-abstract class PhpcouchMutableRecord extends PhpcouchRecord
+abstract class PhpcouchMutableRecord extends PhpcouchRecord implements PhpcouchIMutableRecord
 {
 	protected $isNew = true;
 	protected $isModified = false;
