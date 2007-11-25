@@ -21,11 +21,6 @@ class PhpcouchDatabase extends PhpcouchRecord
 	{
 		return $this->update_seq;
 	}
-	
-	public function listDocuments()
-	{
-		
-	}
 }
 
 ?>

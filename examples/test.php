@@ -6,16 +6,20 @@ set_include_path(get_include_path() . ':' . '/Users/dzuelke/Downloads/ZendFramew
 
 require('../lib/Phpcouch.php');
 
-PhpCouch::registerConnection('default', $con = new PhpcouchConnection(array('database' => 'hellohans'), new PhpcouchZendhttpclientAdapter()));
+PhpCouch::registerConnection('default', $con = new PhpcouchDatabaseConnection(array('database' => 'hellohans'), new PhpcouchZendhttpclientAdapter()));
 
-var_dump($con->retrieveDatabase('hellohans'));
+PhpCouch::registerConnection('server', $con2 = new PhpcouchServerConnection(array(), new PhpcouchZendhttpclientAdapter()), false);
+
+var_dump($con2->listDatabases());
+
+var_dump($con2->retrieveDatabase('hellohans'));
 try {
-	var_dump($con->createDatabase('hellohans2'));
-	var_dump($con->deleteDatabase('hellohans2'));
+	var_dump($con2->createDatabase('hellohans2'));
+	var_dump($con2->deleteDatabase('hellohans2'));
 } catch(PhpcouchClientErrorException $e) {
 }
 
-$doc = $con->retrieve('63A0B00A68EEBE4ECB4E0F8F9682F813');
+$doc = $con->retrieveDocument('63A0B00A68EEBE4ECB4E0F8F9682F813');
 $doc->title = 'hello again';
 $doc->save();
 

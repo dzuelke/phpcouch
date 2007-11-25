@@ -49,12 +49,12 @@ class PhpcouchTest extends PHPUnit_Framework_TestCase
 	
 	public function testRegisterConnection()
 	{
-		$con1 = new PhpcouchConnection(array());
+		$con1 = new PhpcouchServerConnection(array());
 		Phpcouch::registerConnection('foo', $con1);
 		
 		$this->assertSame($con1, Phpcouch::getConnection('foo'));
 		
-		$con2 = new PhpcouchConnection(array());
+		$con2 = new PhpcouchServerConnection(array());
 		Phpcouch::registerConnection('foo', $con2);
 		
 		$this->assertNotSame($con1, Phpcouch::getConnection('foo'));
@@ -65,7 +65,7 @@ class PhpcouchTest extends PHPUnit_Framework_TestCase
 	
 	public function testUnregisterConnection()
 	{
-		Phpcouch::registerConnection('foo', new PhpcouchConnection(array()));
+		Phpcouch::registerConnection('foo', new PhpcouchServerConnection(array()));
 		
 		$con = Phpcouch::getConnection('foo');
 		
@@ -83,7 +83,7 @@ class PhpcouchTest extends PHPUnit_Framework_TestCase
 	
 	public function testUnregisterConnectionResetsDefault()
 	{
-		$con1 = new PhpcouchConnection(array());
+		$con1 = new PhpcouchServerConnection(array());
 		Phpcouch::registerConnection('foo', $con1);
 		
 		$this->assertSame($con1, Phpcouch::getConnection('foo'));
@@ -96,17 +96,17 @@ class PhpcouchTest extends PHPUnit_Framework_TestCase
 	
 	public function testDefaultConnections()
 	{
-		Phpcouch::registerConnection('foo', new PhpcouchConnection(array()));
+		Phpcouch::registerConnection('foo', new PhpcouchServerConnection(array()));
 		
 		$this->assertSame(Phpcouch::getConnection(), Phpcouch::getConnection('foo'));
 		
-		$con1 = new PhpcouchConnection(array());
+		$con1 = new PhpcouchServerConnection(array());
 		Phpcouch::registerConnection('bar', $con1);
 		
 		$this->assertSame(Phpcouch::getConnection(), Phpcouch::getConnection('bar'));
 		$this->assertNotSame(Phpcouch::getConnection(), Phpcouch::getConnection('foo'));
 		
-		$con2 = new PhpcouchConnection(array());
+		$con2 = new PhpcouchServerConnection(array());
 		Phpcouch::registerConnection('baz', $con2, false);
 		
 		$this->assertSame(Phpcouch::getConnection(), Phpcouch::getConnection('bar'));
