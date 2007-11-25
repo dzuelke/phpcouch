@@ -47,6 +47,10 @@ class Record_MutableTest extends PHPUnit_Framework_TestCase
 	
 	public function testUnsetFlagsModified()
 	{
+		unset($this->record->foo);
+		
+		$this->assertFalse($this->record->isModified());
+		
 		$this->record->hydrate(array('foo' => 'foo', 'bar' => 'bar'));
 		
 		unset($this->record->foo);
