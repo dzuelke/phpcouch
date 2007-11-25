@@ -28,6 +28,8 @@ class Phpcouch
 		'PhpcouchZendhttpclientAdapter' => 'Phpcouch/Adapter/Zendhttpclient.class.php',
 		'PhpcouchConfigurable'          => 'Phpcouch/Configurable.class.php',
 		'PhpcouchConnection'            => 'Phpcouch/Connection.class.php',
+		'PhpcouchDatabaseConnection'    => 'Phpcouch/Connection/Database.class.php',
+		'PhpcouchServerConnection'      => 'Phpcouch/Connection/Server.class.php',
 		'PhpcouchDatabase'              => 'Phpcouch/Database.class.php',
 		'PhpcouchIDocument'             => 'Phpcouch/Document.interface.php',
 		'PhpcouchDocument'              => 'Phpcouch/Document.class.php',
