@@ -55,7 +55,7 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	 */
 	protected function sanitize(array &$data)
 	{
-		parent::sanitize(&$data);
+		parent::sanitize($data);
 		
 		foreach(array('_revs_info', '_revs') as $key) {
 			// also, clean the flags that are returned for informational purposes
