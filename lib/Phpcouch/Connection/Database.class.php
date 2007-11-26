@@ -31,21 +31,6 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	}
 	
 	/**
-	 * Build a URI from the given information.
-	 *
-	 * @param      array An array of additional arguments to set in the URL.
-	 *
-	 * @return     string A generated URL.
-	 *
-	 * @author     David Zülke <dz@bitxtender.com>
-	 * @since      1.0.0
-	 */
-	protected function buildUri(array $info = array())
-	{
-		return $this->baseUrl . (isset($info['id']) ? $info['id'] : '');
-	}
-	
-	/**
 	 * Clean up the data before sending.
 	 *
 	 * @param      array The data array to clean up.
@@ -106,7 +91,7 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 		try {
 			if($document->_id) {
 				// create a named document
-				$uri = $this->buildUri(array('id' => $document->_id));
+				$uri = $this->buildUri($document->_id);
 				$result = $this->adapter->put($uri, $values);
 			} else {
 				// let couchdb create an ID
@@ -143,7 +128,7 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	 */
 	public function retrieveDocument($id, $revision = null)
 	{
-		$uri = $this->buildUri(array('id' => $id), array('rev' => $revision, '_revs_info' => true));
+		$uri = $this->buildUri($id, array('rev' => $revision, '_revs_info' => true));
 		
 		// TODO: grab and wrap exceptions
 		$result = $this->adapter->get($uri);
@@ -181,7 +166,7 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 			}
 		}
 		
-		$uri = $this->buildUri(array('id' => $id), array('rev' => $revision, 'attachment' => $name));
+		$uri = $this->buildUri($id, array('rev' => $revision, 'attachment' => $name));
 		
 		return $this->adapter->get($uri);
 	}
@@ -202,7 +187,7 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 		
 		$this->sanitize($values);
 		
-		$uri = $this->buildUri(array('id' => $document->_id));
+		$uri = $this->buildUri($document->_id);
 		
 		$result = $this->adapter->put($uri, $values);
 		
@@ -231,7 +216,7 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 			$id = $id->_id;
 		}
 		
-		$uri = $this->buildUri(array('id' => $id));
+		$uri = $this->buildUri($id);
 		
 		return $this->adapter->delete($uri);
 	}

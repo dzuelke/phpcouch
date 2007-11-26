@@ -3,21 +3,6 @@
 class PhpcouchServerConnection extends PhpcouchConnection
 {
 	/**
-	 * Build a URI from the given information.
-	 *
-	 * @param      array An array of additional arguments to set in the URL.
-	 *
-	 * @return     string A generated URL.
-	 *
-	 * @author     David Zülke <dz@bitxtender.com>
-	 * @since      1.0.0
-	 */
-	protected function buildUri(array $info = array())
-	{
-		return $this->baseUrl . (isset($info['database']) ? $info['database'] : '');
-	}
-	
-	/**
 	 * Create a new database on the server.
 	 *
 	 * @param      string The name of the database to create.
@@ -30,7 +15,7 @@ class PhpcouchServerConnection extends PhpcouchConnection
 	public function createDatabase($name)
 	{
 		// result doesn't matter here
-		$this->adapter->put($this->buildUri(array('database' => $name)));
+		$this->adapter->put($this->buildUri($name));
 		// and return a proper instance just for kicks
 		return $this->retrieveDatabase($name);
 		// TODO: catch exceptions?
@@ -51,7 +36,7 @@ class PhpcouchServerConnection extends PhpcouchConnection
 	public function retrieveDatabase($name)
 	{
 		// TODO: catch exceptions
-		$result = $this->adapter->get($this->buildUri(array('database' => $name)));
+		$result = $this->adapter->get($this->buildUri($name));
 		$database = new PhpcouchDatabase();
 		$database->hydrate($result);
 		return $database;
@@ -70,7 +55,7 @@ class PhpcouchServerConnection extends PhpcouchConnection
 	public function deleteDatabase($name)
 	{
 		// TODO: catch exceptions
-		$result = $this->adapter->delete($this->buildUri(array('database' => $name)));
+		$result = $this->adapter->delete($this->buildUri($name));
 		return $result;
 	}
 	
@@ -87,7 +72,7 @@ class PhpcouchServerConnection extends PhpcouchConnection
 	public function listDatabases()
 	{
 		// TODO: catch exceptions?
-		return $this->adapter->get($this->buildUri(array('database' => '_all_dbs')));
+		return $this->adapter->get($this->buildUri('_all_dbs'));
 	}
 }
 

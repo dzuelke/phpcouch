@@ -56,14 +56,22 @@ abstract class PhpcouchConnection extends PhpcouchConfigurable
 	/**
 	 * Build a URI from the given information.
 	 *
-	 * @param      array An array of additional arguments to set in the URL.
+	 * @param      string The ID of the entity to fetch.
+	 * @param      array  An array of additional arguments to set in the URL.
 	 *
 	 * @return     string A generated URL.
 	 *
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	abstract protected function buildUri(array $info = array());
+	protected function buildUri($id = null, array $arguments = array())
+	{
+		return sprintf('%s%s?%s',
+			$this->baseUrl,
+			$id,
+			http_build_query($arguments)
+		);
+	}
 	
 	/**
 	 * Clean up the data before sending.
