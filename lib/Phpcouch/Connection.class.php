@@ -46,7 +46,7 @@ abstract class PhpcouchConnection extends PhpcouchConfigurable
 		$connectionInfo = array_merge(array(
 			'scheme' => 'http',
 			'host'   => 'localhost',
-			'port'   => '8888',
+			'port'   => 5984,
 		), $connectionInfo);
 		
 		// build the base URL from the connection info
