@@ -25,30 +25,11 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 			// no :( bark!
 			throw new PhpcouchException('No database set on connection');
 		}
+		// yes :) store the name...
 		$this->database = $connectionInfo['database'];
 		
+		// ... and add it to the base URL
 		$this->baseUrl .= $this->database . '/';
-	}
-	
-	/**
-	 * Clean up the data before sending.
-	 *
-	 * @param      array The data array to clean up.
-	 *
-	 * @author     David Zülke
-	 * @since      1.0.0
-	 */
-	protected function sanitize(array &$data)
-	{
-		parent::sanitize($data);
-		
-		foreach(array('_revs_info', '_revs') as $key) {
-			// also, clean the flags that are returned for informational purposes
-			if(array_key_exists($key, $data)) {
-				unset($data[$key]);
-			}
-		}
-		
 	}
 	
 	/**
@@ -82,7 +63,6 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	{
 		$values = $document->dehydrate();
 		
-		$this->sanitize($values);
 		if(isset($values['_id'])) {
 			// there is an id? nice, but we don't need it, the URL is enough
 			unset($values['_id']);
@@ -184,8 +164,6 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	public function updateDocument(PhpcouchIDocument $document)
 	{
 		$values = $document->dehydrate();
-		
-		$this->sanitize($values);
 		
 		$uri = $this->buildUri($document->_id);
 		

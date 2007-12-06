@@ -74,30 +74,6 @@ abstract class PhpcouchConnection extends PhpcouchConfigurable
 	}
 	
 	/**
-	 * Clean up the data before sending.
-	 *
-	 * @param      array The data array to clean up.
-	 *
-	 * @author     David Zülke
-	 * @since      1.0.0
-	 */
-	protected function sanitize(array &$data)
-	{
-		$remove = array();
-		
-		foreach($data as $key => $value) {
-			if(strpos($key, '_') === 0 && $value === null) {
-				// remember all internal CouchDB flags that do not have a value...
-				$remove[] = $key;
-			}
-		}
-		// and remove them
-		foreach($remove as $key) {
-			unset($data[$key]);
-		}
-	}
-	
-	/**
 	 * Fetch the adapter used with this connection.
 	 *
 	 * @return     PhpcouchIAdapter The adapter instance.

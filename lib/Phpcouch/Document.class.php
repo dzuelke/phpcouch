@@ -7,10 +7,19 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 	const REVISION_FIELD = '_rev';
 	const REVISIONS_INFO_FIELD = '_revs_info';
 	
-	public $_attachments = null;
-	public $_id = null;
-	public $_rev = null;
-	public $_revs_info = null;
+	public function dehydrate()
+	{
+		$data = parent::dehydrate();
+		
+		foreach(array('_revs_info', '_revs') as $key) {
+			// clean the flags that are returned for informational purposes
+			if(array_key_exists($key, $data)) {
+				unset($data[$key]);
+			}
+		}
+		
+		return $data;
+	}
 	
 	public function hydrate($data)
 	{
@@ -49,7 +58,7 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 		if(isset($this->{self::REVISION_INFO_FIELD})) {
 			return $this->{self::REVISION_INFO_FIELD};
 		} else {
-			// TODO: grab revision info list
+			// TODO: fetch revision info list
 		}
 	}
 	
