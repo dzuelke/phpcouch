@@ -67,7 +67,7 @@ class PhpcouchServerConnection extends PhpcouchConnection
 	 * @throws     ?
 	 *
 	 * @author     David Zülke <dz@bitxtender.com>
-	 * @since      0.11.0
+	 * @since      1.0.0
 	 */
 	public function listDatabases()
 	{

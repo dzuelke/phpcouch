@@ -3,10 +3,15 @@
 class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocument
 {
 	const ATTACHMENTS_FIELD = '_attachments';
-	const ID_FIELD = '_id';
-	const REVISION_FIELD = '_rev';
-	const REVISIONS_INFO_FIELD = '_revs_info';
 	
+	/**
+	 * Dehydrate record data into a saveable array.
+	 *
+	 * @return     array The cleaned data array.
+	 *
+	 * @author     David Zülke <dz@bitxtender.com>
+	 * @since      1.0.0
+	 */
 	public function dehydrate()
 	{
 		$data = parent::dehydrate();
@@ -21,6 +26,15 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 		return $data;
 	}
 	
+	/**
+	 * Load data into this record.
+	 * This will clear all information before importing the data and set new and modified flags to false.
+	 *
+	 * @param      array The data to load.
+	 *
+	 * @author     David Zülke <dz@bitxtender.com>
+	 * @since      1.0.0
+	 */
 	public function hydrate($data)
 	{
 		parent::hydrate($data);
@@ -48,11 +62,6 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 		}
 	}
 	
-	public function retrieveRevision($revision)
-	{
-		$this->connection->retrieve($this, $revision);
-	}
-	
 	public function retrieveRevisionInfoList()
 	{
 		if(isset($this->{self::REVISION_INFO_FIELD})) {
@@ -62,6 +71,14 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 		}
 	}
 	
+	/**
+	 * Save this document in the database.
+	 *
+	 * @throws     ?
+	 *
+	 * @author     David Zülke <dz@bitxtender.com>
+	 * @since      1.0.0
+	 */
 	public function save()
 	{
 		if($this->isNew()) {

@@ -41,6 +41,20 @@ interface PhpcouchIMutableRecord extends PhpcouchIRecord
 	 * @since      1.0.0
 	 */
 	public function save();
+	
+	/**
+	 * Retrieve a specific revision of this record.
+	 *
+	 * @param      string The revision ID.
+	 *
+	 * @return     PhpcouchRecord The record at that revision.
+	 *
+	 * @throws     ?
+	 *
+	 * @author     David Zülke <dz@bitxtender.com>
+	 * @since      1.0.0
+	 */
+	public function retrieveRevision($revision);
 }
 
 ?>

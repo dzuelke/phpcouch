@@ -2,6 +2,10 @@
 
 abstract class PhpcouchMutableRecord extends PhpcouchRecord implements PhpcouchIMutableRecord
 {
+	const ID_FIELD = '_id';
+	const REVISION_FIELD = '_rev';
+	const REVISIONS_INFO_FIELD = '_revs_info';
+	
 	/**
 	 * @var        bool Flag indicating whether or not this record is new.
 	 */
@@ -116,6 +120,23 @@ abstract class PhpcouchMutableRecord extends PhpcouchRecord implements PhpcouchI
 		}
 		
 		return $data;
+	}
+	
+	/**
+	 * Retrieve a specific revision of this record.
+	 *
+	 * @param      string The revision ID.
+	 *
+	 * @return     PhpcouchRecord The record at that revision.
+	 *
+	 * @throws     ?
+	 *
+	 * @author     David Zülke <dz@bitxtender.com>
+	 * @since      1.0.0
+	 */
+	public function retrieveRevision($revision)
+	{
+		$this->connection->retrieve($this, $revision);
 	}
 }
 
