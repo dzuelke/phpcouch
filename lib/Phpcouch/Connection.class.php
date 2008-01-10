@@ -14,6 +14,8 @@
  */
 abstract class PhpcouchConnection extends PhpcouchConfigurable
 {
+	const COUCHDB_DEFAULT_PORT = 5984;
+	
 	/**
 	 * @var        PhpcouchIAdapter An adapter to use with this connection.
 	 */
@@ -46,7 +48,7 @@ abstract class PhpcouchConnection extends PhpcouchConfigurable
 		$connectionInfo = array_merge(array(
 			'scheme' => 'http',
 			'host'   => 'localhost',
-			'port'   => 5984,
+			'port'   => self::COUCHDB_DEFAULT_PORT,
 		), $connectionInfo);
 		
 		// build the base URL from the connection info
