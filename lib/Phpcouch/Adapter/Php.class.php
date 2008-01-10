@@ -1,7 +1,7 @@
 <?php
 
 /**
- * An adapter implemented using the PHP >= 5.3 fopen wrapper.
+ * An adapter implemented using the PHP >= 5.3 HTTP fopen wrapper.
  *
  * @package    PHPCouch
  * @subpackage Adapter
@@ -15,6 +15,8 @@
  */
 class PhpcouchPhpAdapter implements PhpcouchIAdapter
 {
+	protected $options = array();
+	
 	/**
 	 * Adapter constructor.
 	 *
@@ -25,26 +27,24 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 */
 	public function __construct(array $options = array())
 	{
-	}
-	
-	/**
-	 * Get the client class instance.
-	 *
-	 * @param      bool Whether or not to reset the client before it is returned (default true).
-	 *
-	 * @return     Zend_Http_Client The client instance.
-	 *
-	 * @author     David Zülke <dz@bitxtender.com>
-	 * @since      1.0.0
-	 */
-	protected function getClient($reset = true)
-	{
-		if($reset) {
-			// "reset" the client
-			// this actually only resets params/body and the content-length/content-type headers, but that's enough
-			$this->client->resetParameters();
+		$this->options = array(
+			'http' => array(
+				'header' => array(
+					'Content-Type: application/json',
+					'User-Agent: ' . Phpcouch::getVersionString(),
+				),
+				'ignore_errors' => true,
+			),
+		);
+		
+		// can't do array_merge_recursive
+		foreach($options as $wrapper => $opts) {
+			if(isset($this->options[$wrapper])) {
+				$this->options[$wrapper] = array_merge($this->options[$wrapper], $opts);
+			} else {
+				$this->options[$wrapper] = $opts;
+			}
 		}
-		return $this->client;
 	}
 	
 	/**
@@ -61,39 +61,53 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 */
 	protected function doRequest($uri, $method = 'GET', $data = null)
 	{
-		$c = $this->getClient();
-		
-		$c->setUri($uri);
+		$options = $this->options;
+		$options['http']['method'] = $method;
 		
 		if($data !== null) {
 			// data to send, let's encode it to JSON
-			// must set the content type, since it's reset otherwise (fantastic implementation, Zend...)
-			$data = $c->setRawData(json_encode($data), 'application/json');
+			$options['http']['content'] = json_encode($data);
 		}
 		
-		try {
-			// perform the request
-			$r = $c->request($method);
-		} catch(Zend_Http_Client_Exception $e) {
-			// something went wrong; wrap the exception and throw again
-			// this is typically a timeout, unknown host etc, not a 404 or such
-			throw new PhpcouchAdapterException($e->getMessage());
+		$ctx = stream_context_create($options);
+		
+		$fp = @fopen($uri, 'r', false, $ctx);
+		
+		if($fp === false) {
+			$error = error_get_last();
+			throw new PhpcouchAdapterException($error['message']);
 		}
 		
-		if($r->isError()) {
-			if($r->getStatus() % 500 < 100) {
+		$meta = stream_get_meta_data($fp);
+		
+		if(
+			!isset($meta['wrapper_data'][0]) ||
+			!($status = preg_match('#^HTTP/1\.[01]\s+(\d{3})\s+(.+)$#', $meta['wrapper_data'][0], $matches))
+		) {
+			throw new PhpcouchAdapterException('Could not read HTTP response status line');
+		}
+		
+		$statusCode = (int)$matches[1];
+		$statusMessage = $matches[2];
+		
+		$body = stream_get_contents($fp);
+		
+		if($statusCode >= 400) {
+			if($statusCode % 500 < 100) {
 				// a 5xx response
-				throw new PhpcouchServerErrorException($r->getMessage(), $r->getStatus(), json_decode($r->getBody()));
+				throw new PhpcouchServerErrorException($statusMessage, $statusCode, json_decode($body));
 			} else {
 				// a 4xx response
-				throw new PhpcouchClientErrorException($r->getMessage(), $r->getStatus(), json_decode($r->getBody()));
+				throw new PhpcouchClientErrorException($statusMessage, $statusCode, json_decode($body));
 			}
-		} elseif($r->isRedirect()) {
+		} elseif(false) {
+			// TODO: implement redirect detection
+			
 			// by default, we're following up to five redirects, so we never see them in the response, unless... there were too many
 			throw new PhpcouchAdapterException('Too many redirects');
 		} else {
 			// finally, decode the JSON body and return it
-			return json_decode($r->getBody());
+			return json_decode($body);
 		}
 	}
 	
