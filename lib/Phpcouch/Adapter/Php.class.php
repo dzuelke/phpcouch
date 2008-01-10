@@ -100,11 +100,6 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 				// a 4xx response
 				throw new PhpcouchClientErrorException($statusMessage, $statusCode, json_decode($body));
 			}
-		} elseif(false) {
-			// TODO: implement redirect detection
-			
-			// by default, we're following up to five redirects, so we never see them in the response, unless... there were too many
-			throw new PhpcouchAdapterException('Too many redirects');
 		} else {
 			// finally, decode the JSON body and return it
 			return json_decode($body);
