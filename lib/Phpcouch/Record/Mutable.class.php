@@ -105,18 +105,18 @@ abstract class PhpcouchMutableRecord extends PhpcouchRecord implements PhpcouchI
 	{
 		$data = $this->toArray();
 		
-		$remove = array();
-		
-		foreach($data as $key => $value) {
-			if(strpos($key, '_') === 0 && $value === null) {
-				// remember all internal CouchDB flags that do not have a value...
-				$remove[] = $key;
-			}
-		}
-		// and remove them
-		foreach($remove as $key) {
-			unset($data[$key]);
-		}
+		// $remove = array();
+		// 
+		// foreach($data as $key => $value) {
+		// 	if(strpos($key, '_') === 0 && $value === null) {
+		// 		// remember all internal CouchDB flags that do not have a value...
+		// 		$remove[] = $key;
+		// 	}
+		// }
+		// // and remove them
+		// foreach($remove as $key) {
+		// 	unset($data[$key]);
+		// }
 		
 		return $data;
 	}

@@ -119,11 +119,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 		}
 		
 		foreach($data as $key => $value) {
-			if(strpos($key, '_') === 0) {
-				$this->{$key} = $value;
-			} else {
-				$this->__set($key, $value);
-			}
+			$this->__set($key, $value);
 		}
 	}
 	
