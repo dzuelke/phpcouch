@@ -17,7 +17,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 *
 	 * @param      PhpcouchConnection An optional connection to associate with this record.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function __construct(PhpcouchConnection $connection = null)
@@ -32,7 +32,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 *
 	 * @return     mixed The property value.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function __get($name)
@@ -49,7 +49,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 *
 	 * @return     bool Whether or not a property of that name exists.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function __isset($name)
@@ -63,7 +63,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 * @param      string Name of the virtual property to set.
 	 * @param      mixed  The value to set.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function __set($name, $value)
@@ -76,7 +76,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 *
 	 * @param      string Name of the virtual property to unset.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function __unset($name)
@@ -92,7 +92,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 *
 	 * @param      array The data to load.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function hydrate($data)
@@ -107,7 +107,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 *
 	 * @param      mixed The data to load (array, PhpcouchIRecord or object)
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function fromArray($data)
@@ -132,7 +132,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 *
 	 * @return     array An array representation of this record's data.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function toArray()
@@ -151,7 +151,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 *
 	 * @return     PhpcouchConnection The connection used by this record.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function getConnection()
@@ -166,7 +166,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function setConnection(PhpcouchConnection $connection = null)

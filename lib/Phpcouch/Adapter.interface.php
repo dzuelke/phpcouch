@@ -5,8 +5,8 @@
  *
  * @package    PHPCouch
  *
- * @author     David Zülke <dz@bitxtender.com>
- * @copyright  bitXtender GbR
+ * @author     David Zülke <david.zuelke@bitextender.com>
+ * @copyright  Bitextender GmbH
  *
  * @since      1.0.0
  *
@@ -19,7 +19,7 @@ interface PhpcouchIAdapter
 	 *
 	 * @param      array An array of initialization options for the driver implementation.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function __construct(array $options = array());
@@ -34,7 +34,7 @@ interface PhpcouchIAdapter
 	 *
 	 * @throws     PhpcouchException ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function put($url, $data = null);
@@ -48,7 +48,7 @@ interface PhpcouchIAdapter
 	 *
 	 * @throws     PhpcouchException ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function get($url);
@@ -63,7 +63,7 @@ interface PhpcouchIAdapter
 	 *
 	 * @throws     PhpcouchException ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function post($url, $data = null);
@@ -77,7 +77,7 @@ interface PhpcouchIAdapter
 	 *
 	 * @throws     PhpcouchException ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function delete($url);

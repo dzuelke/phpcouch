@@ -9,7 +9,7 @@ interface PhpcouchIRegistry
 	 *
 	 * @return     mixed The value of the directive, or null if not set.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function getOption($name, $default = null);
@@ -21,7 +21,7 @@ interface PhpcouchIRegistry
 	 *
 	 * @return     bool Whether the directive was set.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function hasOption($name);
@@ -35,7 +35,7 @@ interface PhpcouchIRegistry
 	 *
 	 * @return     bool   Whether or not the configuration directive has been set.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function setOption($name, $value, $overwrite = true);
@@ -47,7 +47,7 @@ interface PhpcouchIRegistry
 	 *
 	 * @return     bool true, if removed successfuly, false otherwise.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function removeOption($name);
@@ -57,7 +57,7 @@ interface PhpcouchIRegistry
 	 *
 	 * @param      string An array of configuration directives.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function setOptions($data);
@@ -67,7 +67,7 @@ interface PhpcouchIRegistry
 	 *
 	 * @return     array An associative array of configuration values.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function getOptions();
@@ -75,7 +75,7 @@ interface PhpcouchIRegistry
 	/**
 	 * Clear the configuration.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function clearOptions();

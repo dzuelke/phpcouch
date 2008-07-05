@@ -7,7 +7,7 @@ interface PhpcouchIMutableRecord extends PhpcouchIRecord
 	 *
 	 * @return     bool True, if this record is new.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function isNew();
@@ -17,7 +17,7 @@ interface PhpcouchIMutableRecord extends PhpcouchIRecord
 	 *
 	 * @return     bool True, if this record is new.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function isModified();
@@ -27,7 +27,7 @@ interface PhpcouchIMutableRecord extends PhpcouchIRecord
 	 *
 	 * @return     array The cleaned data array.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function dehydrate();
@@ -37,7 +37,7 @@ interface PhpcouchIMutableRecord extends PhpcouchIRecord
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function save();
@@ -51,7 +51,7 @@ interface PhpcouchIMutableRecord extends PhpcouchIRecord
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function retrieveRevision($revision);

@@ -9,7 +9,7 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 	 *
 	 * @return     array The cleaned data array.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function dehydrate()
@@ -32,7 +32,7 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 	 *
 	 * @param      array The data to load.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function hydrate($data)
@@ -76,7 +76,7 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function save()

@@ -5,8 +5,8 @@
  *
  * @package    PHPCouch
  *
- * @author     David Zülke <dz@bitxtender.com>
- * @copyright  bitXtender GbR
+ * @author     David Zülke <david.zuelke@bitextender.com>
+ * @copyright  Bitextender GmbH
  *
  * @since      1.0.0
  *
@@ -63,7 +63,7 @@ abstract class PhpcouchConnection extends PhpcouchConfigurable
 	 *
 	 * @return     string A generated URL.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	protected function buildUri($id = null, array $arguments = array())

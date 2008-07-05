@@ -21,7 +21,7 @@ abstract class PhpcouchMutableRecord extends PhpcouchRecord implements PhpcouchI
 	 *
 	 * @return     bool True, if this record is new.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function isNew()
@@ -34,7 +34,7 @@ abstract class PhpcouchMutableRecord extends PhpcouchRecord implements PhpcouchI
 	 *
 	 * @return     bool True, if this record is new.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function isModified()
@@ -48,7 +48,7 @@ abstract class PhpcouchMutableRecord extends PhpcouchRecord implements PhpcouchI
 	 * @param      string Name of the virtual property to set.
 	 * @param      mixed  The value to set.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function __set($name, $value)
@@ -65,7 +65,7 @@ abstract class PhpcouchMutableRecord extends PhpcouchRecord implements PhpcouchI
 	 *
 	 * @param      string Name of the virtual property to unset.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function __unset($name)
@@ -83,7 +83,7 @@ abstract class PhpcouchMutableRecord extends PhpcouchRecord implements PhpcouchI
 	 *
 	 * @param      array The data to load.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function hydrate($data)
@@ -99,7 +99,7 @@ abstract class PhpcouchMutableRecord extends PhpcouchRecord implements PhpcouchI
 	 *
 	 * @return     array The cleaned data array.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function dehydrate()
@@ -131,7 +131,7 @@ abstract class PhpcouchMutableRecord extends PhpcouchRecord implements PhpcouchI
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function retrieveRevision($revision)

@@ -5,8 +5,8 @@
  *
  * @package    PHPCouch
  *
- * @author     David Zülke <dz@bitxtender.com>
- * @copyright  bitXtender GbR
+ * @author     David Zülke <david.zuelke@bitextender.com>
+ * @copyright  Bitextender GmbH
  *
  * @since      1.0.0
  *
@@ -26,7 +26,7 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	 *
 	 * @return     mixed The value of the directive, or null if not set.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function getOption($name, $default = null)
@@ -44,7 +44,7 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	 *
 	 * @return     bool Whether the directive was set.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function hasOption($name)
@@ -61,7 +61,7 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	 *
 	 * @return     bool   Whether or not the configuration directive has been set.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function setOption($name, $value, $overwrite = true)
@@ -81,7 +81,7 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	 *
 	 * @return     bool true, if removed successfuly, false otherwise.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function removeOption($name)
@@ -99,7 +99,7 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	 *
 	 * @param      string An array of configuration directives.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function setOptions($data)
@@ -112,7 +112,7 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	 *
 	 * @return     array An associative array of configuration values.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function getOptions()
@@ -123,7 +123,7 @@ abstract class PhpcouchConfigurable implements PhpcouchIRegistry
 	/**
 	 * Clear the configuration.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function clearOptions()

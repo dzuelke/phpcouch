@@ -6,8 +6,8 @@
  * @package    PHPCouch
  * @subpackage Adapter
  *
- * @author     David Zülke <dz@bitxtender.com>
- * @copyright  bitXtender GbR
+ * @author     David Zülke <david.zuelke@bitextender.com>
+ * @copyright  Bitextender GmbH
  *
  * @since      1.0.0
  *
@@ -22,7 +22,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 *
 	 * @param      array An array of initialization options for this driver implementation.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function __construct(array $options = array())
@@ -56,7 +56,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 *
 	 * @return     stdClass The unserialized response JSON.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	protected function doRequest($uri, $method = 'GET', $data = null)
@@ -116,7 +116,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 *
 	 * @throws     PhpcouchException ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function put($uri, $data = null)
@@ -133,7 +133,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 *
 	 * @throws     PhpcouchException ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function get($uri)
@@ -151,7 +151,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 *
 	 * @throws     PhpcouchException ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function post($uri, $data = null)
@@ -168,7 +168,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 *
 	 * @throws     PhpcouchException ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function delete($uri)

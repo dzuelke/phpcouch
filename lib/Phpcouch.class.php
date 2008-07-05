@@ -5,8 +5,8 @@
  *
  * @package    PHPCouch
  *
- * @author     David Zülke <dz@bitxtender.com>
- * @copyright  bitXtender GbR
+ * @author     David Zülke <david.zuelke@bitextender.com>
+ * @copyright  Bitextender GmbH
  *
  * @since      1.0.0
  *
@@ -65,7 +65,7 @@ class Phpcouch
 	 *
 	 * @param      string The name of the class to autoload.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public static function autoload($className)
@@ -80,7 +80,7 @@ class Phpcouch
 	 *
 	 * This sets up the base path and registers the autoloader.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public static function bootstrap()
@@ -99,7 +99,7 @@ class Phpcouch
 	 *
 	 * @return     string A version number, including status if applicable, e.g. "1.2.0-RC2".
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public static function getVersionInfo()
@@ -121,7 +121,7 @@ class Phpcouch
 	 *
 	 * @return     string A full version string, example: "PHPCouch/1.0.0".
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public static function getVersionString()
@@ -137,7 +137,7 @@ class Phpcouch
 	 * @param      PhpcouchConnection A connection instance.
 	 * @param      bool               Whether or not to make this connection the default one.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public static function registerConnection($name, PhpcouchConnection $connection, $default = true)
@@ -156,7 +156,7 @@ class Phpcouch
 	 *
 	 * @return     PhpcouchConnection The connection instance that was removed from the pool, or null if no connection of that name was registered.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public static function unregisterConnection($name)
@@ -183,7 +183,7 @@ class Phpcouch
 	 *
 	 * @throws     PhpcouchException If no connection of this name was configured.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public static function getConnection($name = null)
