@@ -5,28 +5,6 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 	const ATTACHMENTS_FIELD = '_attachments';
 	
 	/**
-	 * Dehydrate record data into a saveable array.
-	 *
-	 * @return     array The cleaned data array.
-	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
-	 * @since      1.0.0
-	 */
-	public function dehydrate()
-	{
-		$data = parent::dehydrate();
-		
-		foreach(array('_revs_info', '_revs') as $key) {
-			// clean the flags that are returned for informational purposes
-			if(array_key_exists($key, $data)) {
-				unset($data[$key]);
-			}
-		}
-		
-		return $data;
-	}
-	
-	/**
 	 * Load data into this record.
 	 * This will clear all information before importing the data and set new and modified flags to false.
 	 *
@@ -59,15 +37,6 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 			return $this->connection->retrieveAttachment($this, $name);
 		} else {
 			throw new PhpcouchException(sprintf('Unknown attachment "%s".', $name));
-		}
-	}
-	
-	public function retrieveRevisionInfoList()
-	{
-		if(isset($this->{self::REVISION_INFO_FIELD})) {
-			return $this->{self::REVISION_INFO_FIELD};
-		} else {
-			// TODO: fetch revision info list
 		}
 	}
 	

@@ -97,7 +97,6 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	 * Retrieve a document from the database.
 	 *
 	 * @param      string The ID of the document.
-	 * @param      string The revision to fetch (default is latest).
 	 *
 	 * @return     PhpcouchIDocument A document instance.
 	 *
@@ -106,9 +105,9 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public function retrieveDocument($id, $revision = null)
+	public function retrieveDocument($id)
 	{
-		$uri = $this->buildUri($id, array('rev' => $revision, '_revs_info' => true));
+		$uri = $this->buildUri($id);
 		
 		// TODO: grab and wrap exceptions
 		$result = $this->adapter->get($uri);
@@ -127,7 +126,6 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	 *
 	 * @param      string The name of the attachment.
 	 * @param      string The document ID.
-	 * @param      string The document revision (default is latest).
 	 *
 	 * @return     string The attachment contents.
 	 *
@@ -136,17 +134,14 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public function retrieveAttachment($name, $id, $revision = null)
+	public function retrieveAttachment($name, $id)
 	{
 		// TODO: this doesn't work atm
 		if($id instanceof PhpcouchDocument) {
 			$id = $id->_id;
-			if($revision !== null) {
-				$revision = $id->_rev;
-			}
 		}
 		
-		$uri = $this->buildUri($id, array('rev' => $revision, 'attachment' => $name));
+		$uri = $this->buildUri($id, array('attachment' => $name));
 		
 		return $this->adapter->get($uri);
 	}
