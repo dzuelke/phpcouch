@@ -37,7 +37,7 @@ class PhpcouchServerConnection extends PhpcouchConnection
 	{
 		// TODO: catch exceptions
 		$result = $this->adapter->get($this->buildUri($name));
-		$database = new PhpcouchDatabase();
+		$database = new PhpcouchDatabase($this);
 		$database->hydrate($result);
 		return $database;
 	}
