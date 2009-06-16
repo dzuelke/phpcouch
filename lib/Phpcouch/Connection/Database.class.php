@@ -45,8 +45,40 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 		return $this->database;
 	}
 	
-	public function listDocuments()
+	/**
+	 * Get a list of all the documents in the database.
+	 * 
+	 * @param		PhpcouchIDocument The document to store.
+	 *
+	 * @return 	    stdClass list of all records
+	 * 
+	 * @throws		PhpcouchErrorException Yikes!
+	 *
+	 * @author 	    Simon Thulbourn
+	 * @since       1.0.0
+	 */
+	public function listDocuments($allData = false)
 	{
+		$data = array();
+		
+		if ($allData)
+		{
+			$data = array('include_docs' => 'true');
+		}
+		
+		try {
+			$docs = $this->adapter->get($this->buildUri('_all_docs', $data));
+			
+			// I claimed this as odd, but Felix assures me that this exception should be caught below. :)			
+			if ($docs->total_rows == 0)
+				throw new PhpcouchErrorException('No documents founds');
+			
+			return $docs;
+		}
+		catch (PhpcouchErrorException $e)
+		{
+			throw new PhpcouchErrorException($e->getMessage());
+		}
 	}
 	
 	/**
