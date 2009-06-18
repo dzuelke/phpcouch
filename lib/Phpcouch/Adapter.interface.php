@@ -72,15 +72,18 @@ interface PhpcouchIAdapter
 	 * Perform an HTTP DELETE request.
 	 *
 	 * @param      string The URL to call.
+	 * @param 	   array HTTP headers
 	 *
 	 * @return     stdClass The JSON response.
 	 *
 	 * @throws     PhpcouchException ?
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
+	 * @author 	   Simon Thulbourn <simon.thulbourn@bitextender.com>
+	 *
 	 * @since      1.0.0
 	 */
-	public function delete($url);
+	public function delete($url, $headers = array());
 }
 
 ?>

@@ -22,7 +22,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 *
 	 * @param      array An array of initialization options for this driver implementation.
 	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>	
 	 * @since      1.0.0
 	 */
 	public function __construct(array $options = array())
@@ -53,17 +53,26 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 * @param      string The URL to call.
 	 * @param      string The HTTP method to use.
 	 * @param      array  The data to serialize to JSON and send.
+	 * @param      array  HTTP headers.
 	 *
 	 * @return     stdClass The unserialized response JSON.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
+	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
 	 * @since      1.0.0
 	 */
-	protected function doRequest($uri, $method = 'GET', $data = null)
+	protected function doRequest($uri, $method = 'GET', $data = null, $headers = array())
 	{
 		$options = $this->options;
 		$options['http']['method'] = $method;
+			
+		$sendHeaders = array();
 		
+		// form valid headers
+		foreach ($headers as $key => $value) {
+			array_push($options['http']['header'], "$key: $value\r\n");
+		}
+
 		if($data !== null) {
 			// data to send, let's encode it to JSON
 			$options['http']['content'] = json_encode($data);
@@ -163,17 +172,19 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 * Perform an HTTP DELETE request.
 	 *
 	 * @param      string The URL to call.
+	 * @param 	   array  HTTP headers.	
 	 *
 	 * @return     stdClass The JSON response.
 	 *
 	 * @throws     PhpcouchException ?
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
+	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function delete($uri)
-	{
-		return $this->doRequest($uri, 'DELETE');
+	public function delete($uri, $headers = array())
+	{	
+		return $this->doRequest($uri, 'DELETE', array(), $headers);
 	}
 }
 

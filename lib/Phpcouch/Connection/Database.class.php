@@ -48,35 +48,47 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	/**
 	 * Get a list of all the documents in the database.
 	 * 
-	 * @param		PhpcouchIDocument The document to store.
+	 * @param       PhpcouchIDocument The document to store.
 	 *
-	 * @return 	    stdClass list of all records
+	 * @return      stdClass list of all records
 	 * 
-	 * @throws		PhpcouchErrorException Yikes!
+	 * @throws      PhpcouchErrorException Yikes!
 	 *
-	 * @author 	    Simon Thulbourn
+	 * @author      Simon Thulbourn
 	 * @since       1.0.0
 	 */
 	public function listDocuments($allData = false)
 	{
 		$data = array();
 		
-		if ($allData)
-		{
+		if ($allData) {
 			$data = array('include_docs' => 'true');
 		}
 		
 		try {
-			$docs = $this->adapter->get($this->buildUri('_all_docs', $data));
+			$docs = $this->adapter->get($this->buildUri('_all_docs'));
 			
 			// I claimed this as odd, but Felix assures me that this exception should be caught below. :)			
-			if ($docs->total_rows == 0)
+			if ($docs->total_rows == 0) {
 				throw new PhpcouchErrorException('No documents founds');
+			}
+			
+			if ($allData) {
+    			foreach ($docs->rows as &$row) {			
+        			$result = $this->adapter->get($this->buildUri($row->id));
+
+            		if(isset($result->_id)) {
+            			$document = $this->newDocument();
+            			$document->hydrate($result);
+            			$row = $document;
+            		} else {
+            			throw new PhpcouchErrorException('Something bad happened here, call the police');
+            		}
+    		    }
+	        }
 			
 			return $docs;
-		}
-		catch (PhpcouchErrorException $e)
-		{
+		} catch (PhpcouchErrorException $e) {
 			throw new PhpcouchErrorException($e->getMessage());
 		}
 	}
@@ -206,24 +218,27 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	/**
 	 * Delete a document.
 	 *
-	 * @param      string The name of the document to delete.
+	 * @param      PhpcouchDocument The name of the document to delete.
 	 *
 	 * @return     PhpcouchIDocument The deletion stub document.
 	 *
 	 * @throws     ?
 	 *
 	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function deleteDocument($id)
-	{
+	public function deleteDocument(PhpcouchDocument $doc)
+	{	    		
 		if($id instanceof PhpcouchDocument) {
-			$id = $id->_id;
+    		$headers = array('If-Match' => $id->_rev);
+    		$id = $id->_id;
+		} else {
+		    throw new PhpcouchErrorException('Parameter supplied is not of type PhpcouchDocument');
 		}
 		
-		$uri = $this->buildUri($id);
-		
-		return $this->adapter->delete($uri);
+		$uri = $this->buildUri($id);		
+		return $this->adapter->delete($uri, $headers); 
 	}
 	
 	/**
