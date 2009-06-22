@@ -70,7 +70,7 @@ abstract class PhpcouchConnection extends PhpcouchConfigurable
 	{
 		return sprintf('%s%s?%s',
 			$this->baseUrl,
-			$id,
+			rawurlencode($id),
 			http_build_query($arguments)
 		);
 	}

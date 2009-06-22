@@ -230,9 +230,9 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	 */
 	public function deleteDocument(PhpcouchDocument $doc)
 	{	    		
-		if($id instanceof PhpcouchDocument) {
-    		$headers = array('If-Match' => $id->_rev);
-    		$id = $id->_id;
+		if($doc instanceof PhpcouchDocument) {
+    		$headers = array('If-Match' => $doc->_rev);
+    		$id = $doc->_id;
 		} else {
 		    throw new PhpcouchErrorException('Parameter supplied is not of type PhpcouchDocument');
 		}
