@@ -68,24 +68,23 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 		try {
 			$docs = $this->adapter->get($this->buildUri('_all_docs'));
 			
-			// I claimed this as odd, but Felix assures me that this exception should be caught below. :)			
-			if ($docs->total_rows == 0) {
+			if($docs->total_rows == 0) {
 				throw new PhpcouchErrorException('No documents founds');
 			}
 			
-			if ($allData) {
-    			foreach ($docs->rows as &$row) {			
-        			$result = $this->adapter->get($this->buildUri($row->id));
-
-            		if(isset($result->_id)) {
-            			$document = $this->newDocument();
-            			$document->hydrate($result);
-            			$row = $document;
-            		} else {
-            			throw new PhpcouchErrorException('Something bad happened here, call the police');
-            		}
-    		    }
-	        }
+			if($allData) {
+				foreach($docs->rows as &$row) {			
+					$result = $this->adapter->get($this->buildUri($row->id));
+					
+					if(isset($result->_id)) {
+						$document = $this->newDocument();
+						$document->hydrate($result);
+						$row = $document;
+					} else {
+						throw new PhpcouchErrorException('Something bad happened here, call the police');
+					}
+				}
+			}
 			
 			return $docs;
 		} catch (PhpcouchErrorException $e) {

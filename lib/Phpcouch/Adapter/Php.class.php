@@ -69,7 +69,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 		$sendHeaders = array();
 		
 		// form valid headers
-		foreach ($headers as $key => $value) {
+		foreach($headers as $key => $value) {
 			array_push($options['http']['header'], "$key: $value\r\n");
 		}
 
