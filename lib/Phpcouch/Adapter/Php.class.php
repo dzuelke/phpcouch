@@ -22,7 +22,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 *
 	 * @param      array An array of initialization options for this driver implementation.
 	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>	
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function __construct(array $options = array())
@@ -172,7 +172,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 * Perform an HTTP DELETE request.
 	 *
 	 * @param      string The URL to call.
-	 * @param 	   array  HTTP headers.	
+	 * @param 	   array  HTTP headers.
 	 *
 	 * @return     stdClass The JSON response.
 	 *
@@ -183,7 +183,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 	 * @since      1.0.0
 	 */
 	public function delete($uri, $headers = array())
-	{	
+	{
 		return $this->doRequest($uri, 'DELETE', array(), $headers);
 	}
 }
