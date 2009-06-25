@@ -1,6 +1,8 @@
 <?php
 
-interface PhpcouchIRecord
+namespace phpcouch\record;
+
+interface RecordInterface
 {
 	/**
 	 * Record constructor.
@@ -10,7 +12,7 @@ interface PhpcouchIRecord
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function __construct(PhpcouchConnection $connection = null);
+	public function __construct(\phpcouch\connection\ConnectionAbstract $connection = null);
 	
 	/**
 	 * Get overload.
@@ -108,7 +110,7 @@ interface PhpcouchIRecord
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function setConnection(PhpcouchConnection $connection = null);
+	public function setConnection(\phpcouch\connection\ConnectionAbstract $connection = null);
 }
 
 ?>

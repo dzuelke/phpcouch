@@ -1,6 +1,8 @@
 <?php
 
-interface PhpcouchIMutableRecord extends PhpcouchIRecord
+namespace phpcouch\record;
+
+interface MutableRecordInterface extends RecordInterface
 {
 	/**
 	 * Indicates whether or not this record is new, i.e. never saved to the database before.

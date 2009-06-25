@@ -1,10 +1,10 @@
 <?php
 
-namespace phpcouch;
+namespace phpcouch\record;
 
 use phpcouch\exception;
 
-class Document extends record\MutableAbstract implements DocumentInterface
+class Document extends MutableAbstract implements DocumentInterface
 {
 	const ATTACHMENTS_FIELD = '_attachments';
 	

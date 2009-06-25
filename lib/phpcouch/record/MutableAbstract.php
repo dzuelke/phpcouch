@@ -1,6 +1,8 @@
 <?php
 
-abstract class PhpcouchMutableRecord extends PhpcouchRecord implements PhpcouchIMutableRecord
+namespace phpcouch\record;
+
+abstract class MutableRecordAbstract extends RecordAbstract implements MutableRecordInterface
 {
 	const ID_FIELD = '_id';
 	const REVISION_FIELD = '_rev';

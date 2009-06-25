@@ -1,6 +1,8 @@
 <?php
 
-abstract class PhpcouchRecord implements PhpcouchIRecord
+namespace phpcouch\record;
+
+abstract class RecordAbstract implements RecordInterface
 {
 	/**
 	 * @var        PhpcouchConnection The connection associated with this record.
@@ -20,7 +22,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function __construct(PhpcouchConnection $connection = null)
+	public function __construct(\phpcouch\connection\ConnectionAbstract $connection = null)
 	{
 		$this->setConnection($connection);
 	}
@@ -112,7 +114,7 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 */
 	public function fromArray($data)
 	{
-		if($data instanceof PhpcouchIRecord) {
+		if($data instanceof RecordInterface) {
 			$data = $data->toArray();
 		} elseif(is_object($data)) {
 			$data = get_object_vars($data);
@@ -165,10 +167,10 @@ abstract class PhpcouchRecord implements PhpcouchIRecord
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function setConnection(PhpcouchConnection $connection = null)
+	public function setConnection(\phpcouch\connection\ConnectionAbstract $connection = null)
 	{
 		if($connection === null) {
-			$connection = Phpcouch::getConnection();
+			$connection = \phpcouch\Phpcouch::getConnection();
 		}
 		
 		$this->connection = $connection;

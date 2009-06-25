@@ -1,6 +1,6 @@
 <?php
 
-namespace phpcouch;
+namespace phpcouch\record;
 
 interface DocumentInterface
 {
