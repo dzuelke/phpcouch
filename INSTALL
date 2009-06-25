@@ -1,0 +1,23 @@
+PHPCouch Installation Instructions
+==================================
+
+Requirements
+------------
+PHPCouch requires PHP 5.1.x or later, and one of the external dependencies listed below on PHP versions older than 5.3.0
+
+External dependencies
+---------------------
+PHPCouch does not require external libraries or non-standard extensions starting with PHP 5.3.0.
+
+On older versions, PHPCouch can use one of the following dependencies to perform HTTP requests:
+- Zend_Http_Client, shipping with Zend Framework (version 1.0.2 or later), or
+- the pecl/http PHP extension
+- the curl PHP extension
+
+If you would like to run PHPCouch's Unit Tests, you need PHPUnit 3.2 or later installed. Zend_Http_Client is used for the unit tests, so you need Zend Framework (see above).
+
+Setting up
+----------
+To use PHPCouch, simply include lib/Phpcouch.php, or include lib/Phpcouch.class.php and call Phpcouch::boostrap().
+
+After that, PHPCouch is ready for action. Refer to the documentation to learn how to get started by registering a connection etc.
