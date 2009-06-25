@@ -66,7 +66,7 @@ class Phpcouch
 		self::$path = dirname(__FILE__);
 		
 		// and register our autoloader
-		spl_autoload_register(array('Phpcouch', 'autoload'));
+		spl_autoload_register(array(__CLASS__, 'autoload'));
 	}
 	
 	/**
