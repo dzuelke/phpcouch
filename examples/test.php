@@ -1,14 +1,19 @@
 <?php
 
+use phpcouch\Phpcouch;
+use phpcouch\connection;
+use phpcouch\adapter;
+
 error_reporting(E_ALL | E_STRICT);
 
 set_include_path(get_include_path() . ':' . '/Users/dzuelke/Downloads/ZendFramework-1.0.2/library');
 
-require('../lib/Phpcouch.php');
+require('../lib/phpcouch/Phpcouch.php');
+Phpcouch::bootstrap();
 
-PhpCouch::registerConnection('default', $con = new PhpcouchDatabaseConnection(array('database' => 'hellohans'), new PhpcouchPhpAdapter()));
+PhpCouch::registerConnection('default', $con = new connection\Database(array('database' => 'hellohans'), new adapter\Php()));
 
-PhpCouch::registerConnection('server', $con2 = new PhpcouchServerConnection(array(), new PhpcouchPhpAdapter()), false);
+PhpCouch::registerConnection('server', $con2 = new connection\Server(array(), new adapter\Php()), false);
 
 var_dump($con2->listDatabases());
 

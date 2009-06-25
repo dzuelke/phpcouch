@@ -1,13 +1,15 @@
 <?php
 
-class PhpcouchView
+namespace phpcouch;
+
+class View
 {
 	protected $_data = array();
 	
-	public function __construct(PhpcouchConnection $connection = null)
+	public function __construct(phpcouch\connection\ConnectionAbstract $connection = null)
 	{
 		if($connection === null) {
-			$connection = Phpcouch::getConnection();
+			$connection = phpcouch\Phpcouch::getConnection();
 		}
 		
 		$this->_connection = $connection;

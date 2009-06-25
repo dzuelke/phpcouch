@@ -1,5 +1,7 @@
 <?php
 
+namespace phpcouch\adapter;
+
 /**
  * Interface for HTTP client adapters.
  *
@@ -12,7 +14,7 @@
  *
  * @version    $Id$
  */
-interface PhpcouchIAdapter
+interface AdapterInterface
 {
 	/**
 	 * Adapter constructor.

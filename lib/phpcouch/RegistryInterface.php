@@ -1,6 +1,8 @@
 <?php
 
-interface PhpcouchIRegistry
+namespace phpcouch;
+
+interface RegistryInterface
 {
 	/**
 	 * Get a configuration value.

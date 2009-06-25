@@ -1,5 +1,7 @@
 <?php
 
+namespace phpcouch\connection;
+
 /**
  * The main connection class, representing a connection registered with PHPCouch.
  *
@@ -12,7 +14,7 @@
  *
  * @version    $Id$
  */
-abstract class PhpcouchConnection extends PhpcouchConfigurable
+abstract class ConnectionAbstract extends \phpcouch\ConfigurableAbstract
 {
 	const COUCHDB_DEFAULT_PORT = 5984;
 	
@@ -35,13 +37,13 @@ abstract class PhpcouchConnection extends PhpcouchConfigurable
 	 * @author     David Zülke
 	 * @since      1.0.0
 	 */
-	public function __construct(array $connectionInfo, PhpcouchIAdapter $adapter = null)
+	public function __construct(array $connectionInfo, \phpcouch\adapter\AdapterInterface $adapter = null)
 	{
 		if($adapter !== null) {
 			$this->adapter = $adapter;
 		} else {
 			// no adapter given? let's create a default one.
-			$this->adapter = new PhpcouchPhpAdapter();
+			$this->adapter = new \phpcouch\adapter\Php();
 		}
 		
 		// some default connection info for vanilla CouchDB setups
@@ -96,7 +98,7 @@ abstract class PhpcouchConnection extends PhpcouchConfigurable
 	 * @author     David Zülke
 	 * @since      1.0.0
 	 */
-	public function setAdapter(PhpcouchIAdapter $adapter)
+	public function setAdapter(\phpcouch\adapter\AdapterInterface $adapter)
 	{
 		$this->adapter = $adapter;
 	}

@@ -1,6 +1,8 @@
 <?php
 
-interface PhpcouchIDocument
+namespace phpcouch;
+
+interface DocumentInterface
 {
 	public function getAttachments();
 	public function hasAttachments();

@@ -1,6 +1,10 @@
 <?php
 
-class PhpcouchDatabase extends PhpcouchRecord
+namespace phpcouch;
+
+use phpcouch\record;
+
+class Database extends Record
 {
 	public function __toString()
 	{

@@ -1,5 +1,7 @@
 <?php
 
+namespace phpcouch\adapter;
+
 /**
  * An adapter implemented using the PHP >= 5.3 HTTP fopen wrapper.
  *
@@ -13,7 +15,7 @@
  *
  * @version    $Id$
  */
-class PhpcouchPhpAdapter implements PhpcouchIAdapter
+class Php implements AdapterInterface
 {
 	protected $options = array();
 	
@@ -31,7 +33,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 			'http' => array(
 				'header' => array(
 					'Content-Type: application/json',
-					'User-Agent: ' . Phpcouch::getVersionString(),
+					'User-Agent: ' . \phpcouch\Phpcouch::getVersionString(),
 				),
 				'ignore_errors' => true,
 			),
@@ -84,7 +86,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 		
 		if($fp === false) {
 			$error = error_get_last();
-			throw new PhpcouchAdapterException($error['message']);
+			throw new \phpcouch\exception\Adapter($error['message']);
 		}
 		
 		$meta = stream_get_meta_data($fp);
@@ -93,7 +95,7 @@ class PhpcouchPhpAdapter implements PhpcouchIAdapter
 			!isset($meta['wrapper_data'][0]) ||
 			!($status = preg_match('#^HTTP/1\.[01]\s+(\d{3})\s+(.+)$#', $meta['wrapper_data'][0], $matches))
 		) {
-			throw new PhpcouchAdapterException('Could not read HTTP response status line');
+			throw new \phpcouch\exception\Adapter('Could not read HTTP response status line');
 		}
 		
 		$statusCode = (int)$matches[1];

@@ -1,5 +1,7 @@
 <?php
 
+namespace phpcouch;
+
 /**
  * A base class for extension that implements the PHPCouch Registry interface.
  *
@@ -12,7 +14,7 @@
  *
  * @version    $Id$
  */
-abstract class PhpcouchConfigurable implements PhpcouchIRegistry
+abstract class ConfigurableAbstract implements RegistryInterface
 {
 	/**
 	 * @var        array An array of configuration options set on this object.

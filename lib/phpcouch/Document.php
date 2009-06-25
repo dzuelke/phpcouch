@@ -1,6 +1,10 @@
 <?php
 
-class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocument
+namespace phpcouch;
+
+use phpcouch\exception;
+
+class Document extends record\MutableAbstract implements DocumentInterface
 {
 	const ATTACHMENTS_FIELD = '_attachments';
 	
@@ -36,7 +40,7 @@ class PhpcouchDocument extends PhpcouchMutableRecord implements PhpcouchIDocumen
 		if(isset($this->{self::ATTACHMENTS_FIELD}[$name])) {
 			return $this->connection->retrieveAttachment($this, $name);
 		} else {
-			throw new PhpcouchException(sprintf('Unknown attachment "%s".', $name));
+			throw new Exception(sprintf('Unknown attachment "%s".', $name));
 		}
 	}
 	

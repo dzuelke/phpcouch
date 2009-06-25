@@ -1,6 +1,8 @@
 <?php
 
-class PhpcouchDatabaseConnection extends PhpcouchConnection
+namespace phpcouch\connection;
+
+class Database extends ConnectionAbstract
 {
 	/**
 	 * @var        string The name of the database to use with this connection by default.
@@ -16,14 +18,14 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	 * @author     David Zülke
 	 * @since      1.0.0
 	 */
-	public function __construct(array $connectionInfo, PhpcouchIAdapter $adapter = null)
+	public function __construct(array $connectionInfo, \phpcouch\adapter\AdapterInterface $adapter = null)
 	{
 		parent::__construct($connectionInfo, $adapter);
 		
 		// got a database?
 		if(!isset($connectionInfo['database'])) {
 			// no :( bark!
-			throw new PhpcouchException('No database set on connection');
+			throw new \phpcouch\exception\Exception('No database set on connection');
 		}
 		// yes :) store the name...
 		$this->database = $connectionInfo['database'];
@@ -69,7 +71,7 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 			$docs = $this->adapter->get($this->buildUri('_all_docs'));
 			
 			if($docs->total_rows == 0) {
-				throw new PhpcouchErrorException('No documents founds');
+				throw new \phpcouch\exception\error\Error('No documents founds');
 			}
 			
 			if($allData) {
@@ -81,14 +83,14 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 						$document->hydrate($result);
 						$row = $document;
 					} else {
-						throw new PhpcouchErrorException('Something bad happened here, call the police');
+						throw new \phpcouch\exception\error\Error('Something bad happened here, call the police');
 					}
 				}
 			}
 			
 			return $docs;
-		} catch (PhpcouchErrorException $e) {
-			throw new PhpcouchErrorException($e->getMessage());
+		} catch (\phpcouch\exception\error\Error $e) {
+			throw new \phpcouch\exception\error\Error($e->getMessage());
 		}
 	}
 	
@@ -102,7 +104,7 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public function createDocument(PhpcouchDocument $document)
+	public function createDocument(phpcouch\Document $document)
 	{
 		$values = $document->dehydrate();
 		
@@ -124,13 +126,13 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 			
 			if(isset($result->ok) && $result->ok === true) {
 				// all cool.
-				$document->hydrate(array(PhpcouchDocument::ID_FIELD => $result->id, PhpcouchDocument::REVISION_FIELD => $result->rev));
+				$document->hydrate(array(\phpcouch\Document::ID_FIELD => $result->id, \phpcouch\Document::REVISION_FIELD => $result->rev));
 				return;
 			} else {
 				throw new PhpcouchSaveException();
 				// TODO: add $result
 			}
-		} catch(PhpcouchErrorException $e) {
+		} catch(\phpcouch\exception\error\Error $e) {
 			throw new PhpcouchSaveException();
 			// TODO: add $result
 		}
@@ -180,7 +182,7 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	public function retrieveAttachment($name, $id)
 	{
 		// TODO: this doesn't work atm
-		if($id instanceof PhpcouchDocument) {
+		if($id instanceof \phpcouch\DocumentInterface) {
 			$id = $id->_id;
 		}
 		
@@ -199,7 +201,7 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public function updateDocument(PhpcouchIDocument $document)
+	public function updateDocument(\phpcouch\DocumentInterface $document)
 	{
 		$values = $document->dehydrate();
 		
@@ -227,9 +229,9 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function deleteDocument(PhpcouchDocument $doc)
+	public function deleteDocument(\phpcouch\DocumentInterface $doc)
 	{	    		
-		if($doc instanceof PhpcouchDocument) {
+		if($doc instanceof \phpcouch\DocumentInterface) {
     		$headers = array('If-Match' => $doc->_rev);
     		$id = $doc->_id;
 		} else {
@@ -250,7 +252,7 @@ class PhpcouchDatabaseConnection extends PhpcouchConnection
 	 */
 	public function newDocument()
 	{
-		return new PhpcouchDocument($this);
+		return new \phpcouch\Document($this);
 	}
 }
 

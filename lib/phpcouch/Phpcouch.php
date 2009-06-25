@@ -44,8 +44,9 @@ class Phpcouch
 	 */
 	public static function autoload($className)
 	{
+		var_dump($className);
 		if(strpos($className, 'phpcouch\\') === 0) {
-			$path = self::$path . '/' . str_replace(array('\\', '_'), '/', $className);
+			$path = self::$path . '/' . str_replace(array('\\', '_'), '/', substr($className, 9)) . '.php';
 			if(file_exists($path)) {
 				require($path);
 			}
@@ -117,7 +118,7 @@ class Phpcouch
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public static function registerConnection($name, phpcouch\connection\ConnectionAbstract $connection, $default = true)
+	public static function registerConnection($name, connection\ConnectionAbstract $connection, $default = true)
 	{
 		self::$connections[$name] = $connection;
 		

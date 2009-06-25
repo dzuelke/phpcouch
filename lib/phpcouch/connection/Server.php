@@ -1,6 +1,8 @@
 <?php
 
-class PhpcouchServerConnection extends PhpcouchConnection
+namespace phpcouch\connection;
+
+class Server extends ConnectionAbstract
 {
 	/**
 	 * Create a new database on the server.
@@ -37,7 +39,7 @@ class PhpcouchServerConnection extends PhpcouchConnection
 	{
 		// TODO: catch exceptions
 		$result = $this->adapter->get($this->buildUri($name));
-		$database = new PhpcouchDatabase($this);
+		$database = new phpcouch\Database($this);
 		$database->hydrate($result);
 		return $database;
 	}
