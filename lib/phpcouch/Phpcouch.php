@@ -1,5 +1,10 @@
 <?php
 
+namespace phpcouch;
+
+const VERSION_NUMBER = '1.0.0';
+const VERSION_STATUS = 'dev';
+
 /**
  * Main PHPCouch class.
  *
@@ -14,9 +19,6 @@
  */
 class Phpcouch
 {
-	const VERSION_NUMBER = '1.0.0';
-	const VERSION_STATUS = 'dev';
-	
 	/**
 	 * @var        array An array of class names and file paths for autoloading.
 	 */
@@ -70,8 +72,11 @@ class Phpcouch
 	 */
 	public static function autoload($className)
 	{
-		if(isset(self::$autoloads[$className])) {
-			require(self::$path . '/' . self::$autoloads[$className]);
+		if(strpos($className, 'phpcouch\\') === 0) {
+			$path = self::$path . '/' . str_replace(array('\\', '_'), '/', $className);
+			if(file_exists($path)) {
+				require($path);
+			}
 		}
 	}
 	
@@ -89,7 +94,7 @@ class Phpcouch
 		self::$path = dirname(__FILE__);
 		
 		// and register our autoloader
-		spl_autoload_register(array('PhpCouch', 'autoload'));
+		spl_autoload_register(array('Phpcouch', 'autoload'));
 	}
 	
 	/**
@@ -104,11 +109,11 @@ class Phpcouch
 	 */
 	public static function getVersionInfo()
 	{
-		$retval = self::VERSION_NUMBER;
+		$retval = VERSION_NUMBER;
 		
 		// only append a status (like "RC3") if it is set
-		if(self::VERSION_STATUS !== null) {
-			$retval .= '-' . self::VERSION_STATUS;
+		if(VERSION_STATUS !== null) {
+			$retval .= '-' . VERSION_STATUS;
 		}
 		
 		return $retval;
