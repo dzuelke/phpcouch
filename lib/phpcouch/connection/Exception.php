@@ -3,7 +3,7 @@
 namespace phpcouch\connection;
 
 /**
- * Connection Exception Interface
+ * Connection Exception
  *
  * @package    PHPCouch
  *
@@ -14,7 +14,7 @@ namespace phpcouch\connection;
  *
  * @version    $Id$
  */
-interface Exception
+class Exception extends \Exception
 {
 }
 

@@ -3,7 +3,7 @@
 namespace phpcouch\adapter;
 
 /**
- * Adapter Exception Interface
+ * Adapter Exception
  *
  * @package    PHPCouch
  *
@@ -14,7 +14,7 @@ namespace phpcouch\adapter;
  *
  * @version    $Id$
  */
-interface Exception
+class Exception extends \Exception
 {
 }
 
