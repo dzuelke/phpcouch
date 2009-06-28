@@ -39,9 +39,33 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 */
 	public function __construct($uri = null, \phpcouch\adapter\AdapterInterface $adapter = null)
 	{
-		if($uri === null) {
-			$uri = 'http://localhost:' . self::COUCHDB_DEFAULT_PORT;
+		if($uri !== null) {
+			$info = @parse_url($uri);
+			
+			if($info === false) {
+				throw new Exception(sprintf('Could not parse connection string "%s"', $uri));
+			}
+			
+			if(count($info) == 1 && isset($info['path'])) {
+				// special case: $uri was just "localhost" or so
+				$info['host'] = $info['path'];
+			}
+		} else {
+			// no info given. assume localhost
+			$info['host'] = 'localhost';
 		}
+		
+		// set some defaults if necessary
+		if(!isset($info['scheme'])) {
+			$info['scheme'] = 'http';
+		}
+		if(!isset($info['port'])) {
+			$info['port'] = self::COUCHDB_DEFAULT_PORT;
+		}
+		// force path to / no matter what for now
+		$info['path'] = '/';
+		
+		// TODO: user/pass, needs to be passed to adapter
 		
 		if($adapter !== null) {
 			$this->adapter = $adapter;
@@ -50,7 +74,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 			$this->adapter = new \phpcouch\adapter\Php();
 		}
 		
-		$this->baseUrl = $uri . '/';
+		$this->baseUrl = sprintf('%s://%s:%s%s', $info['scheme'], $info['host'], $info['port'], $info['path']);
 	}
 	
 	/**
