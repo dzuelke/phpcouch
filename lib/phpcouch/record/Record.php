@@ -2,7 +2,7 @@
 
 namespace phpcouch\record;
 
-class Record implements RecordInterface
+class Record implements RecordInterface, \ArrayAccess
 {
 	/**
 	 * @var        PhpcouchConnection The connection associated with this record.
@@ -86,6 +86,26 @@ class Record implements RecordInterface
 		if(array_key_exists($name, $this->data)) {
 			unset($this->data[$name]);
 		}
+	}
+	
+	public function offsetGet($offset)
+	{
+		return $this->__get($offset);
+	}
+	
+	public function offsetExists($offset)
+	{
+		return $this->__isset($offset);
+	}
+	
+	public function offsetSet($offset, $value)
+	{
+		return $this->__set($offset, $value);
+	}
+	
+	public function offsetUnset($offset)
+	{
+		return $this->__unset($offset);
 	}
 	
 	/**
