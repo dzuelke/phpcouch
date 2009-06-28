@@ -230,16 +230,16 @@ class Database extends ConnectionAbstract
 	 * @since      1.0.0
 	 */
 	public function deleteDocument(\phpcouch\DocumentInterface $doc)
-	{	    		
+	{
 		if($doc instanceof \phpcouch\DocumentInterface) {
-    		$headers = array('If-Match' => $doc->_rev);
-    		$id = $doc->_id;
+			$headers = array('If-Match' => $doc->_rev);
+			$id = $doc->_id;
 		} else {
-		    throw new PhpcouchErrorException('Parameter supplied is not of type PhpcouchDocument');
+			throw new PhpcouchErrorException('Parameter supplied is not of type PhpcouchDocument');
 		}
 		
-		$uri = $this->buildUri($id);		
-		return $this->adapter->delete($uri, $headers); 
+		$uri = $this->buildUri($id);
+		return $this->adapter->delete($uri, $headers);
 	}
 	
 	/**
