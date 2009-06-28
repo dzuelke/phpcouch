@@ -1,50 +1,25 @@
 <?php
 
-namespace phpcouch\connection;
+namespace phpcouch\record;
 
-class Database extends ConnectionAbstract
+class Database extends Record
 {
-	/**
-	 * @var        string The name of the database to use with this connection by default.
-	 */
-	protected $database = '';
-	
-	/**
-	 * The connection constructor.
-	 *
-	 * @param      array            An array of connection information.
-	 * @param      PhpcouchIAdapter The adapter to use with this connection, or null to use the default.
-	 *
-	 * @author     David Zülke
-	 * @since      1.0.0
-	 */
-	public function __construct(array $connectionInfo, \phpcouch\adapter\AdapterInterface $adapter = null)
+	public function __toString()
 	{
-		parent::__construct($connectionInfo, $adapter);
-		
-		// got a database?
-		if(!isset($connectionInfo['database'])) {
-			// no :( bark!
-			throw new \phpcouch\exception\Exception('No database set on connection');
-		}
-		// yes :) store the name...
-		$this->database = $connectionInfo['database'];
-		
-		// ... and add it to the base URL
-		$this->baseUrl .= $this->database . '/';
+		return $this->getName();
 	}
 	
 	/**
-	 * Get the name of the database to use with this connection.
+	 * Get the name of this database.
 	 *
 	 * @return     string The database name.
 	 *
 	 * @author     David Zülke
 	 * @since      1.0.0
 	 */
-	public function getDatabase()
+	public function getName()
 	{
-		return $this->database;
+		return $this->db_name;
 	}
 	
 	/**
@@ -68,7 +43,7 @@ class Database extends ConnectionAbstract
 		}
 		
 		try {
-			$docs = $this->adapter->get($this->buildUri('_all_docs'));
+			$docs = $this->getConnection()->getAdapter()->get($this->getConnection()->buildUri('_all_docs'));
 			
 			if($docs->total_rows == 0) {
 				throw new \phpcouch\exception\error\Error('No documents founds');
@@ -76,7 +51,7 @@ class Database extends ConnectionAbstract
 			
 			if($allData) {
 				foreach($docs->rows as &$row) {			
-					$result = $this->adapter->get($this->buildUri($row->id));
+					$result = $this->getConnection()->getAdapter()->get($this->getConnection()->buildUri($row->id));
 					
 					if(isset($result->_id)) {
 						$document = $this->newDocument();
@@ -116,12 +91,12 @@ class Database extends ConnectionAbstract
 		try {
 			if($document->_id) {
 				// create a named document
-				$uri = $this->buildUri($document->_id);
-				$result = $this->adapter->put($uri, $values);
+				$uri = $this->getConnection()->buildUri($document->_id);
+				$result = $this->getConnection()->getAdapter()->put($uri, $values);
 			} else {
 				// let couchdb create an ID
-				$uri = $this->buildUri();
-				$result = $this->adapter->post($uri, $values);
+				$uri = $this->getConnection()->buildUri();
+				$result = $this->getConnection()->getAdapter()->post($uri, $values);
 			}
 			
 			if(isset($result->ok) && $result->ok === true) {
@@ -152,10 +127,10 @@ class Database extends ConnectionAbstract
 	 */
 	public function retrieveDocument($id)
 	{
-		$uri = $this->buildUri($id);
+		$uri = $this->getConnection()->buildUri($id);
 		
 		// TODO: grab and wrap exceptions
-		$result = $this->adapter->get($uri);
+		$result = $this->getConnection()->getAdapter()->get($uri);
 		
 		if(isset($result->_id)) {
 			$document = $this->newDocument();
@@ -186,9 +161,9 @@ class Database extends ConnectionAbstract
 			$id = $id->_id;
 		}
 		
-		$uri = $this->buildUri($id, array('attachment' => $name));
+		$uri = $this->getConnection()->buildUri($id, array('attachment' => $name));
 		
-		return $this->adapter->get($uri);
+		return $this->getConnection()->getAdapter()->get($uri);
 	}
 	
 	/**
@@ -205,9 +180,9 @@ class Database extends ConnectionAbstract
 	{
 		$values = $document->dehydrate();
 		
-		$uri = $this->buildUri($document->_id);
+		$uri = $this->getConnection()->buildUri($document->_id);
 		
-		$result = $this->adapter->put($uri, $values);
+		$result = $this->getConnection()->getAdapter()->put($uri, $values);
 		
 		if(isset($result->ok) && $result->ok === true) {
 			$document->_rev = $result->rev;
@@ -238,8 +213,8 @@ class Database extends ConnectionAbstract
 			throw new PhpcouchErrorException('Parameter supplied is not of type PhpcouchDocument');
 		}
 		
-		$uri = $this->buildUri($id);
-		return $this->adapter->delete($uri, $headers);
+		$uri = $this->getConnection()->buildUri($id);
+		return $this->getConnection()->getAdapter()->delete($uri, $headers);
 	}
 	
 	/**
