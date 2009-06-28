@@ -79,7 +79,7 @@ class Database extends Record
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public function createDocument(phpcouch\Document $document)
+	public function createDocument(phpcouch\record\Document $document)
 	{
 		$values = $document->dehydrate();
 		
@@ -101,7 +101,7 @@ class Database extends Record
 			
 			if(isset($result->ok) && $result->ok === true) {
 				// all cool.
-				$document->hydrate(array(\phpcouch\Document::ID_FIELD => $result->id, \phpcouch\Document::REVISION_FIELD => $result->rev));
+				$document->hydrate(array(\phpcouch\record\Document::ID_FIELD => $result->id, \phpcouch\record\Document::REVISION_FIELD => $result->rev));
 				return;
 			} else {
 				throw new PhpcouchSaveException();
@@ -157,7 +157,7 @@ class Database extends Record
 	public function retrieveAttachment($name, $id)
 	{
 		// TODO: this doesn't work atm
-		if($id instanceof \phpcouch\DocumentInterface) {
+		if($id instanceof \phpcouch\record\DocumentInterface) {
 			$id = $id->_id;
 		}
 		
@@ -176,7 +176,7 @@ class Database extends Record
 	 * @author     David Zülke <dz@bitxtender.com>
 	 * @since      1.0.0
 	 */
-	public function updateDocument(\phpcouch\DocumentInterface $document)
+	public function updateDocument(\phpcouch\record\DocumentInterface $document)
 	{
 		$values = $document->dehydrate();
 		
@@ -204,9 +204,9 @@ class Database extends Record
 	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function deleteDocument(\phpcouch\DocumentInterface $doc)
+	public function deleteDocument(\phpcouch\record\DocumentInterface $doc)
 	{
-		if($doc instanceof \phpcouch\DocumentInterface) {
+		if($doc instanceof \phpcouch\record\DocumentInterface) {
 			$headers = array('If-Match' => $doc->_rev);
 			$id = $doc->_id;
 		} else {
@@ -227,7 +227,7 @@ class Database extends Record
 	 */
 	public function newDocument()
 	{
-		return new \phpcouch\Document($this);
+		return new \phpcouch\record\Document($this);
 	}
 }
 
