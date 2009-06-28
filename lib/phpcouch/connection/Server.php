@@ -11,7 +11,7 @@ class Server extends ConnectionAbstract
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function createDatabase($name)
@@ -32,7 +32,7 @@ class Server extends ConnectionAbstract
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function retrieveDatabase($name)
@@ -51,7 +51,7 @@ class Server extends ConnectionAbstract
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function deleteDatabase($name)
@@ -68,7 +68,7 @@ class Server extends ConnectionAbstract
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function listDatabases()

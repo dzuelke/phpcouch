@@ -14,7 +14,7 @@ class Database extends Record
 	 *
 	 * @return     string The database name.
 	 *
-	 * @author     David Zülke
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function getName()
@@ -76,7 +76,7 @@ class Database extends Record
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function createDocument(phpcouch\record\Document $document)
@@ -122,7 +122,7 @@ class Database extends Record
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function retrieveDocument($id)
@@ -151,7 +151,7 @@ class Database extends Record
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function retrieveAttachment($name, $id)
@@ -173,7 +173,7 @@ class Database extends Record
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function updateDocument(\phpcouch\record\DocumentInterface $document)
@@ -200,7 +200,7 @@ class Database extends Record
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
 	 * @since      1.0.0
 	 */
@@ -222,7 +222,7 @@ class Database extends Record
 	 *
 	 * @return     PhpcouchIDocument An empty document.
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function newDocument()

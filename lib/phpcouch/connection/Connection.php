@@ -34,7 +34,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 * @param      array            An array of connection information.
 	 * @param      PhpcouchIAdapter The adapter to use with this connection, or null to use the default.
 	 *
-	 * @author     David Zülke
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function __construct(array $connectionInfo, \phpcouch\adapter\AdapterInterface $adapter = null)
@@ -82,7 +82,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 *
 	 * @return     PhpcouchIAdapter The adapter instance.
 	 *
-	 * @author     David Zülke
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function getAdapter()
@@ -95,7 +95,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 *
 	 * @param      PhpcouchIAdapter The adapter instance to use.
 	 *
-	 * @author     David Zülke
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function setAdapter(\phpcouch\adapter\AdapterInterface $adapter)
@@ -110,7 +110,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function createDatabase($name)
@@ -131,7 +131,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function retrieveDatabase($name)
@@ -150,7 +150,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function deleteDatabase($name)
@@ -167,7 +167,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 *
 	 * @throws     ?
 	 *
-	 * @author     David Zülke <dz@bitxtender.com>
+	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
 	public function listDatabases()
