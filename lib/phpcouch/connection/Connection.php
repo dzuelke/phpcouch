@@ -14,7 +14,7 @@ namespace phpcouch\connection;
  *
  * @version    $Id$
  */
-abstract class ConnectionAbstract extends \phpcouch\ConfigurableAbstract
+class Connection extends \phpcouch\ConfigurableAbstract
 {
 	const COUCHDB_DEFAULT_PORT = 5984;
 	
