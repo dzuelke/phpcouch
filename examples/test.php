@@ -13,8 +13,6 @@ Phpcouch::bootstrap();
 
 PhpCouch::registerConnection('default', $con = new connection\Connection(null, new adapter\Php()));
 
-$x = new \phpcouch\record\Document();
-
 var_dump($con->listDatabases());
 
 var_dump($db = $con->retrieveDatabase('testone'));

@@ -227,7 +227,7 @@ class Database extends Record
 	 */
 	public function newDocument()
 	{
-		return new \phpcouch\record\Document($this->getConnection(), $this);
+		return new \phpcouch\record\Document($this);
 	}
 }
 
