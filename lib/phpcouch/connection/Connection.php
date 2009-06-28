@@ -111,19 +111,6 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	}
 	
 	/**
-	 * Set an adapter to use with this connection.
-	 *
-	 * @param      PhpcouchIAdapter The adapter instance to use.
-	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
-	 * @since      1.0.0
-	 */
-	public function setAdapter(\phpcouch\adapter\AdapterInterface $adapter)
-	{
-		$this->adapter = $adapter;
-	}
-	
-	/**
 	 * Create a new database on the server.
 	 *
 	 * @param      string The name of the database to create.
@@ -192,8 +179,19 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 */
 	public function listDatabases()
 	{
-		// TODO: catch exceptions?
-		return $this->adapter->get($this->buildUri('_all_dbs'));
+		// special case: __all_dbs is simply an array, not a struct
+		// thus we also return a simple array of names here
+		return $this->get('_all_dbs')->toArray();
+	}
+	
+	public function get($path)
+	{
+		$data = $this->adapter->get($this->baseUrl . $path);
+		
+		$retval = new \phpcouch\record\Record($this);
+		$retval->fromArray($data);
+		
+		return $retval;
 	}
 }
 
