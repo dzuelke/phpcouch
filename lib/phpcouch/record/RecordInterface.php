@@ -5,16 +5,6 @@ namespace phpcouch\record;
 interface RecordInterface
 {
 	/**
-	 * Record constructor.
-	 *
-	 * @param      PhpcouchConnection An optional connection to associate with this record.
-	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
-	 * @since      1.0.0
-	 */
-	public function __construct(\phpcouch\connection\Connection $connection = null);
-	
-	/**
 	 * Get overload.
 	 *
 	 * @param      string Name of the virtual property to fetch.

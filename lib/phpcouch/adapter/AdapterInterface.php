@@ -17,16 +17,6 @@ namespace phpcouch\adapter;
 interface AdapterInterface
 {
 	/**
-	 * Adapter constructor.
-	 *
-	 * @param      array An array of initialization options for the driver implementation.
-	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
-	 * @since      1.0.0
-	 */
-	public function __construct(array $options = array());
-	
-	/**
 	 * Perform an HTTP PUT request.
 	 *
 	 * @param      string The URL to call.
