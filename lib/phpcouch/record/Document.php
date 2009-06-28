@@ -8,6 +8,15 @@ class Document extends MutableRecordAbstract implements DocumentInterface
 {
 	const ATTACHMENTS_FIELD = '_attachments';
 	
+	protected $database;
+	
+	public function __construct(\phpcouch\connection\Connection $connection = null, \phpcouch\record\Database $database = null)
+	{
+		parent::__construct($connection);
+		
+		$this->database = $database;
+	}
+	
 	/**
 	 * Load data into this record.
 	 * This will clear all information before importing the data and set new and modified flags to false.
@@ -55,9 +64,9 @@ class Document extends MutableRecordAbstract implements DocumentInterface
 	public function save()
 	{
 		if($this->isNew()) {
-			return $this->connection->createDocument($this);
+			return $this->database->createDocument($this);
 		} elseif($this->isModified()) {
-			return $this->connection->updateDocument($this);
+			return $this->database->updateDocument($this);
 		}
 	}
 }

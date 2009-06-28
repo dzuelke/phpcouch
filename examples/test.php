@@ -11,27 +11,27 @@ set_include_path(get_include_path() . ':' . '/Users/dzuelke/Downloads/ZendFramew
 require('../lib/phpcouch/Phpcouch.php');
 Phpcouch::bootstrap();
 
-PhpCouch::registerConnection('default', $con = new connection\Database(array('database' => 'hellohans'), new adapter\Php()));
+PhpCouch::registerConnection('default', $con = new connection\Connection(null, new adapter\Php()));
 
-PhpCouch::registerConnection('server', $con2 = new connection\Server(array(), new adapter\Php()), false);
+$x = new \phpcouch\record\Document();
 
-var_dump($con2->listDatabases());
+var_dump($con->listDatabases());
 
-var_dump($con2->retrieveDatabase('hellohans'));
+var_dump($db = $con->retrieveDatabase('testone'));
 try {
-	var_dump($con2->createDatabase('hellohans2'));
-	var_dump($con2->deleteDatabase('hellohans2'));
+	var_dump($con->createDatabase('hellohans2'));
+	var_dump($con->deleteDatabase('hellohans2'));
 } catch(PhpcouchClientErrorException $e) {
 }
 
 try {
-	$doc = $con->retrieveDocument('63A0B00A68EEBE4ECB4E0F8F9682F813');
+	$doc = $db->retrieveDocument('63A0B00A68EEBE4ECB4E0F8F9682F813');
 	$doc->title = 'hello again';
 	$doc->save();
 } catch(Exception $e) {
 }
 
-$doc = $con->newDocument();
+$doc = $db->newDocument();
 $doc->_id = uniqid();
 $doc->type = 'Page';
 $doc->title = 'Hello world again!';
@@ -43,7 +43,7 @@ $doc->save();
 $doc->title .= 'Snap';
 $doc->save();
 
-$doc = $con->newDocument();
+$doc = $db->newDocument();
 $doc->type = 'Page';
 $doc->title = 'An unnamed document';
 $doc->content = 'Yay zomg! :>>';

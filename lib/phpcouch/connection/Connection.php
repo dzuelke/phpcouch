@@ -31,14 +31,18 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	/**
 	 * The connection constructor.
 	 *
-	 * @param      array            An array of connection information.
+	 * @param      string           A URI to the server, or null for the CouchDB defaults (http://localhost:5984)
 	 * @param      PhpcouchIAdapter The adapter to use with this connection, or null to use the default.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function __construct(array $connectionInfo, \phpcouch\adapter\AdapterInterface $adapter = null)
+	public function __construct($uri = null, \phpcouch\adapter\AdapterInterface $adapter = null)
 	{
+		if($uri === null) {
+			$uri = 'http://localhost:' . self::COUCHDB_DEFAULT_PORT;
+		}
+		
 		if($adapter !== null) {
 			$this->adapter = $adapter;
 		} else {
@@ -46,15 +50,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 			$this->adapter = new \phpcouch\adapter\Php();
 		}
 		
-		// some default connection info for vanilla CouchDB setups
-		$connectionInfo = array_merge(array(
-			'scheme' => 'http',
-			'host'   => 'localhost',
-			'port'   => self::COUCHDB_DEFAULT_PORT,
-		), $connectionInfo);
-		
-		// build the base URL from the connection info
-		$this->baseUrl = sprintf('%s://%s:%s/', $connectionInfo['scheme'], $connectionInfo['host'], $connectionInfo['port']);
+		$this->baseUrl = $uri . '/';
 	}
 	
 	/**
@@ -68,7 +64,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	protected function buildUri($id = null, array $arguments = array())
+	public function buildUri($id = null, array $arguments = array())
 	{
 		return sprintf('%s%s?%s',
 			$this->baseUrl,
@@ -138,7 +134,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	{
 		// TODO: catch exceptions
 		$result = $this->adapter->get($this->buildUri($name));
-		$database = new phpcouch\Database($this);
+		$database = new \phpcouch\record\Database($this);
 		$database->hydrate($result);
 		return $database;
 	}

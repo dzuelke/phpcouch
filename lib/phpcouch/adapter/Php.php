@@ -86,7 +86,7 @@ class Php implements AdapterInterface
 		
 		if($fp === false) {
 			$error = error_get_last();
-			throw new \phpcouch\exception\Adapter($error['message']);
+			throw new Exception($error['message']);
 		}
 		
 		$meta = stream_get_meta_data($fp);
@@ -95,7 +95,7 @@ class Php implements AdapterInterface
 			!isset($meta['wrapper_data'][0]) ||
 			!($status = preg_match('#^HTTP/1\.[01]\s+(\d{3})\s+(.+)$#', $meta['wrapper_data'][0], $matches))
 		) {
-			throw new \phpcouch\exception\Adapter('Could not read HTTP response status line');
+			throw new Exception('Could not read HTTP response status line');
 		}
 		
 		$statusCode = (int)$matches[1];
@@ -106,13 +106,15 @@ class Php implements AdapterInterface
 		if($statusCode >= 400) {
 			if($statusCode % 500 < 100) {
 				// a 5xx response
-				throw new PhpcouchServerErrorException($statusMessage, $statusCode, json_decode($body));
+				throw new Exception($statusMessage, $statusCode);
+				// throw new Exception($statusMessage, $statusCode, json_decode($body));
 			} else {
 				// a 4xx response
-				throw new PhpcouchClientErrorException($statusMessage, $statusCode, json_decode($body));
+				throw new Exception($statusMessage, $statusCode);
+				// throw new Exception($statusMessage, $statusCode, json_decode($body));
 			}
 		} else {
-			// finally, decode the JSON body and return it
+			// finally, decode the JSON body and return it as a Record
 			return json_decode($body);
 		}
 	}

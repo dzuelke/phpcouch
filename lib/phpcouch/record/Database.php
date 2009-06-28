@@ -79,7 +79,7 @@ class Database extends Record
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function createDocument(phpcouch\record\Document $document)
+	public function createDocument(\phpcouch\record\Document $document)
 	{
 		$values = $document->dehydrate();
 		
@@ -227,7 +227,7 @@ class Database extends Record
 	 */
 	public function newDocument()
 	{
-		return new \phpcouch\record\Document($this);
+		return new \phpcouch\record\Document($this->getConnection(), $this);
 	}
 }
 
