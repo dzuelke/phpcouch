@@ -2,7 +2,7 @@
 
 namespace phpcouch\record;
 
-abstract class RecordAbstract implements RecordInterface
+class Record implements RecordInterface
 {
 	/**
 	 * @var        PhpcouchConnection The connection associated with this record.

@@ -2,7 +2,7 @@
 
 namespace phpcouch\record;
 
-abstract class MutableRecordAbstract extends RecordAbstract implements MutableRecordInterface
+abstract class MutableRecordAbstract extends Record implements MutableRecordInterface
 {
 	const ID_FIELD = '_id';
 	const REVISION_FIELD = '_rev';
