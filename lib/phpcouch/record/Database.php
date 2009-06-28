@@ -38,7 +38,7 @@ class Database extends Record
 	{
 		$data = array();
 		
-		if ($allData) {
+		if($allData) {
 			$data = array('include_docs' => 'true');
 		}
 		
