@@ -50,7 +50,7 @@ class Database extends Record
 			}
 			
 			if($allData) {
-				foreach($docs->rows as &$row) {			
+				foreach($docs->rows as &$row) {
 					$result = $this->getConnection()->getAdapter()->get($this->getConnection()->buildUri($row->id));
 					
 					if(isset($result->_id)) {
