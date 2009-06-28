@@ -6,7 +6,7 @@ class View
 {
 	protected $_data = array();
 	
-	public function __construct(phpcouch\connection\ConnectionAbstract $connection = null)
+	public function __construct(phpcouch\connection\Connection $connection = null)
 	{
 		if($connection === null) {
 			$connection = phpcouch\Phpcouch::getConnection();

@@ -111,14 +111,14 @@ class Phpcouch
 	/**
 	 * Register a connection.
 	 *
-	 * @param      string                                 The name of the connection.
-	 * @param      phpcouch\connection\ConnectionAbstract A connection instance.
-	 * @param      bool                                   Whether or not to make this connection the default one.
+	 * @param      string                         The name of the connection.
+	 * @param      phpcouch\connection\Connection A connection instance.
+	 * @param      bool                           Whether or not to make this connection the default one.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public static function registerConnection($name, connection\ConnectionAbstract $connection, $default = true)
+	public static function registerConnection($name, connection\Connection $connection, $default = true)
 	{
 		self::$connections[$name] = $connection;
 		
@@ -132,7 +132,7 @@ class Phpcouch
 	 *
 	 * @param      string The name of the connection to remove.
 	 *
-	 * @return     PhpcouchConnection The connection instance that was removed from the pool, or null if no connection of that name was registered.
+	 * @return     phpcouch\connection\Connection The connection instance that was removed from the pool, or null if no connection of that name was registered.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
@@ -157,7 +157,7 @@ class Phpcouch
 	 *
 	 * @param      string The name of the connection, or null (default) if the default connection should be returned.
 	 *
-	 * @return     PhpcouchConnection A connection instance, if found.
+	 * @return     phpcouch\connection\Connection A connection instance, if found.
 	 *
 	 * @throws     PhpcouchException If no connection of this name was configured.
 	 *

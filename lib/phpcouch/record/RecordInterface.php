@@ -12,7 +12,7 @@ interface RecordInterface
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function __construct(\phpcouch\connection\ConnectionAbstract $connection = null);
+	public function __construct(\phpcouch\connection\Connection $connection = null);
 	
 	/**
 	 * Get overload.
@@ -110,7 +110,7 @@ interface RecordInterface
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function setConnection(\phpcouch\connection\ConnectionAbstract $connection = null);
+	public function setConnection(\phpcouch\connection\Connection $connection = null);
 }
 
 ?>
