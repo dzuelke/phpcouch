@@ -31,7 +31,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	/**
 	 * The connection constructor.
 	 *
-	 * @param      string           A URI to the server, or null for the CouchDB defaults (http://localhost:5984)
+	 * @param      string           A URI to the server, or null for the CouchDB defaults (http://localhost:5984/)
 	 * @param      PhpcouchIAdapter The adapter to use with this connection, or null to use the default.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
