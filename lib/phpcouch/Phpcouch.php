@@ -44,7 +44,6 @@ class Phpcouch
 	 */
 	public static function autoload($className)
 	{
-		var_dump($className);
 		if(strpos($className, 'phpcouch\\') === 0) {
 			$path = self::$path . '/' . str_replace(array('\\', '_'), '/', substr($className, 9)) . '.php';
 			if(file_exists($path)) {
