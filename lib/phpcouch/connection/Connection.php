@@ -69,7 +69,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		
 		// TODO: user/pass, needs to be passed to adapter
 		$info['auth'] = '';
-		if (isset($info['user']) && isset($info["pass"])) {
+		if(isset($info['user']) && isset($info["pass"])) {
 			$info['auth'] = $info['user'] . ":" . $info["pass"] . "@";
 		}
 		
