@@ -38,14 +38,14 @@ class PhpcouchTest extends PHPUnit_Framework_TestCase
 	
 	public function testGetDefaultConnectionThrowsException()
 	{
-		$this->setExpectedException('phpcouch\exception\Exception');
+		$this->setExpectedException('phpcouch\Exception');
 		
 		Phpcouch::getConnection();
 	}
 	
 	public function testGetNamedConnectionThrowsException()
 	{
-		$this->setExpectedException('PhpcouchException');
+		$this->setExpectedException('phpcouch\Exception');
 		
 		Phpcouch::getConnection('zomg');
 	}
@@ -80,7 +80,7 @@ class PhpcouchTest extends PHPUnit_Framework_TestCase
 		$c = new PHPUnit_Framework_Constraint_IsInstanceOf('phpcouch\connection\Connection');
 		$this->assertThat($ret, $c);
 		
-		$this->setExpectedException('PhpcouchException');
+		$this->setExpectedException('phpcouch\Exception');
 		
 		Phpcouch::getConnection('foo');
 	}
@@ -95,7 +95,7 @@ class PhpcouchTest extends PHPUnit_Framework_TestCase
 		
 		Phpcouch::unregisterConnection('foo');
 		
-		$this->setExpectedException('PhpcouchException');
+		$this->setExpectedException('phpcouch\Exception');
 		Phpcouch::getConnection();
 	}
 	
@@ -126,7 +126,7 @@ class PhpcouchTest extends PHPUnit_Framework_TestCase
 		// remove bar, now we do not have a default
 		Phpcouch::unregisterConnection('bar');
 		
-		$this->setExpectedException('PhpcouchException');
+		$this->setExpectedException('phpcouch\Exception');
 		Phpcouch::getConnection();
 	}
 }
