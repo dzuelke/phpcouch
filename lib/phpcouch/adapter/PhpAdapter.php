@@ -17,7 +17,7 @@ use phpcouch\Exception;
  *
  * @version    $Id$
  */
-class Php implements AdapterInterface
+class PhpAdapter implements AdapterInterface
 {
 	protected $options = array();
 	

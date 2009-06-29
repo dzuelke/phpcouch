@@ -73,7 +73,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 			$this->adapter = $adapter;
 		} else {
 			// no adapter given? let's create a default one.
-			$this->adapter = new \phpcouch\adapter\Php();
+			$this->adapter = new \phpcouch\adapter\PhpAdapter();
 		}
 		
 		$this->baseUrl = sprintf('%s://%s:%s%s', $info['scheme'], $info['host'], $info['port'], $info['path']);

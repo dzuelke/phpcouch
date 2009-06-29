@@ -11,7 +11,7 @@ set_include_path(get_include_path() . ':' . '/Users/dzuelke/Downloads/ZendFramew
 require('../lib/phpcouch/Phpcouch.php');
 Phpcouch::bootstrap();
 
-PhpCouch::registerConnection('default', $con = new connection\Connection(null, new adapter\Php()));
+PhpCouch::registerConnection('default', $con = new connection\Connection(null, new adapter\PhpAdapter()));
 
 var_dump($con->listDatabases());
 
