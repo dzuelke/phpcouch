@@ -1,6 +1,7 @@
 <?php
 
 use phpcouch\Phpcouch;
+use phpcouch\Exception;
 use phpcouch\connection;
 use phpcouch\adapter;
 
@@ -26,7 +27,7 @@ die();
 try {
 	var_dump($con->createDatabase('hellohans2'));
 	var_dump($con->deleteDatabase('hellohans2'));
-} catch(PhpcouchClientErrorException $e) {
+} catch(Exception $e) {
 }
 
 try {
