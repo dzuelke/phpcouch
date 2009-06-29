@@ -1,6 +1,6 @@
 <?php
 
-class Document_Test extends PHPUnit_Framework_TestCase
+class Database_Test extends PHPUnit_Framework_TestCase
 {
 	
 	protected $database;
@@ -13,6 +13,7 @@ class Document_Test extends PHPUnit_Framework_TestCase
 		$this->document = new TestDatabase(new TestPhpcouchDummyConnection("http://admin:neverland@127.0.0.1:5984/"));
 	
 	}
+	
 	
 
 }
