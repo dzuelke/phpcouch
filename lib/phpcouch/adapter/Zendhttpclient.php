@@ -13,7 +13,7 @@
  *
  * @version    $Id$
  */
-class PhpcouchZendhttpclientAdapter implements PhpcouchIAdapter
+class PhpcouchZendhttpclientAdapter implements AdapterInterface
 {
 	/**
 	 * Adapter constructor.
@@ -23,14 +23,8 @@ class PhpcouchZendhttpclientAdapter implements PhpcouchIAdapter
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function __construct(array $options = array())
+	public function __construct(array $options = array(), $clientClass = 'Zend_Http_Client')
 	{
-		// try an autoload
-		if(!class_exists('Zend_Http_Client')) {
-			// nope. Zend loves to be on the include path, though
-			require('Zend/Http/Client.php');
-		}
-		
 		// by default, we override two options, keepalive (nice when doing multiple requests) and the user agent string
 		$options = array_merge(array(
 			'keepalive'    => true,
@@ -38,7 +32,8 @@ class PhpcouchZendhttpclientAdapter implements PhpcouchIAdapter
 		), $options);
 		
 		// make a client instance
-		$this->client = new Zend_Http_Client();
+		// we rely on Zend_Loader's autoloader being active. That's the user's job though
+		$this->client = new $clientClass();
 		// and feed it our options
 		$this->client->setConfig($options);
 	}
