@@ -1,5 +1,7 @@
 <?php
 
+use phpcouch\Phpcouch;
+
 if(!defined('PHPUnit_MAIN_METHOD')) {
 	define('PHPUnit_MAIN_METHOD', 'AllTests::main');
 }
@@ -36,7 +38,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
 	public function setUp()
 	{
 		// set up and init PHPCouch
-		require_once('../lib/Phpcouch.class.php');
+		require_once('../lib/phpcouch/Phpcouch.php');
 		Phpcouch::bootstrap();
 	}
 	
@@ -45,8 +47,8 @@ class AllTests extends PHPUnit_Framework_TestSuite
 	}
 }
 
-PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(dirname(__FILE__) . '/../lib/'));
-PHPUnit_Util_Filter::removeFileFromWhitelist(realpath(dirname(__FILE__) . '/../lib/Phpcouch.php'));
+PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(dirname(__FILE__) . '/../lib/phpcouch'));
+PHPUnit_Util_Filter::removeFileFromWhitelist(realpath(dirname(__FILE__) . '/../lib/phpcouch/Phpcouch.php'));
 PHPUnit_Util_Filter::removeDirectoryFromWhitelist(realpath(dirname(__FILE__)));
 
 if(PHPUnit_MAIN_METHOD == 'AllTests::main') {

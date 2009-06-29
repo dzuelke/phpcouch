@@ -1,5 +1,6 @@
 <?php
 
+
 class Record_Test extends PHPUnit_Framework_TestCase
 {
 	protected $record;
@@ -16,7 +17,7 @@ class Record_Test extends PHPUnit_Framework_TestCase
 	{
 		$ret = $this->record->getConnection();
 		
-		$c = new PHPUnit_Framework_Constraint_IsInstanceOf('PhpcouchConnection');
+		$c = new PHPUnit_Framework_Constraint_IsInstanceOf('phpcouch\connection\Connection');
 		$this->assertThat($ret, $c);
 	}
 	
@@ -33,13 +34,13 @@ class Record_Test extends PHPUnit_Framework_TestCase
 	{
 		$cname = uniqid();
 		$con = new TestPhpcouchDummyConnection(array());
-		Phpcouch::registerConnection($cname, $con, true);
+		phpcouch\Phpcouch::registerConnection($cname, $con, true);
 		
 		$this->record->setConnection();
 		
 		$this->assertSame($con, $this->record->getConnection());
 		
-		Phpcouch::unregisterConnection($cname);
+		phpcouch\Phpcouch::unregisterConnection($cname);
 	}
 	
 	public function testIsInitiallyEmpty()
