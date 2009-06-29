@@ -18,8 +18,12 @@ var_dump($con->listDatabases());
 
 var_dump($db = $con->retrieveDatabase('testone'));
 
-foreach($db->executeView('lolcats', 'allpp') as $row) {
-	var_dump($row->getDocument('doc'));
+foreach($db->executeView('lolcats', 'allp') as $row) {
+	var_dump($row->getDocument('doc')->_id);
+}
+
+foreach($db->listDocuments(true) as $row) {
+	var_dump($row->getDocument()->_id);
 }
 
 die();

@@ -25,53 +25,6 @@ class Database extends Record
 	}
 	
 	/**
-	 * Get a list of all the documents in the database.
-	 * 
-	 * @param       PhpcouchIDocument The document to store.
-	 *
-	 * @return      stdClass list of all records
-	 * 
-	 * @throws      PhpcouchErrorException Yikes!
-	 *
-	 * @author      Simon Thulbourn
-	 * @since       1.0.0
-	 */
-	public function listDocuments($allData = false)
-	{
-		$data = array();
-		
-		if($allData) {
-			$data = array('include_docs' => 'true');
-		}
-		
-		try {
-			$docs = $this->getConnection()->getAdapter()->get($this->getConnection()->buildUri('_all_docs'));
-			
-			if($docs->total_rows == 0) {
-				throw new Exception('No documents founds');
-			}
-			
-			if($allData) {
-				foreach($docs->rows as &$row) {
-					$result = $this->getConnection()->getAdapter()->get($this->getConnection()->buildUri($row->id));
-					
-					if(isset($result->_id)) {
-						$document = $this->newDocument();
-						$document->hydrate($result);
-						$row = $document;
-					} else {
-						throw new Exception('Something bad happened here, call the police');
-					}
-				}
-			}
-			
-			return $docs;
-		} catch(Exception $e) {
-			throw new Exception($e->getMessage(), $e->getCode(), $e);
-		}
-	}
-	
-	/**
 	 * Create a new document on the server.
 	 *
 	 * @param      PhpcouchIDocument The document to store.
@@ -232,6 +185,24 @@ class Database extends Record
 		return new Document($this);
 	}
 	
+	/**
+	 * Get a list of all the documents in the database.
+	 * 
+	 * @param       bool Whether or not to pull complete document instances along in the list.
+	 *
+	 * @return      AllDocsResult A list of all documents in the database.
+	 * 
+	 * @author      David Zülke <david.zuelke@bitextender.com>
+	 * @since       1.0.0
+	 */
+	public function listDocuments($includeDocs = false)
+	{
+		$viewResult = new AllDocsResult($this);
+		$viewResult->hydrate($this->getConnection()->getAdapter()->get($this->getConnection()->baseUrl . $this->getName() . '/_all_docs' . ($includeDocs ? '?include_docs=true' : '')));
+		
+		return $viewResult;
+	}
+	
 	public function executeView($designDocument, $viewName, $viewResultClass = null)
 	{
 		if($designDocument instanceof DocumentInterface) {
@@ -239,9 +210,9 @@ class Database extends Record
 		}
 		
 		if($viewResultClass === null) {
-			$viewResultClass = '\phpcouch\record\ViewResult';
+			$viewResultClass = 'phpcouch\record\ViewResult';
 		}
-		$viewResult = new ViewResult($this);
+		$viewResult = new $viewResultClass($this);
 		$viewResult->hydrate($this->getConnection()->getAdapter()->get($this->getConnection()->baseUrl . $this->getName() . '/_design/' . $designDocument . '/_view/' . $viewName));
 		
 		return $viewResult;

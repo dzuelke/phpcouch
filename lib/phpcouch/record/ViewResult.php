@@ -2,15 +2,22 @@
 
 namespace phpcouch\record;
 
-class ViewResult extends Record implements \IteratorAggregate
+class ViewResult extends Record implements ViewResultInterface, \IteratorAggregate
 {
+	const DEFAULT_VIEW_RESULT_ROW_CLASS = 'phpcouch\record\ViewResultRow';
+	
 	protected $database;
 	
-	public function __construct(\phpcouch\record\Database $database = null)
+	public function __construct(Database $database = null)
 	{
 		parent::__construct($database->getConnection());
 		
 		$this->database = $database;
+	}
+	
+	public function getDatabase()
+	{
+		return $this->database;
 	}
 	
 	public function hydrate($data)
@@ -18,9 +25,10 @@ class ViewResult extends Record implements \IteratorAggregate
 		parent::hydrate($data);
 		
 		$newRows = array();
+		$cls = static::DEFAULT_VIEW_RESULT_ROW_CLASS;
 		// cannot iterate with &$row as it's a __get() function
 		foreach($this->rows as $row) {
-			$vrr = new ViewResultRow($this->database);
+			$vrr = new $cls($this);
 			$vrr->hydrate($row);
 			$newRows[] = $vrr;
 		}
