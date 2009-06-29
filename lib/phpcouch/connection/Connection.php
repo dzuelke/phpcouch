@@ -28,7 +28,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	/**
 	 * @var        string The base URL for this connection.
 	 */
-	protected $baseUrl = '';
+	public $baseUrl = '';
 	
 	/**
 	 * The connection constructor.

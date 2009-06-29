@@ -231,6 +231,21 @@ class Database extends Record
 	{
 		return new \phpcouch\record\Document($this);
 	}
+	
+	public function executeView($designDocument, $viewName, $viewResultClass = null)
+	{
+		if($designDocument instanceof DocumentInterface) {
+			$designDocument = str_replace('_design/', '', $designDocument->getId());
+		}
+		
+		if($viewResultClass === null) {
+			$viewResultClass = '\phpcouch\record\ViewResult';
+		}
+		$viewResult = new ViewResult($this);
+		$viewResult->hydrate($this->getConnection()->getAdapter()->get($this->getConnection()->baseUrl . $this->getName() . '/_design/' . $designDocument . '/_view/' . $viewName));
+		
+		return $viewResult;
+	}
 }
 
 ?>

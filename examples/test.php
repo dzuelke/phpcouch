@@ -16,6 +16,13 @@ PhpCouch::registerConnection('default', $con = new connection\Connection(null, n
 var_dump($con->listDatabases());
 
 var_dump($db = $con->retrieveDatabase('testone'));
+
+foreach($db->executeView('lolcats', 'allpp') as $row) {
+	var_dump($row->getDocument('doc'));
+}
+
+die();
+
 try {
 	var_dump($con->createDatabase('hellohans2'));
 	var_dump($con->deleteDatabase('hellohans2'));
