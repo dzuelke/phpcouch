@@ -1,6 +1,6 @@
 <?php
 
-class TestPhpcouchDocument extends PhpcouchDocument
+class TestPhpcouchDocument extends phpcouch\record\Document
 {
 
 }
