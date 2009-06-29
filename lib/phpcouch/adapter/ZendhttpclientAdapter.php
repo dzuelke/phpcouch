@@ -32,7 +32,7 @@ class ZendhttpclientAdapter implements AdapterInterface
 		// by default, we override two options, keepalive (nice when doing multiple requests) and the user agent string
 		$options = array_merge(array(
 			'keepalive'    => true,
-			'useragent'    => phpcouch\Phpcouch::getVersionString(),
+			'useragent'    => \phpcouch\Phpcouch::getVersionString(),
 		), $options);
 		
 		// make a client instance
@@ -52,7 +52,7 @@ class ZendhttpclientAdapter implements AdapterInterface
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	protected function getClient($reset = true)
+	public function getClient($reset = true)
 	{
 		if($reset) {
 			// "reset" the client
@@ -74,7 +74,7 @@ class ZendhttpclientAdapter implements AdapterInterface
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	protected function doRequest($uri, $method = 'GET', $data = null)
+	protected function doRequest($uri, $method = 'GET', $data = null, $headers = array())
 	{
 		$c = $this->getClient();
 		
@@ -84,6 +84,10 @@ class ZendhttpclientAdapter implements AdapterInterface
 			// data to send, let's encode it to JSON
 			// must set the content type, since it's reset otherwise (fantastic implementation, Zend...)
 			$data = $c->setRawData(json_encode($data), 'application/json');
+		}
+		
+		if (sizeof($headers) !== 0) {
+			$c->setHeaders($headers);
 		}
 		
 		try {
@@ -177,9 +181,9 @@ class ZendhttpclientAdapter implements AdapterInterface
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function delete($uri)
+	public function delete($uri, $headers = array())
 	{
-		return $this->doRequest($uri, 'DELETE');
+		return $this->doRequest($uri, 'DELETE', null, $headers);
 	}
 }
 

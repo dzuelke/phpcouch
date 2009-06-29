@@ -190,7 +190,7 @@ class PhpAdapter implements AdapterInterface
 	 */
 	public function delete($uri, $headers = array())
 	{
-		return $this->doRequest($uri, 'DELETE', array(), $headers);
+		return $this->doRequest($uri, 'DELETE', null, $headers);
 	}
 }
 
