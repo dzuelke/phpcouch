@@ -40,6 +40,7 @@ class Document_Test extends PHPUnit_Framework_TestCase
 
 		$connection->deleteDatabase($dat2->getName());
 
+		$this->markIncomplete('');
 	}
 	
 	public function testHydrateGetHasAttachments()
@@ -63,11 +64,35 @@ class Document_Test extends PHPUnit_Framework_TestCase
 	
 	public function testSaveCreateDocument()
 	{
-	
+		
+		$database = $this->getMock('TestDatabase');
+		$this->document->database = $database;
+		$this->document->sdfsdf = "sdfds";
+		
+				
+		$database->expects($this->once())
+			->method('createDocument')
+			->with($this->equalTo($this->document));
+						
+		$this->document->save();
+			
 	}
 
 	public function testSaveUpdateDocument()
 	{
+		$database = $this->getMock('TestDatabase');
+		$this->document->database = $database;
+
+		$this->document->sdfsdf = "sdfds";
+		$this->document->save();
+
+		$this->document->sdfsfdsfd = "sdfsdfs";		
+				
+		$database->expects($this->once())
+			->method('createDocument')
+			->with($this->equalTo($this->document));
+						
+		$this->document->save();
 	
 	}
 
