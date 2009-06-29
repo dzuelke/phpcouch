@@ -2,3 +2,4 @@
 - Views (CRUD, executing, temp views)
 - implement other adapters
 - teeeeeeeests (http://framework.zend.com/manual/en/zend.http.client.adapters.html#zend.http.client.adapters.test)
+- adapters might need connection details, like auth info or even the uri itself
