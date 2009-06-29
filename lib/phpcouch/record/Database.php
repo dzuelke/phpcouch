@@ -81,7 +81,7 @@ class Database extends Record
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function createDocument(\phpcouch\record\Document $document)
+	public function createDocument(DocumentInterface $document)
 	{
 		$values = $document->dehydrate();
 		
@@ -103,7 +103,7 @@ class Database extends Record
 			
 			if(isset($result->ok) && $result->ok === true) {
 				// all cool.
-				$document->hydrate(array(\phpcouch\record\Document::ID_FIELD => $result->id, \phpcouch\record\Document::REVISION_FIELD => $result->rev));
+				$document->hydrate(array(Document::ID_FIELD => $result->id, Document::REVISION_FIELD => $result->rev));
 				return;
 			} else {
 				throw new Exception('Result not OK :(');
@@ -159,7 +159,7 @@ class Database extends Record
 	public function retrieveAttachment($name, $id)
 	{
 		// TODO: this doesn't work atm
-		if($id instanceof \phpcouch\record\DocumentInterface) {
+		if($id instanceof DocumentInterface) {
 			$id = $id->_id;
 		}
 		
@@ -178,7 +178,7 @@ class Database extends Record
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function updateDocument(\phpcouch\record\DocumentInterface $document)
+	public function updateDocument(DocumentInterface $document)
 	{
 		$values = $document->dehydrate();
 		
@@ -206,9 +206,9 @@ class Database extends Record
 	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function deleteDocument(\phpcouch\record\DocumentInterface $doc)
+	public function deleteDocument(DocumentInterface $doc)
 	{
-		if($doc instanceof \phpcouch\record\DocumentInterface) {
+		if($doc instanceof DocumentInterface) {
 			$headers = array('If-Match' => $doc->_rev);
 			$id = $doc->_id;
 		} else {
@@ -229,7 +229,7 @@ class Database extends Record
 	 */
 	public function newDocument()
 	{
-		return new \phpcouch\record\Document($this);
+		return new Document($this);
 	}
 	
 	public function executeView($designDocument, $viewName, $viewResultClass = null)
