@@ -1,5 +1,9 @@
 <?php
 
+namespace phpcouch\adapter;
+
+use phpcouch\Exception;
+
 /**
  * An adapter implemented using the Zend Framework HTTP Client.
  *
@@ -13,7 +17,7 @@
  *
  * @version    $Id$
  */
-class PhpcouchZendhttpclientAdapter implements AdapterInterface
+class ZendhttpclientAdapter implements AdapterInterface
 {
 	/**
 	 * Adapter constructor.
@@ -28,12 +32,12 @@ class PhpcouchZendhttpclientAdapter implements AdapterInterface
 		// by default, we override two options, keepalive (nice when doing multiple requests) and the user agent string
 		$options = array_merge(array(
 			'keepalive'    => true,
-			'useragent'    => Phpcouch::getVersionString(),
+			'useragent'    => phpcouch\Phpcouch::getVersionString(),
 		), $options);
 		
 		// make a client instance
 		// we rely on Zend_Loader's autoloader being active. That's the user's job though
-		$this->client = new Zend_Http_Client();
+		$this->client = new \Zend_Http_Client();
 		// and feed it our options
 		$this->client->setConfig($options);
 	}
@@ -85,23 +89,23 @@ class PhpcouchZendhttpclientAdapter implements AdapterInterface
 		try {
 			// perform the request
 			$r = $c->request($method);
-		} catch(Zend_Http_Client_Exception $e) {
+		} catch(\Zend_Http_Client_Exception $e) {
 			// something went wrong; wrap the exception and throw again
 			// this is typically a timeout, unknown host etc, not a 404 or such
-			throw new PhpcouchAdapterException($e->getMessage());
+			throw new Exception($e->getMessage());
 		}
 		
 		if($r->isError()) {
 			if($r->getStatus() % 500 < 100) {
 				// a 5xx response
-				throw new PhpcouchServerErrorException($r->getMessage(), $r->getStatus(), json_decode($r->getBody()));
+				throw new Exception($r->getMessage(), $r->getStatus(), json_decode($r->getBody()));
 			} else {
 				// a 4xx response
-				throw new PhpcouchClientErrorException($r->getMessage(), $r->getStatus(), json_decode($r->getBody()));
+				throw new Exception($r->getMessage(), $r->getStatus(), json_decode($r->getBody()));
 			}
 		} elseif($r->isRedirect()) {
 			// by default, we're following up to five redirects, so we never see them in the response, unless... there were too many
-			throw new PhpcouchAdapterException('Too many redirects');
+			throw new Exception('Too many redirects');
 		} else {
 			// finally, decode the JSON body and return it
 			return json_decode($r->getBody());
