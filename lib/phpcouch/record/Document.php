@@ -10,7 +10,7 @@ class Document extends MutableRecordAbstract implements DocumentInterface
 	
 	protected $database;
 	
-	public function __construct(\phpcouch\record\Database $database = null)
+	public function __construct(Database $database = null)
 	{
 		parent::__construct($database->getConnection());
 		
