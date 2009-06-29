@@ -2,6 +2,8 @@
 
 namespace phpcouch\adapter;
 
+use phpcouch\Exception;
+
 /**
  * An adapter implemented using the PHP >= 5.3 HTTP fopen wrapper.
  *

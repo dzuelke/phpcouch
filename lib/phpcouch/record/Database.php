@@ -2,6 +2,8 @@
 
 namespace phpcouch\record;
 
+use phpcouch\Exception;
+
 class Database extends Record
 {
 	public function __toString()
@@ -46,7 +48,7 @@ class Database extends Record
 			$docs = $this->getConnection()->getAdapter()->get($this->getConnection()->buildUri('_all_docs'));
 			
 			if($docs->total_rows == 0) {
-				throw new \phpcouch\exception\error\Error('No documents founds');
+				throw new Exception('No documents founds');
 			}
 			
 			if($allData) {
@@ -58,14 +60,14 @@ class Database extends Record
 						$document->hydrate($result);
 						$row = $document;
 					} else {
-						throw new \phpcouch\exception\error\Error('Something bad happened here, call the police');
+						throw new Exception('Something bad happened here, call the police');
 					}
 				}
 			}
 			
 			return $docs;
-		} catch (\phpcouch\exception\error\Error $e) {
-			throw new \phpcouch\exception\error\Error($e->getMessage());
+		} catch(Exception $e) {
+			throw new Exception($e->getMessage(), $e->getCode(), $e);
 		}
 	}
 	
@@ -104,11 +106,11 @@ class Database extends Record
 				$document->hydrate(array(\phpcouch\record\Document::ID_FIELD => $result->id, \phpcouch\record\Document::REVISION_FIELD => $result->rev));
 				return;
 			} else {
-				throw new PhpcouchSaveException();
+				throw new Exception('Result not OK :(');
 				// TODO: add $result
 			}
-		} catch(\phpcouch\exception\error\Error $e) {
-			throw new PhpcouchSaveException();
+		} catch(Exception $e) {
+			throw new Exception($e->getMessage(), $e->getCode(), $e);
 			// TODO: add $result
 		}
 	}
@@ -210,7 +212,7 @@ class Database extends Record
 			$headers = array('If-Match' => $doc->_rev);
 			$id = $doc->_id;
 		} else {
-			throw new PhpcouchErrorException('Parameter supplied is not of type PhpcouchDocument');
+			throw new Exception('Parameter supplied is not of type PhpcouchDocument');
 		}
 		
 		$uri = $this->getConnection()->buildUri($id);

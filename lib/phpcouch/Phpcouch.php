@@ -172,9 +172,9 @@ class Phpcouch
 		if($name !== null && isset(self::$connections[$name])) {
 			return self::$connections[$name];
 		} elseif($name === null) {
-			throw new PhpcouchException(sprintf('No default connection defined.'));
+			throw new Exception(sprintf('No default connection defined.'));
 		} else {
-			throw new PhpcouchException(sprintf('Connection "%s" not configured.', $name));
+			throw new Exception(sprintf('Connection "%s" not configured.', $name));
 		}
 	}
 	

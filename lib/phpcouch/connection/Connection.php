@@ -2,6 +2,8 @@
 
 namespace phpcouch\connection;
 
+use phpcouch\Exception;
+
 /**
  * The main connection class, representing a connection registered with PHPCouch.
  *
