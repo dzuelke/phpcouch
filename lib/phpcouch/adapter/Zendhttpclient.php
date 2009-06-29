@@ -23,7 +23,7 @@ class PhpcouchZendhttpclientAdapter implements AdapterInterface
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function __construct(array $options = array(), $clientClass = 'Zend_Http_Client')
+	public function __construct(array $options = array())
 	{
 		// by default, we override two options, keepalive (nice when doing multiple requests) and the user agent string
 		$options = array_merge(array(
@@ -33,7 +33,7 @@ class PhpcouchZendhttpclientAdapter implements AdapterInterface
 		
 		// make a client instance
 		// we rely on Zend_Loader's autoloader being active. That's the user's job though
-		$this->client = new $clientClass();
+		$this->client = new Zend_Http_Client();
 		// and feed it our options
 		$this->client->setConfig($options);
 	}
