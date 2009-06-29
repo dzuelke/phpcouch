@@ -40,7 +40,7 @@ class Document_Test extends PHPUnit_Framework_TestCase
 
 		$connection->deleteDatabase($dat2->getName());
 
-		$this->markIncomplete('');
+		$this->markTestIncomplete('');
 	}
 	
 	public function testHydrateGetHasAttachments()
