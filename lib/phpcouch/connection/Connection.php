@@ -68,6 +68,10 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		$info['path'] = '/';
 		
 		// TODO: user/pass, needs to be passed to adapter
+		$info['auth'] = '';
+		if (isset($info['user']) && isset($info["pass"])) {
+			$info['auth'] = $info['user'] . ":" . $info["pass"] . "@";
+		}
 		
 		if($adapter !== null) {
 			$this->adapter = $adapter;
@@ -76,7 +80,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 			$this->adapter = new \phpcouch\adapter\PhpAdapter();
 		}
 		
-		$this->baseUrl = sprintf('%s://%s:%s%s', $info['scheme'], $info['host'], $info['port'], $info['path']);
+		$this->baseUrl = sprintf('%s://%s%s:%s%s', $info['scheme'], $info['auth'], $info['host'], $info['port'], $info['path']);
 	}
 	
 	/**

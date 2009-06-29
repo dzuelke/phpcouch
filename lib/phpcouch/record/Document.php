@@ -34,6 +34,11 @@ class Document extends MutableRecordAbstract implements DocumentInterface
 		$this->isModified = false;
 	}
 	
+	public function getDatabase()
+	{
+		return $this->database;
+	}
+	
 	public function getAttachments()
 	{
 		return $this->{self::ATTACHMENTS_FIELD};

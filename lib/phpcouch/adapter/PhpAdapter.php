@@ -67,6 +67,7 @@ class PhpAdapter implements AdapterInterface
 	 */
 	protected function doRequest($uri, $method = 'GET', $data = null, $headers = array())
 	{
+	
 		$options = $this->options;
 		$options['http']['method'] = $method;
 			
