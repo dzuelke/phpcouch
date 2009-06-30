@@ -5,16 +5,12 @@ use phpcouch\Exception;
 use phpcouch\connection;
 use phpcouch\adapter;
 
-define('RESPONSE_PATH', dirname(__FILE__) .'/files');
+define('RESPONSE_PATH', dirname(__FILE__) .'/_files');
 
-if(!defined('PHPUnit_MAIN_METHOD')) {
-	define('PHPUnit_MAIN_METHOD', 'AllTests::main');
-}
- 
 require_once('PHPUnit/Framework.php');
 require_once('PHPUnit/TextUI/TestRunner.php');
 
-require('../../lib/phpcouch/Phpcouch.php');
+require('../../../lib/phpcouch/Phpcouch.php');
 require_once('Zend/Loader/Autoloader.php');
  
 class PhpcouchConnectionTest extends PHPUnit_Framework_TestCase
@@ -42,7 +38,7 @@ class PhpcouchConnectionTest extends PHPUnit_Framework_TestCase
 		$adapter = new Zend_Http_Client_Adapter_Test();
 		$con->getAdapter()->getClient()->setAdapter($adapter);
 		
-		$response = file_get_contents(RESPONSE_PATH .'/_files/connection/connection/listDatabases');
+		$response = file_get_contents(RESPONSE_PATH .'/listDatabases');
 		
 		$adapter->setResponse($response);
 				
@@ -56,7 +52,7 @@ class PhpcouchConnectionTest extends PHPUnit_Framework_TestCase
 		$adapter = new Zend_Http_Client_Adapter_Test();
 		$con->getAdapter()->getClient()->setAdapter($adapter);
 		
-		$response = file_get_contents(RESPONSE_PATH .'/_files/connection/connection/retrieveDatabase');
+		$response = file_get_contents(RESPONSE_PATH .'/retrieveDatabase');
 		
 		$adapter->setResponse($response);
 				
@@ -74,7 +70,7 @@ class PhpcouchConnectionTest extends PHPUnit_Framework_TestCase
 		$adapter = new Zend_Http_Client_Adapter_Test();
 		$con->getAdapter()->getClient()->setAdapter($adapter);
 		
-		$response = file_get_contents(RESPONSE_PATH .'/_files/connection/connection/createDatabase');
+		$response = file_get_contents(RESPONSE_PATH .'/createDatabase');
 		
 		$adapter->setResponse($response);
 				
@@ -92,7 +88,7 @@ class PhpcouchConnectionTest extends PHPUnit_Framework_TestCase
 		$adapter = new Zend_Http_Client_Adapter_Test();
 		$con->getAdapter()->getClient()->setAdapter($adapter);
 		
-		$response = file_get_contents(RESPONSE_PATH .'/_files/connection/connection/deleteDatabase');
+		$response = file_get_contents(RESPONSE_PATH .'/deleteDatabase');
 		
 		$adapter->setResponse($response);
 		
