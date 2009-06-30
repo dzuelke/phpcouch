@@ -34,10 +34,10 @@ class PhpAdapter implements AdapterInterface
 		$this->options = array(
 			'http' => array(
 				'header' => array(
-					'Content-Type: application/json',
-					'User-Agent: ' . \phpcouch\Phpcouch::getVersionString(),
+					'Accept: */*, application/json',
 				),
 				'ignore_errors' => true,
+				'user_agent' => \phpcouch\Phpcouch::getVersionString(),
 			),
 		);
 		
@@ -52,35 +52,34 @@ class PhpAdapter implements AdapterInterface
 	}
 	
 	/**
-	 * Perform the actual request.
+	 * Perform the HTTP request.
 	 *
-	 * @param      string The URL to call.
 	 * @param      string The HTTP method to use.
-	 * @param      array  The data to serialize to JSON and send.
-	 * @param      array  HTTP headers.
+	 * @param      string The URL to call.
+	 * @param      array  Optional HTTP headers.
+	 * @param      string Optional request body payload.
 	 *
-	 * @return     stdClass The unserialized response JSON.
+	 * @return     array  The response from the server as an indexed array of a content string and a headers array.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
 	 * @since      1.0.0
 	 */
-	protected function doRequest($uri, $method = 'GET', $data = null, $headers = array())
+	public function sendRequest($method, $url, array $headers = array(), $payload = null)
 	{
 		$options = $this->options;
-		$options['http']['method'] = $method;
-			
-		$sendHeaders = array();
 		
-		// form valid headers
-		foreach($headers as $key => $value) {
-			array_push($options['http']['header'], "$key: $value\r\n");
-		}
-
+		$options['http']['method'] = $method;
+		
+		$options['http']['header'] = array();
+		
 		if($data !== null) {
-			// data to send, let's encode it to JSON
-			$options['http']['content'] = json_encode($data);
+			$options['http']['content'] = $data;
+			$options['http']['header'][] = 'Content-Length: ' . strlen($data);
 		}
+		
+		// build our list of additional headers from the method argument
+		array_walk($headers, function($value, $key) use($options) { $options['http']['header'][] = "$key: $value"; });
 		
 		$ctx = stream_context_create($options);
 		
@@ -92,6 +91,8 @@ class PhpAdapter implements AdapterInterface
 		}
 		
 		$meta = stream_get_meta_data($fp);
+		
+		// $meta['wrapper_data'] is an indexed array of the individual response header lines
 		
 		if(
 			!isset($meta['wrapper_data'][0]) ||
@@ -116,81 +117,8 @@ class PhpAdapter implements AdapterInterface
 				// throw new Exception($statusMessage, $statusCode, json_decode($body));
 			}
 		} else {
-			// finally, decode the JSON body and return it as a Record
-			return json_decode($body);
+			return array($body, $meta['wrapper_data']);
 		}
-	}
-	
-	/**
-	 * Perform an HTTP PUT request.
-	 *
-	 * @param      string The URL to call.
-	 * @param      array  The JSON data to serialize and send.
-	 *
-	 * @return     stdClass The JSON response.
-	 *
-	 * @throws     PhpcouchException ?
-	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
-	 * @since      1.0.0
-	 */
-	public function put($uri, $data = null)
-	{
-		return $this->doRequest($uri, 'PUT', $data);
-	}
-	
-	/**
-	 * Perform an HTTP GET request.
-	 *
-	 * @param      string The URL to call.
-	 *
-	 * @return     stdClass The JSON response.
-	 *
-	 * @throws     PhpcouchException ?
-	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
-	 * @since      1.0.0
-	 */
-	public function get($uri)
-	{
-		return $this->doRequest($uri, 'GET');
-	}
-	
-	/**
-	 * Perform an HTTP POST request.
-	 *
-	 * @param      string The URL to call.
-	 * @param      array  The JSON data to serialize and send.
-	 *
-	 * @return     stdClass The JSON response.
-	 *
-	 * @throws     PhpcouchException ?
-	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
-	 * @since      1.0.0
-	 */
-	public function post($uri, $data = null)
-	{
-		return $this->doRequest($uri, 'POST', $data);
-	}
-	
-	/**
-	 * Perform an HTTP DELETE request.
-	 *
-	 * @param      string The URL to call.
-	 * @param 	   array  HTTP headers.
-	 *
-	 * @return     stdClass The JSON response.
-	 *
-	 * @throws     PhpcouchException ?
-	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
-	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
-	 * @since      1.0.0
-	 */
-	public function delete($uri, $headers = array())
-	{
-		return $this->doRequest($uri, 'DELETE', null, $headers);
 	}
 }
 

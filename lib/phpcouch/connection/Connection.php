@@ -190,9 +190,39 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		return $this->get('_all_dbs')->toArray();
 	}
 	
-	public function get($path)
+	public function get($resource, $headers = array())
 	{
-		$data = $this->adapter->get($this->baseUrl . $path);
+		return $this->adapter->doRequest('GET', $this->baseUrl . $resource, $headers);
+		
+		$retval = new \phpcouch\record\Record($this);
+		$retval->fromArray($data);
+		
+		return $retval;
+	}
+	
+	public function post($resource, $headers = array(), $payload)
+	{
+		return $this->adapter->doRequest('POST', $this->baseUrl . $resource, $headers, $payload);
+		
+		$retval = new \phpcouch\record\Record($this);
+		$retval->fromArray($data);
+		
+		return $retval;
+	}
+	
+	public function put($resource, $headers = array(), $payload)
+	{
+		return $this->adapter->doRequest('PUT', $this->baseUrl . $resource, $headers, $payload);
+		
+		$retval = new \phpcouch\record\Record($this);
+		$retval->fromArray($data);
+		
+		return $retval;
+	}
+	
+	public function delete($resource, $headers = array())
+	{
+		return $this->adapter->doRequest('DELETE', $this->baseUrl . $resource, $headers);
 		
 		$retval = new \phpcouch\record\Record($this);
 		$retval->fromArray($data);

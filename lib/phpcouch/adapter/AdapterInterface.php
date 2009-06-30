@@ -17,65 +17,19 @@ namespace phpcouch\adapter;
 interface AdapterInterface
 {
 	/**
-	 * Perform an HTTP PUT request.
+	 * Perform the HTTP request.
 	 *
+	 * @param      string The HTTP method to use.
 	 * @param      string The URL to call.
-	 * @param      array  The JSON data to serialize and send.
+	 * @param      array  Optional HTTP headers.
+	 * @param      string Optional request body payload.
 	 *
-	 * @return     stdClass The JSON response.
-	 *
-	 * @throws     PhpcouchException ?
+	 * @return     array  The response from the server as an indexed array of a content string and a headers array.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function put($url, $data = null);
-	
-	/**
-	 * Perform an HTTP GET request.
-	 *
-	 * @param      string The URL to call.
-	 *
-	 * @return     stdClass The JSON response.
-	 *
-	 * @throws     PhpcouchException ?
-	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
-	 * @since      1.0.0
-	 */
-	public function get($url);
-	
-	/**
-	 * Perform an HTTP POST request.
-	 *
-	 * @param      string The URL to call.
-	 * @param      array  The JSON data to serialize and send.
-	 *
-	 * @return     stdClass The JSON response.
-	 *
-	 * @throws     PhpcouchException ?
-	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
-	 * @since      1.0.0
-	 */
-	public function post($url, $data = null);
-	
-	/**
-	 * Perform an HTTP DELETE request.
-	 *
-	 * @param      string The URL to call.
-	 * @param      array HTTP headers
-	 *
-	 * @return     stdClass The JSON response.
-	 *
-	 * @throws     PhpcouchException ?
-	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
-	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
-	 *
-	 * @since      1.0.0
-	 */
-	public function delete($url, $headers = array());
+	public function sendRequest($url, $headers = array());
 }
 
 ?>
