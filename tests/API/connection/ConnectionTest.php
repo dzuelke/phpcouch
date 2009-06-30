@@ -5,6 +5,7 @@ use phpcouch\Exception;
 use phpcouch\connection;
 use phpcouch\adapter;
 
+define('RESPONSE_PATH', dirname(__FILE__) .'/files');
 
 if(!defined('PHPUnit_MAIN_METHOD')) {
 	define('PHPUnit_MAIN_METHOD', 'AllTests::main');
@@ -41,7 +42,7 @@ class PhpcouchConnectionTest extends PHPUnit_Framework_TestCase
 		$adapter = new Zend_Http_Client_Adapter_Test();
 		$con->getAdapter()->getClient()->setAdapter($adapter);
 		
-		$response = file_get_contents('./_files/connection/connection/listDatabases');
+		$response = file_get_contents(RESPONSE_PATH .'/_files/connection/connection/listDatabases');
 		
 		$adapter->setResponse($response);
 				
@@ -55,7 +56,7 @@ class PhpcouchConnectionTest extends PHPUnit_Framework_TestCase
 		$adapter = new Zend_Http_Client_Adapter_Test();
 		$con->getAdapter()->getClient()->setAdapter($adapter);
 		
-		$response = file_get_contents('./_files/connection/connection/retrieveDatabase');
+		$response = file_get_contents(RESPONSE_PATH .'/_files/connection/connection/retrieveDatabase');
 		
 		$adapter->setResponse($response);
 				
@@ -73,7 +74,7 @@ class PhpcouchConnectionTest extends PHPUnit_Framework_TestCase
 		$adapter = new Zend_Http_Client_Adapter_Test();
 		$con->getAdapter()->getClient()->setAdapter($adapter);
 		
-		$response = file_get_contents('./_files/connection/connection/createDatabase');
+		$response = file_get_contents(RESPONSE_PATH .'/_files/connection/connection/createDatabase');
 		
 		$adapter->setResponse($response);
 				
@@ -91,7 +92,7 @@ class PhpcouchConnectionTest extends PHPUnit_Framework_TestCase
 		$adapter = new Zend_Http_Client_Adapter_Test();
 		$con->getAdapter()->getClient()->setAdapter($adapter);
 		
-		$response = file_get_contents('./_files/connection/connection/deleteDatabase');
+		$response = file_get_contents(RESPONSE_PATH .'/_files/connection/connection/deleteDatabase');
 		
 		$adapter->setResponse($response);
 		
