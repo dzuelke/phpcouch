@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Server: CouchDB/0.9.0 (Erlang OTP/R13B)
+Date: Mon, 29 Jun 2009 16:12:33 GMT
+Content-Type: text/plain;charset=utf-8
+Content-Length: 162
+Cache-Control: must-revalidate
+
+{"db_name":"foo","doc_count":2,"doc_del_count":0,"update_seq":3,"purge_seq":0,"compact_running":false,"disk_size":14912,"instance_start_time":"1246269129436895"}
