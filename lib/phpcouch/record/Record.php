@@ -47,7 +47,7 @@ class Record implements RecordInterface, \ArrayAccess
 	/**
 	 * Isset overload.
 	 *
-	 * @param      string Name of the virtual property to check for existance.
+	 * @param      string Name of the virtual property to check for existence.
 	 *
 	 * @return     bool Whether or not a property of that name exists.
 	 *
