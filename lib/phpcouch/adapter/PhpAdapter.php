@@ -87,7 +87,7 @@ class PhpAdapter implements AdapterInterface
 		
 		if($fp === false) {
 			$error = error_get_last();
-			throw new Exception($error['message']);
+			throw new TransportException($error['message']);
 		}
 		
 		$meta = stream_get_meta_data($fp);
@@ -98,7 +98,7 @@ class PhpAdapter implements AdapterInterface
 			!isset($meta['wrapper_data'][0]) ||
 			!($status = preg_match('#^HTTP/1\.[01]\s+(\d{3})\s+(.+)$#', $meta['wrapper_data'][0], $matches))
 		) {
-			throw new Exception('Could not read HTTP response status line');
+			throw new TransportException('Could not read HTTP response status line');
 		}
 		
 		$statusCode = (int)$matches[1];
@@ -109,12 +109,10 @@ class PhpAdapter implements AdapterInterface
 		if($statusCode >= 400) {
 			if($statusCode % 500 < 100) {
 				// a 5xx response
-				throw new Exception($statusMessage, $statusCode);
-				// throw new Exception($statusMessage, $statusCode, json_decode($body));
+				throw new ClientErrorException($statusMessage, $statusCode);
 			} else {
 				// a 4xx response
-				throw new Exception($statusMessage, $statusCode);
-				// throw new Exception($statusMessage, $statusCode, json_decode($body));
+				throw new ServerErrorException($statusMessage, $statusCode);
 			}
 		} else {
 			return array($body, $meta['wrapper_data']);
