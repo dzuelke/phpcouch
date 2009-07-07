@@ -73,9 +73,9 @@ class PhpAdapter implements AdapterInterface
 		
 		$options['http']['header'] = array();
 		
-		if($data !== null) {
-			$options['http']['content'] = $data;
-			$options['http']['header'][] = 'Content-Length: ' . strlen($data);
+		if($payload !== null) {
+			$options['http']['content'] = $payload;
+			$options['http']['header'][] = 'Content-Length: ' . strlen($payload);
 		}
 		
 		// build our list of additional headers from the method argument
@@ -83,7 +83,7 @@ class PhpAdapter implements AdapterInterface
 		
 		$ctx = stream_context_create($options);
 		
-		$fp = @fopen($uri, 'r', false, $ctx);
+		$fp = @fopen($url, 'r', false, $ctx);
 		
 		if($fp === false) {
 			$error = error_get_last();

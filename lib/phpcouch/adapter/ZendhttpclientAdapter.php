@@ -74,7 +74,7 @@ class ZendhttpclientAdapter implements AdapterInterface
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	protected function doRequest($uri, $method = 'GET', $data = null, $headers = array())
+	protected function sendRequest($uri, $method = 'GET', $data = null, $headers = array())
 	{
 		$c = $this->getClient();
 		
@@ -131,7 +131,7 @@ class ZendhttpclientAdapter implements AdapterInterface
 	 */
 	public function put($uri, $data = null)
 	{
-		return $this->doRequest($uri, 'PUT', $data);
+		return $this->sendRequest($uri, 'PUT', $data);
 	}
 	
 	/**
@@ -148,7 +148,7 @@ class ZendhttpclientAdapter implements AdapterInterface
 	 */
 	public function get($uri)
 	{
-		return $this->doRequest($uri, 'GET');
+		return $this->sendRequest($uri, 'GET');
 	}
 	
 	/**
@@ -166,7 +166,7 @@ class ZendhttpclientAdapter implements AdapterInterface
 	 */
 	public function post($uri, $data = null)
 	{
-		return $this->doRequest($uri, 'POST', $data);
+		return $this->sendRequest($uri, 'POST', $data);
 	}
 	
 	/**
@@ -183,7 +183,7 @@ class ZendhttpclientAdapter implements AdapterInterface
 	 */
 	public function delete($uri, $headers = array())
 	{
-		return $this->doRequest($uri, 'DELETE', null, $headers);
+		return $this->sendRequest($uri, 'DELETE', null, $headers);
 	}
 }
 

@@ -20,6 +20,18 @@ class Connection extends \phpcouch\ConfigurableAbstract
 {
 	const COUCHDB_DEFAULT_PORT = 5984;
 	
+	const HTTP_DELETE = 'DELETE';
+	const HTTP_GET = 'GET';
+	const HTTP_POST = 'POST';
+	const HTTP_PUT = 'PUT';
+	
+	const URL_PATTERN_ALLDBS = '%s_all_dbs';
+	const URL_PATTERN_DATABASE = '%s%s/';
+	const URL_PATTERRN_UUIDS = '%s_uuids?count=%d';
+	const URL_PATTERN_CONFIG = '%s_config';
+	const URL_PATTERN_STATS = '%s_stats';
+	const URL_PATTERN_INFO = '%s';
+	
 	/**
 	 * @var        PhpcouchIAdapter An adapter to use with this connection.
 	 */
@@ -84,26 +96,6 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	}
 	
 	/**
-	 * Build a URI from the given information.
-	 *
-	 * @param      string The ID of the entity to fetch.
-	 * @param      array  An array of additional arguments to set in the URL.
-	 *
-	 * @return     string A generated URL.
-	 *
-	 * @author     David Zülke <david.zuelke@bitextender.com>
-	 * @since      1.0.0
-	 */
-	public function buildUri($id = null, array $arguments = array())
-	{
-		return sprintf('%s%s?%s',
-			$this->baseUrl,
-			rawurlencode($id),
-			http_build_query($arguments)
-		);
-	}
-	
-	/**
 	 * Fetch the adapter used with this connection.
 	 *
 	 * @return     PhpcouchIAdapter The adapter instance.
@@ -111,7 +103,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function getAdapter()
+	protected function getAdapter()
 	{
 		return $this->adapter;
 	}
@@ -128,11 +120,27 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 */
 	public function createDatabase($name)
 	{
-		// result doesn't matter here
-		$this->adapter->put($this->buildUri($name));
-		// and return a proper instance just for kicks
-		return $this->retrieveDatabase($name);
-		// TODO: catch exceptions?
+		if(!preg_match('#^[a-z][a-z0-9_$()+-/]*$#', $name)) {
+			throw new \InvalidArgumentException('Invalid database name. Database names must conform to regular expression "^[a-z][a-z0-9_$()+-/]*$"');
+		}
+		
+		try {
+			$this->sendRequest(self::HTTP_PUT, sprintf('%s%s/', $this->baseUrl, rawurlencode($name)));
+			
+			try {
+				return $this->retrieveDatabase($name);
+			} catch(\Exception $e) {
+				// something really, really messed up happened...
+				// TODO: catch and throw appropriate exceptions
+				throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			}
+		} catch(\Exception $e) {
+			// TODO: catch and throw appropriate exceptions
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		} catch(\Exception $e) {
+			// TODO: catch and throw appropriate exceptions
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
 	}
 	
 	/**
@@ -150,9 +158,11 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	public function retrieveDatabase($name)
 	{
 		// TODO: catch exceptions
-		$result = $this->adapter->get($this->buildUri($name));
+		$result = $this->sendRequest(self::HTTP_PUT, sprintf(self::URL_PATTERN_DATABASE, $this->baseUrl, rawurlencode($name)));
+		
 		$database = new \phpcouch\record\Database($this);
 		$database->hydrate($result);
+		
 		return $database;
 	}
 	
@@ -169,8 +179,36 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	public function deleteDatabase($name)
 	{
 		// TODO: catch exceptions
-		$result = $this->adapter->delete($this->buildUri($name));
-		return $result;
+		// TODO: hydrate to Record
+		return $this->sendRequest(self::HTTP_DELETE, sprintf(self::URL_PATTERN_DATABASE, $this->baseUrl, rawurlencode($name)));
+	}
+	
+	public function retrieveUuids($count = 10)
+	{
+		// TODO: catch exceptions
+		// TODO: hydrate to Record?
+		return $this->sendRequest(self::HTTP_GET, sprintf(self::URL_PATTERN_UUIDS, $this->baseUrl, $count));
+	}
+	
+	public function retrieveInfo()
+	{
+		// TODO: catch exceptions
+		// TODO: hydrate to Record
+		return $this->sendRequest(self::HTTP_GET, sprintf(self::URL_PATTERN_INFO, $this->baseUrl));
+	}
+	
+	public function retrieveConfig()
+	{
+		// TODO: catch exceptions
+		// TODO: hydrate to Record
+		return $this->sendRequest(self::HTTP_GET, sprintf(self::URL_PATTERN_CONFIG, $this->baseUrl));
+	}
+	
+	public function retrieveStats()
+	{
+		// TODO: catch exceptions
+		// TODO: hydrate to Record
+		return $this->sendRequest(self::HTTP_GET, sprintf(self::URL_PATTERN_STATS, $this->baseUrl));
 	}
 	
 	/**
@@ -187,47 +225,18 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	{
 		// special case: __all_dbs is simply an array, not a struct
 		// thus we also return a simple array of names here
-		return $this->get('_all_dbs')->toArray();
+		// TODO: catch exceptions
+		return $this->sendRequest(self::HTTP_GET, sprintf(self::URL_PATTERN_ALLDBS, $this->baseUrl));
 	}
 	
-	public function get($resource, $headers = array())
+	public function sendRequest($method, $resource, $headers = array(), $payload = null)
 	{
-		return $this->adapter->doRequest('GET', $this->baseUrl . $resource, $headers);
-		
-		$retval = new \phpcouch\record\Record($this);
-		$retval->fromArray($data);
-		
-		return $retval;
-	}
-	
-	public function post($resource, $headers = array(), $payload)
-	{
-		return $this->adapter->doRequest('POST', $this->baseUrl . $resource, $headers, $payload);
-		
-		$retval = new \phpcouch\record\Record($this);
-		$retval->fromArray($data);
-		
-		return $retval;
-	}
-	
-	public function put($resource, $headers = array(), $payload)
-	{
-		return $this->adapter->doRequest('PUT', $this->baseUrl . $resource, $headers, $payload);
-		
-		$retval = new \phpcouch\record\Record($this);
-		$retval->fromArray($data);
-		
-		return $retval;
-	}
-	
-	public function delete($resource, $headers = array())
-	{
-		return $this->adapter->doRequest('DELETE', $this->baseUrl . $resource, $headers);
-		
-		$retval = new \phpcouch\record\Record($this);
-		$retval->fromArray($data);
-		
-		return $retval;
+		try {
+			return $this->getAdapter()->sendRequest($method, $resource, $headers, $payload);
+		} catch(\Exception $e) {
+			// TODO: catch and throw appropriate exceptions
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
 	}
 }
 
