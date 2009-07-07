@@ -2,7 +2,7 @@
 
 namespace phpcouch\adapter;
 
-class ServerErrorException extends TransportException
+class ServerErrorException extends HttpErrorException
 {
 }
 

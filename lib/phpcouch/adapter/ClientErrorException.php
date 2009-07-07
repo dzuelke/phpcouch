@@ -2,7 +2,7 @@
 
 namespace phpcouch\adapter;
 
-class ClientErrorException extends TransportException
+class ClientErrorException extends HttpErrorException
 {
 }
 
