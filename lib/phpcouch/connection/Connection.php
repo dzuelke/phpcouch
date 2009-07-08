@@ -23,7 +23,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	
 	const URL_PATTERN_ALLDBS = '%s_all_dbs';
 	const URL_PATTERN_DATABASE = '%s%s/';
-	const URL_PATTERRN_UUIDS = '%s_uuids?count=%d';
+	const URL_PATTERN_UUIDS = '%s_uuids';
 	const URL_PATTERN_CONFIG = '%s_config';
 	const URL_PATTERN_STATS = '%s_stats';
 	const URL_PATTERN_INFO = '%s';
@@ -195,36 +195,36 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		return $this->sendRequest($request);
 	}
 	
-	public function retrieveUuids($count = 10)
+	public function retrieveUuids($count = 1)
 	{
-		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_UUIDS));
 		// TODO: catch exceptions
-		// TODO: hydrate to Record
-		return $this->sendRequest($request);
+		$record = new \phpcouch\record\Record($this);
+		$record->hydrate(json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_UUIDS, array(), array('count' => $count))))->getContent()));
+		return $record;
 	}
 	
 	public function retrieveInfo()
 	{
-		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_INFO));
 		// TODO: catch exceptions
-		// TODO: hydrate to Record
-		return $this->sendRequest($request);
+		$database = new \phpcouch\record\Database($this);
+		$database->hydrate(json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_INFO)))->getContent()));
+		return $database;
 	}
 	
 	public function retrieveConfig()
 	{
-		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_CONFIG));
 		// TODO: catch exceptions
-		// TODO: hydrate to Record
-		return $this->sendRequest($request);
+		$record = new \phpcouch\record\Record($this);
+		$record->hydrate(json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_CONFIG)))->getContent()));
+		return $record;
 	}
 	
 	public function retrieveStats()
 	{
-		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_STATS));
 		// TODO: catch exceptions
-		// TODO: hydrate to Record
-		return $this->sendRequest($request);
+		$record = new \phpcouch\record\Record($this);
+		$record->hydrate(json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_STATS)))->getContent()));
+		return $record;
 	}
 	
 	/**
@@ -239,12 +239,10 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 */
 	public function listDatabases()
 	{
-		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_ALLDBS));
-		
-		// special case: __all_dbs is simply an array, not a struct
-		// thus we also return a simple array of names here
 		// TODO: catch exceptions
-		return json_decode($this->sendRequest($request)->getContent());
+		// special case: _all_dbs is simply an array, not a struct
+		// thus we also return a simple array of values here
+		return json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_ALLDBS)))->getContent());
 	}
 	
 	public function sendRequest(\phpcouch\http\HttpRequest $request)

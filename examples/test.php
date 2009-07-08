@@ -15,6 +15,10 @@ Phpcouch::bootstrap();
 PhpCouch::registerConnection('default', $con = new connection\Connection(null, new adapter\PhpAdapter()));
 
 var_dump($con->listDatabases());
+var_dump('A UUID (from _uuids): ' . $con->retrieveUuids()->uuids[0]);
+var_dump('Database dir (from _config): ' . $con->retrieveConfig()->couchdb->database_dir);
+var_dump('CouchDB Version (from /): ' . $con->retrieveInfo()->version);
+var_dump('Mean request time (from /_stats): ' . $con->retrieveStats()->couchdb->request_time->mean);
 
 var_dump($db = $con->retrieveDatabase('testone'));
 
