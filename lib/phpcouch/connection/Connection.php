@@ -21,12 +21,12 @@ class Connection extends \phpcouch\ConfigurableAbstract
 {
 	const COUCHDB_DEFAULT_PORT = 5984;
 	
-	const URL_PATTERN_ALLDBS = '%s_all_dbs';
-	const URL_PATTERN_DATABASE = '%s%s/';
-	const URL_PATTERN_UUIDS = '%s_uuids';
-	const URL_PATTERN_CONFIG = '%s_config';
-	const URL_PATTERN_STATS = '%s_stats';
-	const URL_PATTERN_INFO = '%s';
+	const URL_PATTERN_ALLDBS = '%s/_all_dbs';
+	const URL_PATTERN_DATABASE = '%s/%s';
+	const URL_PATTERN_UUIDS = '%s/_uuids';
+	const URL_PATTERN_CONFIG = '%s/_config';
+	const URL_PATTERN_STATS = '%s/_stats';
+	const URL_PATTERN_INFO = '%s/';
 	
 	/**
 	 * @var        PhpcouchIAdapter An adapter to use with this connection.
@@ -72,8 +72,6 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		if(!isset($info['port'])) {
 			$info['port'] = self::COUCHDB_DEFAULT_PORT;
 		}
-		// force path to / no matter what for now
-		$info['path'] = '/';
 		
 		// TODO: user/pass, needs to be passed to adapter
 		$info['auth'] = '';
@@ -88,7 +86,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 			$this->adapter = new \phpcouch\adapter\PhpAdapter();
 		}
 		
-		$this->baseUrl = sprintf('%s://%s%s:%s%s', $info['scheme'], $info['auth'], $info['host'], $info['port'], $info['path']);
+		$this->baseUrl = sprintf('%s://%s%s:%s', $info['scheme'], $info['auth'], $info['host'], $info['port']);
 	}
 	
 	/**
