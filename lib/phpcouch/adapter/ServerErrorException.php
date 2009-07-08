@@ -1,8 +1,8 @@
 <?php
 
-namespace phpcouch\adapter;
+namespace phpcouch\http;
 
-class ServerErrorException extends HttpErrorException
+class HttpServerErrorException extends HttpErrorException
 {
 }
 

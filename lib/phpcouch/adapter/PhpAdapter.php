@@ -3,7 +3,7 @@
 namespace phpcouch\adapter;
 
 use phpcouch\Exception;
-use phpcouch\http\HttpResponse;
+use phpcouch\http\HttpResponse, phpcouch\http\HttpClientErrorException, phpcouch\http\HttpServerErrorException;
 
 /**
  * An adapter implemented using the PHP >= 5.3 HTTP fopen wrapper.
@@ -123,10 +123,10 @@ class PhpAdapter implements AdapterInterface
 		if($statusCode >= 400) {
 			if($statusCode % 500 < 100) {
 				// a 5xx response
-				throw new ServerErrorException($statusMessage, $statusCode, $response);
+				throw new HttpServerErrorException($statusMessage, $statusCode, $response);
 			} else {
 				// a 4xx response
-				throw new ClientErrorException($statusMessage, $statusCode, $response);
+				throw new HttpClientErrorException($statusMessage, $statusCode, $response);
 			}
 		} else {
 			return $response;
