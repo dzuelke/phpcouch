@@ -130,8 +130,8 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		}
 		
 		try {
-			$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_DATABASE, array($name)));
-			$result = $this->sendRequest($request);
+			// result doesn't matter here
+			$this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_DATABASE, array($name)), HttpRequest::METHOD_PUT));
 			
 			try {
 				return $this->retrieveDatabase($name);
@@ -164,14 +164,8 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	public function retrieveDatabase($name)
 	{
 		// TODO: catch exceptions
-		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_DATABASE, array($name)));
-		// TODO: catch exceptions
-		// TODO: hydrate to Record
-		$result = $this->sendRequest($request);
-		
 		$database = new \phpcouch\record\Database($this);
-		$database->hydrate(json_decode($result->getContent()));
-		
+		$database->hydrate(json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_DATABASE, array($name))))->getContent()));
 		return $database;
 	}
 	
