@@ -3,6 +3,7 @@
 namespace phpcouch\adapter;
 
 use phpcouch\Exception;
+use phpcouch\http\HttpResponse;
 
 /**
  * An adapter implemented using the PHP >= 5.3 HTTP fopen wrapper.
@@ -65,25 +66,25 @@ class PhpAdapter implements AdapterInterface
 	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function sendRequest($method, $url, array $headers = array(), $payload = null)
+	public function sendRequest(\phpcouch\http\HttpRequest $request)
 	{
 		$options = $this->options;
-		
-		$options['http']['method'] = $method;
-		
 		$options['http']['header'] = array();
+		$options['http']['method'] = $request->getMethod();
 		
-		if($payload !== null) {
+		if(null !== ($payload = $request->getContent())) {
 			$options['http']['content'] = $payload;
 			$options['http']['header'][] = 'Content-Length: ' . strlen($payload);
 		}
 		
-		// build our list of additional headers from the method argument
-		array_walk($headers, function($value, $key) use($options) { $options['http']['header'][] = "$key: $value"; });
+		// additional headers
+		foreach($request->getHttpHeaders() as $key => $value) {
+			$options['http']['header'][] = "$key: $value";
+		}
 		
 		$ctx = stream_context_create($options);
 		
-		$fp = @fopen($url, 'r', false, $ctx);
+		$fp = @fopen($request->getDestination(), 'r', false, $ctx);
 		
 		if($fp === false) {
 			$error = error_get_last();
@@ -99,6 +100,8 @@ class PhpAdapter implements AdapterInterface
 			!($status = preg_match('#^HTTP/1\.[01]\s+(\d{3})\s+(.+)$#', $meta['wrapper_data'][0], $matches))
 		) {
 			throw new TransportException('Could not read HTTP response status line');
+		} else {
+			array_shift($meta['wrapper_data']);
 		}
 		
 		$statusCode = (int)$matches[1];
@@ -106,16 +109,27 @@ class PhpAdapter implements AdapterInterface
 		
 		$body = stream_get_contents($fp);
 		
+		$response = new HttpResponse();
+		$response->setHttpStatusCode($statusCode);
+		$response->setContent($body);
+		
+		foreach($meta['wrapper_data'] as $headerLine) {
+			$headerParts = explode(':', $headerLine, 2);
+			if(count($headerParts) == 2) {
+				$response->setHttpHeader(trim($headerParts[0]), trim($headerParts[1]));
+			}
+		}
+		
 		if($statusCode >= 400) {
 			if($statusCode % 500 < 100) {
 				// a 5xx response
-				throw new ClientErrorException($statusMessage, $statusCode);
+				throw new ServerErrorException($statusMessage, $statusCode, $response);
 			} else {
 				// a 4xx response
-				throw new ServerErrorException($statusMessage, $statusCode);
+				throw new ClientErrorException($statusMessage, $statusCode, $response);
 			}
 		} else {
-			return array($body, $meta['wrapper_data']);
+			return $response;
 		}
 	}
 }

@@ -3,6 +3,7 @@
 namespace phpcouch\connection;
 
 use phpcouch\Exception;
+use phpcouch\http\HttpRequest, phpcouch\http\HttpResponse;
 
 /**
  * The main connection class, representing a connection registered with PHPCouch.
@@ -19,11 +20,6 @@ use phpcouch\Exception;
 class Connection extends \phpcouch\ConfigurableAbstract
 {
 	const COUCHDB_DEFAULT_PORT = 5984;
-	
-	const HTTP_DELETE = 'DELETE';
-	const HTTP_GET = 'GET';
-	const HTTP_POST = 'POST';
-	const HTTP_PUT = 'PUT';
 	
 	const URL_PATTERN_ALLDBS = '%s_all_dbs';
 	const URL_PATTERN_DATABASE = '%s%s/';
@@ -108,6 +104,17 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		return $this->adapter;
 	}
 	
+	public function buildUrl($template, array $values = array(), $options = array())
+	{
+		$url = vsprintf($template, array_merge(array($this->baseUrl), array_map('rawurlencode', $values)));
+		
+		if($options) {
+			$url .= '?' . http_build_query($options);
+		}
+		
+		return $url;
+	}
+	
 	/**
 	 * Create a new database on the server.
 	 *
@@ -125,7 +132,8 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		}
 		
 		try {
-			$this->sendRequest(self::HTTP_PUT, sprintf('%s%s/', $this->baseUrl, rawurlencode($name)));
+			$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_DATABASE, array($name)));
+			$result = $this->sendRequest($request);
 			
 			try {
 				return $this->retrieveDatabase($name);
@@ -158,10 +166,13 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	public function retrieveDatabase($name)
 	{
 		// TODO: catch exceptions
-		$result = $this->sendRequest(self::HTTP_PUT, sprintf(self::URL_PATTERN_DATABASE, $this->baseUrl, rawurlencode($name)));
+		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_DATABASE, array($name)));
+		// TODO: catch exceptions
+		// TODO: hydrate to Record
+		$result = $this->sendRequest($request);
 		
 		$database = new \phpcouch\record\Database($this);
-		$database->hydrate($result);
+		$database->hydrate(json_decode($result->getContent()));
 		
 		return $database;
 	}
@@ -178,37 +189,42 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 */
 	public function deleteDatabase($name)
 	{
+		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_DATABASE, array($name)));
 		// TODO: catch exceptions
 		// TODO: hydrate to Record
-		return $this->sendRequest(self::HTTP_DELETE, sprintf(self::URL_PATTERN_DATABASE, $this->baseUrl, rawurlencode($name)));
+		return $this->sendRequest($request);
 	}
 	
 	public function retrieveUuids($count = 10)
 	{
+		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_UUIDS));
 		// TODO: catch exceptions
-		// TODO: hydrate to Record?
-		return $this->sendRequest(self::HTTP_GET, sprintf(self::URL_PATTERN_UUIDS, $this->baseUrl, $count));
+		// TODO: hydrate to Record
+		return $this->sendRequest($request);
 	}
 	
 	public function retrieveInfo()
 	{
+		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_INFO));
 		// TODO: catch exceptions
 		// TODO: hydrate to Record
-		return $this->sendRequest(self::HTTP_GET, sprintf(self::URL_PATTERN_INFO, $this->baseUrl));
+		return $this->sendRequest($request);
 	}
 	
 	public function retrieveConfig()
 	{
+		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_CONFIG));
 		// TODO: catch exceptions
 		// TODO: hydrate to Record
-		return $this->sendRequest(self::HTTP_GET, sprintf(self::URL_PATTERN_CONFIG, $this->baseUrl));
+		return $this->sendRequest($request);
 	}
 	
 	public function retrieveStats()
 	{
+		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_STATS));
 		// TODO: catch exceptions
 		// TODO: hydrate to Record
-		return $this->sendRequest(self::HTTP_GET, sprintf(self::URL_PATTERN_STATS, $this->baseUrl));
+		return $this->sendRequest($request);
 	}
 	
 	/**
@@ -223,20 +239,18 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 */
 	public function listDatabases()
 	{
+		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_ALLDBS));
+		
 		// special case: __all_dbs is simply an array, not a struct
 		// thus we also return a simple array of names here
 		// TODO: catch exceptions
-		return $this->sendRequest(self::HTTP_GET, sprintf(self::URL_PATTERN_ALLDBS, $this->baseUrl));
+		return json_decode($this->sendRequest($request)->getContent());
 	}
 	
-	public function sendRequest($method, $resource, $headers = array(), $payload = null)
+	public function sendRequest(\phpcouch\http\HttpRequest $request)
 	{
-		try {
-			return $this->getAdapter()->sendRequest($method, $resource, $headers, $payload);
-		} catch(\Exception $e) {
-			// TODO: catch and throw appropriate exceptions
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
-		}
+		// TODO: should we wrap exceptions here? I'm not sure really.
+		return $this->getAdapter()->sendRequest($request);
 	}
 }
 

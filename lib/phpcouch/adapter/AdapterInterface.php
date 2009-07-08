@@ -29,7 +29,7 @@ interface AdapterInterface
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function sendRequest($method, $url, array $headers = array(), $payload = null);
+	public function sendRequest(\phpcouch\http\HttpRequest $request);
 }
 
 ?>
