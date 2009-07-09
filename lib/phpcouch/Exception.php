@@ -2,7 +2,7 @@
 
 namespace phpcouch;
 
-class Exception extends \Exception
+interface Exception
 {
 }
 

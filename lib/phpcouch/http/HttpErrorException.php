@@ -2,7 +2,7 @@
 
 namespace phpcouch\http;
 
-class HttpErrorException extends \RuntimeException
+class HttpErrorException extends \RuntimeException implements \phpcouch\Exception
 {
 	private $response;
 	

@@ -2,7 +2,7 @@
 
 namespace phpcouch\http;
 
-class HttpClientErrorException extends HttpErrorException
+class HttpClientErrorException extends HttpErrorException implements \phpcouch\Exception
 {
 }
 

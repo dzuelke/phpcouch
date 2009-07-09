@@ -3,7 +3,7 @@
 namespace phpcouch\connection;
 
 use phpcouch\Exception;
-use phpcouch\http\HttpRequest, phpcouch\http\HttpResponse;
+use phpcouch\http\HttpRequest, phpcouch\http\HttpResponse, phpcouch\http\HttpClientException, phpcouch\http\HttpServerException;
 
 /**
  * The main connection class, representing a connection registered with PHPCouch.
@@ -138,14 +138,17 @@ class Connection extends \phpcouch\ConfigurableAbstract
 			} catch(\Exception $e) {
 				// something really, really messed up happened...
 				// TODO: catch and throw appropriate exceptions
-				throw new \Exception($e->getMessage(), $e->getCode(), $e);
+				throw $e;
+				// throw new \Exception($e->getMessage(), $e->getCode(), $e);
 			}
-		} catch(\Exception $e) {
+		} catch(HttpClientErrorException $e) {
 			// TODO: catch and throw appropriate exceptions
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
-		} catch(\Exception $e) {
+			throw $e;
+			// throw new whatever\Exception($e->getMessage(), $e->getCode(), $e);
+		} catch(HttpClientErrorException $e) {
 			// TODO: catch and throw appropriate exceptions
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
+			// throw new whatever\Exception($e->getMessage(), $e->getCode(), $e);
 		}
 	}
 	
