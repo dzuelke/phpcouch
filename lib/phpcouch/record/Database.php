@@ -3,9 +3,15 @@
 namespace phpcouch\record;
 
 use phpcouch\Exception;
+use phpcouch\http\HttpRequest;
 
 class Database extends Record
 {
+	const URL_PATTERN_ATTACHMENT = '%s/%s/%s/%s';
+	const URL_PATTERN_DESIGNDOCUMENT = '%s/%s/_design/%s';
+	const URL_PATTERN_DOCUMENT = '%s/%s/%s';
+	const URL_PATTERN_VIEW = '%s/%s/_design/%s/_view/%s';
+	
 	public function __toString()
 	{
 		return $this->getName();
@@ -205,6 +211,8 @@ class Database extends Record
 	
 	public function executeView($designDocument, $viewName, $viewResultClass = null)
 	{
+		$con = $this->getConnection();
+		
 		if($designDocument instanceof DocumentInterface) {
 			$designDocument = str_replace('_design/', '', $designDocument->getId());
 		}
@@ -213,7 +221,7 @@ class Database extends Record
 			$viewResultClass = 'phpcouch\record\ViewResult';
 		}
 		$viewResult = new $viewResultClass($this);
-		$viewResult->hydrate($this->getConnection()->getAdapter()->get($this->getConnection()->baseUrl . $this->getName() . '/_design/' . $designDocument . '/_view/' . $viewName));
+		$viewResult->hydrate(json_decode($con->sendRequest(new HttpRequest($con->buildUrl(self::URL_PATTERN_VIEW, array($this->getName(), $designDocument, $viewName), array('reduce' => false))))->getContent()));
 		
 		return $viewResult;
 	}
