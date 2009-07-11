@@ -237,7 +237,9 @@ class Database extends Record
 			'limit' => 'intval',
 			'stale' => function($value) { if($value) return 'ok'; },
 			'descending' => $boolCleanup,
+			'skip' => 'intval',
 			'group' => $boolCleanup,
+			'group_level' => 'intval',
 			'reduce' => $boolCleanup,
 			'include_docs' => $boolCleanup,
 		);
