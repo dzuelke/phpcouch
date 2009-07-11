@@ -11,6 +11,7 @@ class Database extends Record
 	const URL_PATTERN_ATTACHMENT = '%s/%s/%s/%s';
 	const URL_PATTERN_DESIGNDOCUMENT = '%s/%s/_design/%s';
 	const URL_PATTERN_DOCUMENT = '%s/%s/%s';
+	const URL_PATTERN_NEWDOCUMENT = '%s/%s/';
 	const URL_PATTERN_VIEW = '%s/%s/_design/%s/_view/%s';
 	
 	public function __toString()
@@ -53,17 +54,17 @@ class Database extends Record
 		try {
 			if($document->_id) {
 				// create a named document
-				$uri = $this->getConnection()->buildUri($document->_id);
-				$result = $this->getConnection()->getAdapter()->put($uri, $values);
+				$request = new HttpRequest($this->getConnection()->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $document->_id)), HttpRequest::METHOD_PUT);
 			} else {
 				// let couchdb create an ID
-				$uri = $this->getConnection()->buildUri();
-				$result = $this->getConnection()->getAdapter()->post($uri, $values);
+				$request = new HttpRequest($this->getConnection()->buildUrl(self::URL_PATTERN_NEWDOCUMENT, array($this->getName())), HttpRequest::METHOD_POST);
 			}
+			
+			$result = $this->getConnection()->sendRequest($request);
 			
 			if(isset($result->ok) && $result->ok === true) {
 				// all cool.
-				$document->hydrate(array(Document::ID_FIELD => $result->id, Document::REVISION_FIELD => $result->rev));
+				$document->fromArray(array(Document::ID_FIELD => $result->id, Document::REVISION_FIELD => $result->rev));
 				return;
 			} else {
 				throw new Exception('Result not OK :(');
@@ -128,14 +129,22 @@ class Database extends Record
 	 */
 	public function retrieveAttachment($name, $id)
 	{
-		// TODO: this doesn't work atm
 		if($id instanceof DocumentInterface) {
 			$id = $id->_id;
 		}
 		
-		$uri = $this->getConnection()->buildUri($id, array('attachment' => $name));
-		
-		return $this->getConnection()->getAdapter()->get($uri);
+		return $this->getConnection()->sendRequest(
+			new HttpRequest(
+				$this->getConnection()->buildUrl(
+					self::URL_PATTERN_ATTACHMENT,
+					array(
+						$this->getName(),
+						$id,
+						$name,
+					)
+				)
+			)
+		)->getContent();
 	}
 	
 	/**
@@ -150,11 +159,10 @@ class Database extends Record
 	 */
 	public function updateDocument(DocumentInterface $document)
 	{
-		$values = $document->dehydrate();
+		$request = new HttpRequest($this->getConnection()->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $document->_id)), HttpRequest::METHOD_PUT);
+		$request->setContent(json_encode($document->dehydrate()));
 		
-		$uri = $this->getConnection()->buildUri($document->_id);
-		
-		$result = $this->getConnection()->getAdapter()->put($uri, $values);
+		$result = $this->getConnection()->sendRequest();
 		
 		if(isset($result->ok) && $result->ok === true) {
 			$document->_rev = $result->rev;
