@@ -209,7 +209,7 @@ class Database extends Record
 		return $viewResult;
 	}
 	
-	public function executeView($designDocument, $viewName, $viewResultClass = null)
+	public function executeView($designDocument, $viewName, array $options = array(), $viewResultClass = null)
 	{
 		$con = $this->getConnection();
 		
@@ -220,8 +220,34 @@ class Database extends Record
 		if($viewResultClass === null) {
 			$viewResultClass = 'phpcouch\record\ViewResult';
 		}
+		
+		$boolCleanup = function($value) { return var_export((bool)$value, true); };
+		$cleanup = array(
+			// 'keys' => 'json_encode',
+			'key' => 'json_encode',
+			'startkey' => 'json_encode',
+			'endkey' => 'json_encode',
+			'limit' => 'intval',
+			'stale' => function($value) { if($value) return 'ok'; },
+			'descending' => $boolCleanup,
+			'group' => $boolCleanup,
+			'reduce' => $boolCleanup,
+			'include_docs' => $boolCleanup,
+		);
+		
+		array_walk($options, function(&$value, $key, $cleanup) { if(isset($cleanup[$key])) $value = $cleanup[$key]($value); }, $cleanup);
+		
+		$request = new HttpRequest();
+		if(isset($options['keys'])) {
+			$request->setContent(json_encode(array('keys' => (array)$options['keys'])));
+			$request->setMethod(HttpRequest::METHOD_POST);
+			$request->setContentType('application/json');
+			unset($options['keys']);
+		}
+		$request->setDestination($con->buildUrl(self::URL_PATTERN_VIEW, array($this->getName(), $designDocument, $viewName), $options));
+		
 		$viewResult = new $viewResultClass($this);
-		$viewResult->hydrate(json_decode($con->sendRequest(new HttpRequest($con->buildUrl(self::URL_PATTERN_VIEW, array($this->getName(), $designDocument, $viewName), array('reduce' => false))))->getContent()));
+		$viewResult->hydrate($con->sendRequest($request));
 		
 		return $viewResult;
 	}
