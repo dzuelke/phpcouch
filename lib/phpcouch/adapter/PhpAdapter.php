@@ -77,8 +77,10 @@ class PhpAdapter implements AdapterInterface
 		}
 		
 		// additional headers
-		foreach($request->getHttpHeaders() as $key => $value) {
-			$options['http']['header'][] = "$key: $value";
+		foreach($request->getHttpHeaders() as $key => $values) {
+			foreach($values as $value) {
+				$options['http']['header'][] = "$key: $value";
+			}
 		}
 		
 		$ctx = stream_context_create($options);
