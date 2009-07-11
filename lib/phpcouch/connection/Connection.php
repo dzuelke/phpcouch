@@ -168,7 +168,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	{
 		// TODO: catch exceptions
 		$database = new \phpcouch\record\Database($this);
-		$database->hydrate(json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_DATABASE, array($name))))->getContent()));
+		$database->hydrate($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_DATABASE, array($name)))));
 		return $database;
 	}
 	
@@ -194,7 +194,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	{
 		// TODO: catch exceptions
 		$record = new \phpcouch\record\Record($this);
-		$record->hydrate(json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_UUIDS, array(), array('count' => $count))))->getContent()));
+		$record->hydrate($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_UUIDS, array(), array('count' => $count)))));
 		return $record;
 	}
 	
@@ -202,7 +202,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	{
 		// TODO: catch exceptions
 		$database = new \phpcouch\record\Database($this);
-		$database->hydrate(json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_INFO)))->getContent()));
+		$database->hydrate($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_INFO))));
 		return $database;
 	}
 	
@@ -210,7 +210,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	{
 		// TODO: catch exceptions
 		$record = new \phpcouch\record\Record($this);
-		$record->hydrate(json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_CONFIG)))->getContent()));
+		$record->hydrate($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_CONFIG))));
 		return $record;
 	}
 	
@@ -218,7 +218,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	{
 		// TODO: catch exceptions
 		$record = new \phpcouch\record\Record($this);
-		$record->hydrate(json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_STATS)))->getContent()));
+		$record->hydrate($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_STATS))));
 		return $record;
 	}
 	
