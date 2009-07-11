@@ -20,13 +20,13 @@ var_dump('Database dir (from /_config): ' . $con->retrieveConfig()->couchdb->dat
 var_dump('CouchDB Version (from /): ' . $con->retrieveInfo()->version);
 var_dump('Mean request time (from /_stats): ' . $con->retrieveStats()->couchdb->request_time->mean);
 
-var_dump($db = $con->retrieveDatabase('testone'));
+var_dump($db = $con->retrieveDatabase('test_suite_db/with_slashes'));
 
-foreach($db->executeView('lolcats', 'allp') as $row) {
-	var_dump($row->getDocument('doc')->_id);
+foreach($db->callView('test', 'testing', array('reduce' => false, 'stale' => true, /*'keys' => array('foo', 'bar')*/)) as $row) {
+	var_dump($row);
 }
 
-foreach($db->listDocuments(true) as $row) {
+foreach($db->listDocuments(array('include_docs' => true)) as $row) {
 	var_dump($row->getDocument()->_id);
 }
 

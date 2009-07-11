@@ -7,6 +7,7 @@ use phpcouch\http\HttpRequest;
 
 class Database extends Record
 {
+	const URL_PATTERN_ALLDOCS = '%s/%s/_all_docs';
 	const URL_PATTERN_ATTACHMENT = '%s/%s/%s/%s';
 	const URL_PATTERN_DESIGNDOCUMENT = '%s/%s/_design/%s';
 	const URL_PATTERN_DOCUMENT = '%s/%s/%s';
@@ -194,28 +195,34 @@ class Database extends Record
 	/**
 	 * Get a list of all the documents in the database.
 	 * 
-	 * @param       bool Whether or not to pull complete document instances along in the list.
+	 * @param       array An associative array of view options.
 	 *
-	 * @return      AllDocsResult A list of all documents in the database.
+	 * @return      AllDocsResult A list of documents in the database.
 	 * 
 	 * @author      David Zülke <david.zuelke@bitextender.com>
 	 * @since       1.0.0
 	 */
-	public function listDocuments($includeDocs = false)
+	public function listDocuments(array $options = array())
 	{
-		$viewResult = new AllDocsResult($this);
-		$viewResult->hydrate($this->getConnection()->getAdapter()->get($this->getConnection()->baseUrl . $this->getName() . '/_all_docs' . ($includeDocs ? '?include_docs=true' : '')));
-		
-		return $viewResult;
+		// only build basic URL
+		// options etc are done in executeView()
+		return $this->executeView(self::URL_PATTERN_ALLDOCS, array($this->getName()), $options, 'phpcouch\record\AllDocsResult');
 	}
 	
-	public function executeView($designDocument, $viewName, array $options = array(), $viewResultClass = null)
+	public function callView($designDocument, $viewName, array $options = array())
 	{
-		$con = $this->getConnection();
-		
 		if($designDocument instanceof DocumentInterface) {
 			$designDocument = str_replace('_design/', '', $designDocument->getId());
 		}
+		
+		// only build basic URL
+		// options etc are done in executeView()
+		return $this->executeView(self::URL_PATTERN_VIEW, array($this->getName(), $designDocument, $viewName), $options);
+	}
+	
+	protected function executeView($urlPattern, array $urlPatternValues, array $options = array(), $viewResultClass = null)
+	{
+		$con = $this->getConnection();
 		
 		if($viewResultClass === null) {
 			$viewResultClass = 'phpcouch\record\ViewResult';
@@ -244,7 +251,7 @@ class Database extends Record
 			$request->setContentType('application/json');
 			unset($options['keys']);
 		}
-		$request->setDestination($con->buildUrl(self::URL_PATTERN_VIEW, array($this->getName(), $designDocument, $viewName), $options));
+		$request->setDestination($con->buildUrl($urlPattern, $urlPatternValues, $options));
 		
 		$viewResult = new $viewResultClass($this);
 		$viewResult->hydrate($con->sendRequest($request));
