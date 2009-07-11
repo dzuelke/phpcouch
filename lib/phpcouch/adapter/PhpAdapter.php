@@ -96,6 +96,32 @@ class PhpAdapter implements AdapterInterface
 		
 		// $meta['wrapper_data'] is an indexed array of the individual response header lines
 		
+		// FIXME: when a redirect happens, we get all the response headers merged together
+		// [0]=>
+		// string(30) "HTTP/1.0 301 Moved Permanently"
+		// [1]=>
+		// string(39) "Server: CouchDB/0.9.0 (Erlang OTP/R13B)"
+		// [2]=>
+		// string(73) "Location: http://localhost:5984/test_suite_db%2Fwith_slashes/_design/test"
+		// [3]=>
+		// string(35) "Date: Sat, 11 Jul 2009 21:33:46 GMT"
+		// [4]=>
+		// string(17) "Content-Length: 0"
+		// [5]=>
+		// string(15) "HTTP/1.0 200 OK"
+		// [6]=>
+		// string(39) "Server: CouchDB/0.9.0 (Erlang OTP/R13B)"
+		// [7]=>
+		// string(19) "Etag: "1-573696572""
+		// [8]=>
+		// string(35) "Date: Sat, 11 Jul 2009 21:33:46 GMT"
+		// [9]=>
+		// string(30) "Content-Type: application/json"
+		// [10]=>
+		// string(18) "Content-Length: 96"
+		// [11]=>
+		// string(30) "Cache-Control: must-revalidate"
+		
 		if(
 			!isset($meta['wrapper_data'][0]) ||
 			!($status = preg_match('#^HTTP/1\.[01]\s+(\d{3})\s+(.+)$#', $meta['wrapper_data'][0], $matches))

@@ -79,6 +79,7 @@ class Database extends Record
 	 * Retrieve a document from the database.
 	 *
 	 * @param      string The ID of the document.
+	 * @param      string Optional revision to fetch.
 	 *
 	 * @return     PhpcouchIDocument A document instance.
 	 *
@@ -87,20 +88,29 @@ class Database extends Record
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function retrieveDocument($id)
+	public function retrieveDocument($id, $rev = null)
 	{
-		$uri = $this->getConnection()->buildUri($id);
+		$document = $this->newDocument();
 		
 		// TODO: grab and wrap exceptions
-		$result = $this->getConnection()->getAdapter()->get($uri);
+		$document->hydrate(
+			$this->getConnection()->sendRequest(
+				new HttpRequest(
+					$this->getConnection()->buildUrl(
+						self::URL_PATTERN_DOCUMENT,
+						array(
+							$this->getName(),
+							$id,
+						),
+						array(
+							'rev' => $rev,
+						)
+					)
+				)
+			)
+		);
 		
-		if(isset($result->_id)) {
-			$document = $this->newDocument();
-			$document->hydrate($result);
-			return $document;
-		} else {
-			// error
-		}
+		return $document;
 	}
 	
 	/**
@@ -168,15 +178,13 @@ class Database extends Record
 	 */
 	public function deleteDocument(DocumentInterface $doc)
 	{
-		if($doc instanceof DocumentInterface) {
-			$headers = array('If-Match' => $doc->_rev);
-			$id = $doc->_id;
-		} else {
+		if(!($doc instanceof DocumentInterface)) {
 			throw new Exception('Parameter supplied is not of type PhpcouchDocument');
 		}
 		
-		$uri = $this->getConnection()->buildUri($id);
-		return $this->getConnection()->getAdapter()->delete($uri, $headers);
+		$request = new HttpRequest($this->getConnection()->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $id)), HttpRequest::METHOD_POST);
+		$request->setHttpHeader('If-Match', $doc->_rev);
+		return $this->getConnection()->sendRequest($request);
 	}
 	
 	/**
@@ -230,7 +238,7 @@ class Database extends Record
 		
 		$boolCleanup = function($value) { return var_export((bool)$value, true); };
 		$cleanup = array(
-			// 'keys' => 'json_encode',
+			'keys' => function($value) { return json_encode(array('keys' => (array)$value)); },
 			'key' => 'json_encode',
 			'startkey' => 'json_encode',
 			'endkey' => 'json_encode',
@@ -243,12 +251,11 @@ class Database extends Record
 			'reduce' => $boolCleanup,
 			'include_docs' => $boolCleanup,
 		);
-		
 		array_walk($options, function(&$value, $key, $cleanup) { if(isset($cleanup[$key])) $value = $cleanup[$key]($value); }, $cleanup);
 		
 		$request = new HttpRequest();
 		if(isset($options['keys'])) {
-			$request->setContent(json_encode(array('keys' => (array)$options['keys'])));
+			$request->setContent($options['keys']);
 			$request->setMethod(HttpRequest::METHOD_POST);
 			$request->setContentType('application/json');
 			unset($options['keys']);
