@@ -69,7 +69,6 @@ class PhpAdapter implements AdapterInterface
 	public function sendRequest(\phpcouch\http\HttpRequest $request)
 	{
 		$options = $this->options;
-		$options['http']['header'] = array();
 		$options['http']['method'] = $request->getMethod();
 		
 		if(null !== ($payload = $request->getContent())) {
