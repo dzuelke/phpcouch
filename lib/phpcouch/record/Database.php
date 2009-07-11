@@ -44,6 +44,8 @@ class Database extends Record
 	 */
 	public function createDocument(DocumentInterface $document)
 	{
+		$con = $this->getConnection();
+		
 		$values = $document->dehydrate();
 		
 		if(isset($values['_id'])) {
@@ -54,13 +56,13 @@ class Database extends Record
 		try {
 			if($document->_id) {
 				// create a named document
-				$request = new HttpRequest($this->getConnection()->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $document->_id)), HttpRequest::METHOD_PUT);
+				$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $document->_id)), HttpRequest::METHOD_PUT);
 			} else {
 				// let couchdb create an ID
-				$request = new HttpRequest($this->getConnection()->buildUrl(self::URL_PATTERN_NEWDOCUMENT, array($this->getName())), HttpRequest::METHOD_POST);
+				$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_NEWDOCUMENT, array($this->getName())), HttpRequest::METHOD_POST);
 			}
 			
-			$result = $this->getConnection()->sendRequest($request);
+			$result = $con->sendRequest($request);
 			
 			if(isset($result->ok) && $result->ok === true) {
 				// all cool.
@@ -91,13 +93,15 @@ class Database extends Record
 	 */
 	public function retrieveDocument($id, $rev = null)
 	{
+		$con = $this->getConnection();
+		
 		$document = $this->newDocument();
 		
 		// TODO: grab and wrap exceptions
 		$document->hydrate(
-			$this->getConnection()->sendRequest(
+			$con->sendRequest(
 				new HttpRequest(
-					$this->getConnection()->buildUrl(
+					$con->buildUrl(
 						self::URL_PATTERN_DOCUMENT,
 						array(
 							$this->getName(),
@@ -129,13 +133,15 @@ class Database extends Record
 	 */
 	public function retrieveAttachment($name, $id)
 	{
+		$con = $this->getConnection();
+		
 		if($id instanceof DocumentInterface) {
 			$id = $id->_id;
 		}
 		
-		return $this->getConnection()->sendRequest(
+		return $con->sendRequest(
 			new HttpRequest(
-				$this->getConnection()->buildUrl(
+				$con->buildUrl(
 					self::URL_PATTERN_ATTACHMENT,
 					array(
 						$this->getName(),
@@ -159,10 +165,12 @@ class Database extends Record
 	 */
 	public function updateDocument(DocumentInterface $document)
 	{
-		$request = new HttpRequest($this->getConnection()->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $document->_id)), HttpRequest::METHOD_PUT);
+		$con = $this->getConnection();
+		
+		$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $document->_id)), HttpRequest::METHOD_PUT);
 		$request->setContent(json_encode($document->dehydrate()));
 		
-		$result = $this->getConnection()->sendRequest();
+		$result = $con->sendRequest();
 		
 		if(isset($result->ok) && $result->ok === true) {
 			$document->_rev = $result->rev;
@@ -190,9 +198,11 @@ class Database extends Record
 			throw new Exception('Parameter supplied is not of type PhpcouchDocument');
 		}
 		
-		$request = new HttpRequest($this->getConnection()->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $id)), HttpRequest::METHOD_POST);
+		$con = $this->getConnection();
+		
+		$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $id)), HttpRequest::METHOD_POST);
 		$request->setHeader('If-Match', $doc->_rev);
-		return $this->getConnection()->sendRequest($request);
+		return $con->sendRequest($request);
 	}
 	
 	/**
