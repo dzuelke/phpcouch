@@ -11,9 +11,11 @@ class HttpRequest extends HttpMessage
 	
 	protected $destination;
 	
-	public function __construct($destination, $method = self::METHOD_GET)
+	public function __construct($destination = null, $method = self::METHOD_GET)
 	{
-		$this->setDestination($destination);
+		if($destination) {
+			$this->setDestination($destination);
+		}
 		$this->setMethod($method);
 	}
 	
