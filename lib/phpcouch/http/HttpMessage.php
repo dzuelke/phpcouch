@@ -12,7 +12,7 @@ class HttpMessage
 	/**
 	 * @var        array The HTTP headers scheduled to be sent with the message.
 	 */
-	protected $httpHeaders = array();
+	protected $headers = array();
 	
 	/**
 	 * Clear the content for this message.
@@ -31,9 +31,9 @@ class HttpMessage
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function clearHttpHeaders()
+	public function clearHeaders()
 	{
-		$this->httpHeaders = array();
+		$this->headers = array();
 	}
 	
 	/**
@@ -80,7 +80,7 @@ class HttpMessage
 	 */
 	public function getContentType()
 	{
-		$retval = $this->getHttpHeader('Content-Type');
+		$retval = $this->getHeader('Content-Type');
 		if(is_array($retval) && count($retval)) {
 			return $retval[0];
 		} else {
@@ -98,12 +98,12 @@ class HttpMessage
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function getHttpHeader($name)
+	public function getHeader($name)
 	{
 		$name = $this->normalizeHttpHeaderName($name);
 		$retval = null;
-		if(isset($this->httpHeaders[$name])) {
-			$retval = $this->httpHeaders[$name];
+		if(isset($this->headers[$name])) {
+			$retval = $this->headers[$name];
 		}
 		return $retval;
 	}
@@ -116,9 +116,9 @@ class HttpMessage
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function getHttpHeaders()
+	public function getHeaders()
 	{
-		return $this->httpHeaders;
+		return $this->headers;
 	}
 	
 	/**
@@ -144,11 +144,11 @@ class HttpMessage
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function hasHttpHeader($name)
+	public function hasHeader($name)
 	{
 		$name = $this->normalizeHttpHeaderName($name);
 		$retval = false;
-		if(isset($this->httpHeaders[$name])) {
+		if(isset($this->headers[$name])) {
 			$retval = true;
 		}
 		return $retval;
@@ -185,13 +185,13 @@ class HttpMessage
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function removeHttpHeader($name)
+	public function removeHeader($name)
 	{
 		$name = $this->normalizeHttpHeaderName($name);
 		$retval = null;
-		if(isset($this->httpHeaders[$name])) {
-			$retval = $this->httpHeaders[$name];
-			unset($this->httpHeaders[$name]);
+		if(isset($this->headers[$name])) {
+			$retval = $this->headers[$name];
+			unset($this->headers[$name]);
 		}
 		return $retval;
 	}
@@ -219,7 +219,7 @@ class HttpMessage
 	 */
 	public function setContentType($type)
 	{
-		$this->setHttpHeader('Content-Type', $type);
+		$this->setHeader('Content-Type', $type);
 	}
 	
 	/**
@@ -232,16 +232,16 @@ class HttpMessage
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function setHttpHeader($name, $value, $replace = true)
+	public function setHeader($name, $value, $replace = true)
 	{
 		$name = $this->normalizeHttpHeaderName($name);
-		if(!isset($this->httpHeaders[$name]) || $replace) {
-			$this->httpHeaders[$name] = array();
+		if(!isset($this->headers[$name]) || $replace) {
+			$this->headers[$name] = array();
 		}
 		if(is_array($value)) {
-			$this->httpHeaders[$name] = array_merge($this->httpHeaders[$name], $value);
+			$this->headers[$name] = array_merge($this->headers[$name], $value);
 		} else {
-			$this->httpHeaders[$name][] = $value;
+			$this->headers[$name][] = $value;
 		}
 	}
 

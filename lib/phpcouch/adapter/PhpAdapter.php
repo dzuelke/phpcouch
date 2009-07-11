@@ -77,7 +77,7 @@ class PhpAdapter implements AdapterInterface
 		}
 		
 		// additional headers
-		foreach($request->getHttpHeaders() as $key => $values) {
+		foreach($request->getHeaders() as $key => $values) {
 			foreach($values as $value) {
 				$options['http']['header'][] = "$key: $value";
 			}
@@ -137,13 +137,13 @@ class PhpAdapter implements AdapterInterface
 		$body = stream_get_contents($fp);
 		
 		$response = new HttpResponse();
-		$response->setHttpStatusCode($statusCode);
+		$response->setStatusCode($statusCode);
 		$response->setContent($body);
 		
 		foreach($meta['wrapper_data'] as $headerLine) {
 			$headerParts = explode(':', $headerLine, 2);
 			if(count($headerParts) == 2) {
-				$response->setHttpHeader(trim($headerParts[0]), trim($headerParts[1]));
+				$response->setHeader(trim($headerParts[0]), trim($headerParts[1]));
 			}
 		}
 		

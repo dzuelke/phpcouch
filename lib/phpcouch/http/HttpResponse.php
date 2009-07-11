@@ -53,7 +53,7 @@ class HttpResponse extends HttpMessage
 	/**
 	 * @var        string The HTTP status code of this message.
 	 */
-	protected $httpStatusCode = '200';
+	protected $statusCode = '200';
 	
 	/**
 	 * Gets the HTTP status code set for the message.
@@ -63,9 +63,9 @@ class HttpResponse extends HttpMessage
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function getHttpStatusCode()
+	public function getStatusCode()
 	{
-		return $this->httpStatusCode;
+		return $this->statusCode;
 	}
 	
 	/**
@@ -76,11 +76,11 @@ class HttpResponse extends HttpMessage
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function setHttpStatusCode($code)
+	public function setStatusCode($code)
 	{
 		$code = (string)$code;
 		if($this->validateHttpStatusCode($code)) {
-			$this->httpStatusCode = $code;
+			$this->statusCode = $code;
 		} else {
 			throw new \phpcouch\UnexpectedValueException(sprintf('Unknown HTTP/1.1 Status code: %s', $code));
 		}

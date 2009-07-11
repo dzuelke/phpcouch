@@ -183,7 +183,7 @@ class Database extends Record
 		}
 		
 		$request = new HttpRequest($this->getConnection()->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $id)), HttpRequest::METHOD_POST);
-		$request->setHttpHeader('If-Match', $doc->_rev);
+		$request->setHeader('If-Match', $doc->_rev);
 		return $this->getConnection()->sendRequest($request);
 	}
 	
