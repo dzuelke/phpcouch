@@ -30,6 +30,9 @@ foreach($db->listDocuments(array('include_docs' => true)) as $row) {
 	var_dump($row->getDocument()->_id);
 }
 
+var_dump($db->retrieveDocument('_design/test'));
+var_dump($db->retrieveDocument('_design/testx'));
+
 die();
 
 try {

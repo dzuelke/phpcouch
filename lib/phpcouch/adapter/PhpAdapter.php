@@ -122,30 +122,33 @@ class PhpAdapter implements AdapterInterface
 		// [11]=>
 		// string(30) "Cache-Control: must-revalidate"
 		
-		if(
-			!isset($meta['wrapper_data'][0]) ||
-			!($status = preg_match('#^HTTP/1\.[01]\s+(\d{3})\s+(.+)$#', $meta['wrapper_data'][0], $matches))
-		) {
-			throw new TransportException('Could not read HTTP response status line');
-		} else {
-			array_shift($meta['wrapper_data']);
-		}
-		
-		$statusCode = (int)$matches[1];
-		$statusMessage = $matches[2];
-		
-		$body = stream_get_contents($fp);
-		
-		$response = new HttpResponse();
-		$response->setStatusCode($statusCode);
-		$response->setContent($body);
-		
 		foreach($meta['wrapper_data'] as $headerLine) {
+			if(preg_match('#^HTTP/1\.[01]\s+(\d{3})\s+(.+)$#', $headerLine, $matches)) {
+				$statusCode = (int)$matches[1];
+				$statusMessage = $matches[2];
+				
+				if(isset($response)) {
+					$response = new HttpResponse($response);
+				} else {
+					$response = new HttpResponse();
+				}
+				$response->setStatusCode($statusCode);
+				
+				continue;
+			}
+			
+			if(!isset($response)) {
+				throw new TransportException('Could not read HTTP response status line');
+			}
+			
 			$headerParts = explode(':', $headerLine, 2);
 			if(count($headerParts) == 2) {
 				$response->setHeader(trim($headerParts[0]), trim($headerParts[1]));
 			}
 		}
+		
+		$body = stream_get_contents($fp);
+		$response->setContent($body);
 		
 		if($statusCode >= 400) {
 			if($statusCode % 500 < 100) {

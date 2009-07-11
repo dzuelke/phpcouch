@@ -56,6 +56,18 @@ class HttpResponse extends HttpMessage
 	protected $statusCode = '200';
 	
 	/**
+	 * @var        phpcouch\http\HttpResponse A potential preceding HTTP response (from a redirect).
+	 */
+	protected $precedingResponse = null;
+	
+	public function __construct(self $precedingResponse = null)
+	{
+		if($precedingResponse) {
+			$this->setPrecedingResponse($precedingResponse);
+		}
+	}
+	
+	/**
 	 * Gets the HTTP status code set for the message.
 	 *
 	 * @return     string A numeric HTTP status code between 100 and 505, or null if no status code has been set.
@@ -66,6 +78,11 @@ class HttpResponse extends HttpMessage
 	public function getStatusCode()
 	{
 		return $this->statusCode;
+	}
+	
+	public function setPrecedingResponse(self $precedingResponse)
+	{
+		$this->precedingResponse = $precedingResponse;
 	}
 	
 	/**
