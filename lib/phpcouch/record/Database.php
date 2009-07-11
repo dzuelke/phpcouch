@@ -7,12 +7,12 @@ use phpcouch\http\HttpRequest;
 
 class Database extends Record
 {
-	const URL_PATTERN_ALLDOCS = '%s/%s/_all_docs';
-	const URL_PATTERN_ATTACHMENT = '%s/%s/%s/%s';
-	const URL_PATTERN_DESIGNDOCUMENT = '%s/%s/_design/%s';
-	const URL_PATTERN_DOCUMENT = '%s/%s/%s';
-	const URL_PATTERN_NEWDOCUMENT = '%s/%s/';
-	const URL_PATTERN_VIEW = '%s/%s/_design/%s/_view/%s';
+	const URL_PATTERN_ALLDOCS = '/%s/_all_docs';
+	const URL_PATTERN_ATTACHMENT = '/%s/%s/%s';
+	const URL_PATTERN_DESIGNDOCUMENT = '/%s/_design/%s';
+	const URL_PATTERN_DOCUMENT = '/%s/%s';
+	const URL_PATTERN_NEWDOCUMENT = '/%s/';
+	const URL_PATTERN_VIEW = '/%s/_design/%s/_view/%s';
 	
 	public function __toString()
 	{

@@ -21,12 +21,12 @@ class Connection extends \phpcouch\ConfigurableAbstract
 {
 	const COUCHDB_DEFAULT_PORT = 5984;
 	
-	const URL_PATTERN_ALLDBS = '%s/_all_dbs';
-	const URL_PATTERN_DATABASE = '%s/%s';
-	const URL_PATTERN_UUIDS = '%s/_uuids';
-	const URL_PATTERN_CONFIG = '%s/_config';
-	const URL_PATTERN_STATS = '%s/_stats';
-	const URL_PATTERN_INFO = '%s/';
+	const URL_PATTERN_ALLDBS = '/_all_dbs';
+	const URL_PATTERN_DATABASE = '/%s';
+	const URL_PATTERN_UUIDS = '/_uuids';
+	const URL_PATTERN_CONFIG = '/_config';
+	const URL_PATTERN_STATS = '/_stats';
+	const URL_PATTERN_INFO = '/';
 	
 	/**
 	 * @var        PhpcouchIAdapter An adapter to use with this connection.
@@ -104,10 +104,10 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	
 	public function buildUrl($template, array $values = array(), $options = array())
 	{
-		$url = vsprintf($template, array_merge(array($this->baseUrl), array_map('rawurlencode', $values)));
+		$url = vsprintf('%s' . $template, array_merge(array($this->baseUrl), array_map('rawurlencode', $values)));
 		
-		if($options) {
-			$url .= '?' . http_build_query($options);
+		if($options && ($options = http_build_query($options)) !== '') {
+			$url .= '?' . $options;
 		}
 		
 		return $url;
