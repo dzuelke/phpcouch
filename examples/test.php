@@ -45,7 +45,9 @@ try {
 try {
 	$newdb = uniqid('foobar', true);
 	var_dump($con->createDatabase($newdb));
+	var_dump("$newdb created!");
 	var_dump($con->deleteDatabase($newdb));
+	var_dump("$newdb deleted!");
 } catch(Exception $e) {
 }
 
@@ -72,7 +74,11 @@ $doc = $db->newDocument();
 $doc->type = 'Page';
 $doc->title = 'An unnamed document';
 $doc->content = 'Yay zomg! :>>';
-$doc->save();
-var_dump($doc);
+try {
+	$doc->save();
+	var_dump($doc);
+} catch(\phpcouch\http\HttpClientErrorException $e) {
+	var_dump($e->getResponse());
+}
 
 ?>
