@@ -83,6 +83,10 @@ class PhpAdapter implements AdapterInterface
 			}
 		}
 		
+		// must do this as there is a bug in all current PHP versions causing an additional \r\n being appended to the last header (so there are two \r\n sequences before the request body starts) when it's an array
+		// a string it is then, that fixes the problem
+		$options['http']['header'] = implode("\r\n", $options['http']['header']);
+		
 		$ctx = stream_context_create($options);
 		
 		$fp = @fopen($request->getDestination(), 'r', false, $ctx);

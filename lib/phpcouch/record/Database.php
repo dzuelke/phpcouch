@@ -62,7 +62,11 @@ class Database extends Record
 				$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_NEWDOCUMENT, array($this->getName())), HttpRequest::METHOD_POST);
 			}
 			
-			$result = $con->sendRequest($request);
+			$request->setContent(json_encode($values));
+			$request->setContentType('application/json');
+			
+			$result = new Record($this->getConnection());
+			$result->hydrate(json_decode($con->sendRequest($request)));
 			
 			if(isset($result->ok) && $result->ok === true) {
 				// all cool.
@@ -73,7 +77,8 @@ class Database extends Record
 				// TODO: add $result
 			}
 		} catch(Exception $e) {
-			throw new Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
+			// throw new Exception($e->getMessage(), $e->getCode(), $e);
 			// TODO: add $result
 		}
 	}

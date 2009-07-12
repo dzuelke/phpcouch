@@ -12,7 +12,7 @@ set_include_path(get_include_path() . ':' . '/Users/dzuelke/Downloads/ZendFramew
 require('../lib/phpcouch/Phpcouch.php');
 Phpcouch::bootstrap();
 
-PhpCouch::registerConnection('default', $con = new connection\Connection(null, new adapter\PhpAdapter()));
+PhpCouch::registerConnection('default', $con = new connection\Connection(null, new adapter\PhpAdapter(array('http' => array('request_fulluri' => true, 'proxy' => 'tcp://localhost:8888')))));
 
 var_dump($con->listDatabases());
 var_dump('A UUID (from /_uuids): ' . $con->retrieveUuids()->uuids[0]);
@@ -22,16 +22,28 @@ var_dump('Mean request time (from /_stats): ' . $con->retrieveStats()->couchdb->
 
 var_dump($db = $con->retrieveDatabase('test_suite_db/with_slashes'));
 
-foreach($db->callView('test', 'testing', array('reduce' => false, 'stale' => true, /*'keys' => array('foo', 'bar')*/)) as $row) {
-	var_dump($row);
-}
+// foreach($db->callView('test', 'testing', array('reduce' => false, 'stale' => true, /*'keys' => array('foo', 'bar')*/)) as $row) {
+// 	var_dump($row);
+// }
 
 foreach($db->listDocuments(array('include_docs' => true)) as $row) {
 	var_dump($row->getDocument()->_id);
 }
 
 var_dump($db->retrieveDocument('_design/test'));
-var_dump($db->retrieveDocument('_design/testx'));
+// var_dump($db->retrieveDocument('_design/testx'));
+
+$new = $db->newDocument();
+$new->_id = 'ohaiasdsad';
+$new->foo = 'bar';
+try {
+	$new->save();
+} catch(Exception $e) {
+	var_dump($e);
+	die();
+}
+
+var_dump($new);
 
 die();
 
