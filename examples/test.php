@@ -34,27 +34,23 @@ var_dump($db->retrieveDocument('_design/test'));
 // var_dump($db->retrieveDocument('_design/testx'));
 
 $new = $db->newDocument();
-$new->_id = 'ohaiasdsad';
 $new->foo = 'bar';
 try {
 	$new->save();
-} catch(Exception $e) {
-	var_dump($e);
-	die();
+	var_dump($new);
+} catch(\phpcouch\http\HttpClientErrorException $e) {
+	var_dump($e->getResponse());
 }
 
-var_dump($new);
-
-die();
-
 try {
-	var_dump($con->createDatabase('hellohans2'));
-	var_dump($con->deleteDatabase('hellohans2'));
+	$newdb = uniqid('foobar', true);
+	var_dump($con->createDatabase($newdb));
+	var_dump($con->deleteDatabase($newdb));
 } catch(Exception $e) {
 }
 
 try {
-	$doc = $db->retrieveDocument('63A0B00A68EEBE4ECB4E0F8F9682F813');
+	$doc = $db->retrieveDocument($new->_id);
 	$doc->title = 'hello again';
 	$doc->save();
 } catch(Exception $e) {
