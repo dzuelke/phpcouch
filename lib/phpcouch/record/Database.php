@@ -66,7 +66,7 @@ class Database extends Record
 			$request->setContentType('application/json');
 			
 			$result = new Record($this->getConnection());
-			$result->hydrate(json_decode($con->sendRequest($request)));
+			$result->hydrate($con->sendRequest($request));
 			
 			if(isset($result->ok) && $result->ok === true) {
 				// all cool.
