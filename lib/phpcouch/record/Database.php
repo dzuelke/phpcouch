@@ -175,7 +175,7 @@ class Database extends Record
 		$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $document->_id)), HttpRequest::METHOD_PUT);
 		$request->setContent(json_encode($document->dehydrate()));
 		
-		$result = $con->sendRequest();
+		$result = $con->sendRequest($request);
 		
 		if(isset($result->ok) && $result->ok === true) {
 			$document->_rev = $result->rev;
