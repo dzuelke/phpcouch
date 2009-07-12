@@ -12,7 +12,7 @@ set_include_path(get_include_path() . ':' . '/Users/dzuelke/Downloads/ZendFramew
 require('../lib/phpcouch/Phpcouch.php');
 Phpcouch::bootstrap();
 
-PhpCouch::registerConnection('default', $con = new connection\Connection(null, new adapter\PhpAdapter(array('http' => array('request_fulluri' => true, 'proxy' => 'tcp://localhost:8888')))));
+PhpCouch::registerConnection('default', $con = new connection\Connection(null, new adapter\PhpAdapter()));
 
 var_dump($con->listDatabases());
 var_dump('A UUID (from /_uuids): ' . $con->retrieveUuids()->uuids[0]);
