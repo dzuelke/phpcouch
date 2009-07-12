@@ -2,7 +2,7 @@
 
 namespace phpcouch\connection;
 
-use phpcouch\Exception;
+use phpcouch\Exception, phpcouch\InvalidArgumentException;
 use phpcouch\http\HttpRequest, phpcouch\http\HttpResponse, phpcouch\http\HttpClientException, phpcouch\http\HttpServerException;
 
 /**
@@ -125,8 +125,8 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 */
 	public function createDatabase($name)
 	{
-		if(!preg_match('#^[a-z][a-z0-9_$()+-/]*$#', $name)) {
-			throw new \InvalidArgumentException('Invalid database name. Database names must conform to regular expression "^[a-z][a-z0-9_$()+-/]*$"');
+		if(!preg_match('#^[a-z][a-z0-9_$()+/-]*$#', $name)) {
+			throw new InvalidArgumentException('Invalid database name. Database names must conform to regular expression "^[a-z][a-z0-9_$()+-/]*$"');
 		}
 		
 		try {
