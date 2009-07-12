@@ -99,8 +99,8 @@ class PhpAdapter implements AdapterInterface
 		$meta = stream_get_meta_data($fp);
 		
 		// $meta['wrapper_data'] is an indexed array of the individual response header lines
-		
-		// FIXME: when a redirect happens, we get all the response headers merged together
+		// when a redirect happens, we get all the response headers merged together
+		// so we need to run in a loop and create a chain of responses until we reach the final, authoritative one
 		// [0]=>
 		// string(30) "HTTP/1.0 301 Moved Permanently"
 		// [1]=>
