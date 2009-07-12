@@ -42,13 +42,18 @@ try {
 	var_dump($e->getResponse());
 }
 
+$newdb = uniqid('foobar');
 try {
-	$newdb = uniqid('foobar', true);
 	var_dump($con->createDatabase($newdb));
 	var_dump("$newdb created!");
+} catch(Exception $e) {
+	var_dump($e->getResponse());
+}
+try {
 	var_dump($con->deleteDatabase($newdb));
 	var_dump("$newdb deleted!");
 } catch(Exception $e) {
+	var_dump($e->getResponse());
 }
 
 try {
