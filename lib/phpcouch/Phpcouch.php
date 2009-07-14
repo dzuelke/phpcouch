@@ -20,6 +20,11 @@ const VERSION_STATUS = 'dev';
 class Phpcouch
 {
 	/**
+	 * @var        bool Whether or not Phpcouch as been bootstrapped already.
+	 */
+	protected static $bootstrapped = false;
+	
+	/**
 	 * @var        array An array of registered connections.
 	 */
 	protected static $connections = array();
@@ -62,11 +67,17 @@ class Phpcouch
 	 */
 	public static function bootstrap()
 	{
+		if(self::$bootstrapped) {
+			return;
+		}
+		
 		// grab the base path where we are located
 		self::$path = dirname(__FILE__);
 		
 		// and register our autoloader
 		spl_autoload_register(array(__CLASS__, 'autoload'));
+		
+		self::$bootstrapped = true;
 	}
 	
 	/**
