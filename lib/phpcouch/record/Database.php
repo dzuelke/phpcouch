@@ -205,7 +205,7 @@ class Database extends Record
 		
 		$con = $this->getConnection();
 		
-		$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $id)), HttpRequest::METHOD_POST);
+		$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $doc->_id)), HttpRequest::METHOD_DELETE);
 		$request->setHeader('If-Match', $doc->_rev);
 		return $con->sendRequest($request);
 	}
