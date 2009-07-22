@@ -72,7 +72,7 @@ class Phpcouch
 		}
 		
 		// grab the base path where we are located
-		self::$path = dirname(__FILE__);
+		self::$path = __DIR__;
 		
 		// and register our autoloader
 		spl_autoload_register(array(__CLASS__, 'autoload'));
