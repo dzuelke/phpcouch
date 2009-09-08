@@ -248,6 +248,17 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		return $this->getAdapter()->sendRequest($request);
 	}
 	
+	/**
+	 * Replicate two databases across instances of CouchDB
+	 * 
+	 * @param      string either a url to the remote db or the name of the local db
+	 * @param      string either a url to the remote db or the name of the local db
+	 *
+	 * @throws     HttpErrorException
+	 * 
+	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
+	 * @since      1.0.0
+	 */
 	public function replicate($source, $target)
 	{
 		if (!filter_var($source, FILTER_VALIDATE_URL)) {
@@ -270,7 +281,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 			$result->hydrate($this->sendRequest($request));
 			
 			if(!isset($result->ok) && $result->ok !== true) {
-				throw new HttpErrorException('Cannot replicated these items');
+				throw new HttpErrorException('Cannot replicate these items');
 			}
 		} catch (Exception $e) {
 			throw $e;
