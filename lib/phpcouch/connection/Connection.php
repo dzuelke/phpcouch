@@ -27,6 +27,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	const URL_PATTERN_CONFIG = '/_config';
 	const URL_PATTERN_STATS = '/_stats';
 	const URL_PATTERN_INFO = '/';
+	const URL_PATTERN_REPLICATE = '/_replicate';
 	
 	/**
 	 * @var        PhpcouchIAdapter An adapter to use with this connection.
@@ -185,7 +186,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 */
 	public function deleteDatabase($name)
 	{
-		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_DATABASE, array($name)));
+		$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_DATABASE, array($name)), HttpRequest::METHOD_DELETE);
 		// TODO: catch exceptions
 		// TODO: hydrate to Record
 		return $this->sendRequest($request);
@@ -245,6 +246,35 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	{
 		// TODO: should we wrap exceptions here? I'm not sure really.
 		return $this->getAdapter()->sendRequest($request);
+	}
+	
+	public function replicate($source, $target)
+	{
+		if (!filter_var($source, FILTER_VALIDATE_URL)) {
+			$source = $this->buildUrl(self::URL_PATTERN_DATABASE, array($source));
+		}
+		
+		if (!filter_var($target, FILTER_VALIDATE_URL)) {
+			$target = $this->buildUrl(self::URL_PATTERN_DATABASE, array($target));
+		}
+		
+		try {
+			$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_REPLICATE), HttpRequest::METHOD_POST);
+			
+			$values = array('source' => $source, 'target' => $target);
+			
+			$request->setContent(json_encode($values));
+			$request->setContentType('application/json');
+			
+			$result = new \phpcouch\record\Record($this);
+			$result->hydrate($this->sendRequest($request));
+			
+			if(!isset($result->ok) && $result->ok !== true) {
+				throw new HttpErrorException('Cannot replicated these items');
+			}
+		} catch (Exception $e) {
+			throw $e;
+		}
 	}
 }
 
