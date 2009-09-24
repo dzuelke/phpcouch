@@ -13,6 +13,7 @@ class Database extends Record
 	const URL_PATTERN_DOCUMENT = '/%s/%s';
 	const URL_PATTERN_NEWDOCUMENT = '/%s/';
 	const URL_PATTERN_VIEW = '/%s/_design/%s/_view/%s';
+	const URL_PATTERN_CHANGES = '/%s/_changes';
 	
 	public function __toString()
 	{
@@ -226,18 +227,31 @@ class Database extends Record
 	/**
 	 * Get a list of all the documents in the database.
 	 * 
-	 * @param       array An associative array of view options.
+	 * @param      array An associative array of view options.
 	 *
-	 * @return      AllDocsResult A list of documents in the database.
+	 * @return     AllDocsResult A list of documents in the database.
 	 * 
-	 * @author      David Zülke <david.zuelke@bitextender.com>
-	 * @since       1.0.0
+	 * @author     David Zülke <david.zuelke@bitextender.com>
+	 * @since      1.0.0
 	 */
 	public function listDocuments(array $options = array())
 	{
 		// only build basic URL
 		// options etc are done in executeView()
 		return $this->executeView(self::URL_PATTERN_ALLDOCS, array($this->getName()), $options, 'phpcouch\record\AllDocsResult');
+	}
+
+	/**
+	 * Show all changes in the database since the last restart of CouchDB
+	 * 
+	 * @return     AllDocsResult A list of document ids with their changes
+	 *
+	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
+	 * @since      1.0.0
+	 */
+	public function showChanges(array $options = array())
+	{
+		return $this->executeView(self::URL_PATTERN_CHANGES, array($this->getName()), $options, 'phpcouch\record\AllDocsResult');
 	}
 	
 	public function callView($designDocument, $viewName, array $options = array())

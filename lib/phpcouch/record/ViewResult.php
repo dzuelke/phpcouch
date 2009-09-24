@@ -26,11 +26,14 @@ class ViewResult extends Record implements ViewResultInterface, \IteratorAggrega
 		
 		$newRows = array();
 		$cls = static::DEFAULT_VIEW_RESULT_ROW_CLASS;
-		// cannot iterate with &$row as it's a __get() function
-		foreach($this->rows as $row) {
-			$vrr = new $cls($this);
-			$vrr->hydrate($row);
-			$newRows[] = $vrr;
+		
+		if (isset($this->rows)) {
+			// cannot iterate with &$row as it's a __get() function
+			foreach($this->rows as $row) {
+				$vrr = new $cls($this);
+				$vrr->hydrate($row);
+				$newRows[] = $vrr;
+			}
 		}
 		$this->rows = $newRows;
 	}
