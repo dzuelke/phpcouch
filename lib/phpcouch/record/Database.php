@@ -74,7 +74,7 @@ class Database extends Record
 				$document->fromArray(array(Document::ID_FIELD => $result->id, Document::REVISION_FIELD => $result->rev));
 				return;
 			} else {
-				throw new phpcouch\Exception('Result not OK :(');
+				throw new \Exception('Result not OK :(');
 				// TODO: add $result
 			}
 		} catch(Exception $e) {
