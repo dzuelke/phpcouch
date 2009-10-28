@@ -78,9 +78,8 @@ class HttpAdapter implements AdapterInterface
 				$internalRequest->setPutData($payload);
 			} elseif ('POST' == $request->getMethod()) {
 				$internalRequest->setBody($payload);
+				$this->headers['Content-Length'] = strlen($payload);
 			}
-			
-			$this->headers['Content-Length'] = strlen($payload);
 		}
 		
 		$internalRequest->addHeaders($this->headers);
