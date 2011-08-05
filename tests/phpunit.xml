@@ -1,0 +1,25 @@
+<phpunit>
+	<testsuites>
+		<testsuite name="Phpcouch">
+			<file>Phpcouch/ConfigurableAbstractTest.php</file>
+			<file>Phpcouch/PhpcouchTest.php</file>
+			
+			<file>Phpcouch/Connection/ConnectionTest.php</file>
+			
+			<!-- Http -->
+			<file>Phpcouch/Http/HttpMessageTest.php</file>
+			<file>Phpcouch/Http/HttpRequestTest.php</file>
+			<file>Phpcouch/Http/HttpResponseTest.php</file>
+			
+			<!-- Record -->
+			<file>Phpcouch/Record/AllDocsResultRowTest.php</file>
+			<file>Phpcouch/Record/AllDocsResultTest.php</file>
+			<file>Phpcouch/Record/DatabaseTest.php</file>
+			<file>Phpcouch/Record/DocumentTest.php</file>
+			<file>Phpcouch/Record/MutableRecordAbstractTest.php</file>
+			<file>Phpcouch/Record/RecordTest.php</file>
+			<file>Phpcouch/Record/ViewResultRowTest.php</file>
+			<file>Phpcouch/Record/ViewResultTest.php</file>
+		</testsuite>
+	</testsuites>
+</phpunit>
