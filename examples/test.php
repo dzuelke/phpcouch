@@ -1,32 +1,69 @@
 <?php
 
+use phpcouch\Phpcouch;
+use phpcouch\Exception;
+use phpcouch\connection;
+use phpcouch\adapter;
+
 error_reporting(E_ALL | E_STRICT);
 
 set_include_path(get_include_path() . ':' . '/Users/dzuelke/Downloads/ZendFramework-1.0.2/library');
 
-require('../lib/Phpcouch.php');
+require('../lib/phpcouch/Phpcouch.php');
+Phpcouch::bootstrap();
 
-PhpCouch::registerConnection('default', $con = new PhpcouchDatabaseConnection(array('database' => 'hellohans'), new PhpcouchPhpAdapter()));
+PhpCouch::registerConnection('default', $con = new connection\Connection(null, new adapter\PhpAdapter()));
 
-PhpCouch::registerConnection('server', $con2 = new PhpcouchServerConnection(array(), new PhpcouchPhpAdapter()), false);
+var_dump($con->listDatabases());
+var_dump('A UUID (from /_uuids): ' . $con->retrieveUuids()->uuids[0]);
+var_dump('Database dir (from /_config): ' . $con->retrieveConfig()->couchdb->database_dir);
+var_dump('CouchDB Version (from /): ' . $con->retrieveInfo()->version);
+var_dump('Mean request time (from /_stats): ' . $con->retrieveStats()->couchdb->request_time->mean);
 
-var_dump($con2->listDatabases());
+var_dump($db = $con->retrieveDatabase('test_suite_db/with_slashes'));
 
-var_dump($con2->retrieveDatabase('hellohans'));
+// foreach($db->callView('test', 'testing', array('reduce' => false, 'stale' => true, /*'keys' => array('foo', 'bar')*/)) as $row) {
+// 	var_dump($row);
+// }
+
+foreach($db->listDocuments(array('include_docs' => true)) as $row) {
+	var_dump($row->getDocument()->_id);
+}
+
+var_dump($db->retrieveDocument('_design/test'));
+// var_dump($db->retrieveDocument('_design/testx'));
+
+$new = $db->newDocument();
+$new->foo = 'bar';
 try {
-	var_dump($con2->createDatabase('hellohans2'));
-	var_dump($con2->deleteDatabase('hellohans2'));
-} catch(PhpcouchClientErrorException $e) {
+	$new->save();
+	var_dump($new);
+} catch(\phpcouch\http\HttpClientErrorException $e) {
+	var_dump($e->getResponse());
+}
+
+$newdb = uniqid('foobar');
+try {
+	var_dump($con->createDatabase($newdb));
+	var_dump("$newdb created!");
+} catch(Exception $e) {
+	var_dump($e->getResponse());
+}
+try {
+	var_dump($con->deleteDatabase($newdb));
+	var_dump("$newdb deleted!");
+} catch(Exception $e) {
+	var_dump($e->getResponse());
 }
 
 try {
-	$doc = $con->retrieveDocument('63A0B00A68EEBE4ECB4E0F8F9682F813');
+	$doc = $db->retrieveDocument($new->_id);
 	$doc->title = 'hello again';
 	$doc->save();
 } catch(Exception $e) {
 }
 
-$doc = $con->newDocument();
+$doc = $db->newDocument();
 $doc->_id = uniqid();
 $doc->type = 'Page';
 $doc->title = 'Hello world again!';
@@ -38,11 +75,15 @@ $doc->save();
 $doc->title .= 'Snap';
 $doc->save();
 
-$doc = $con->newDocument();
+$doc = $db->newDocument();
 $doc->type = 'Page';
 $doc->title = 'An unnamed document';
 $doc->content = 'Yay zomg! :>>';
-$doc->save();
-var_dump($doc);
+try {
+	$doc->save();
+	var_dump($doc);
+} catch(\phpcouch\http\HttpClientErrorException $e) {
+	var_dump($e->getResponse());
+}
 
 ?>
