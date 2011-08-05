@@ -12,7 +12,17 @@
  */
 class AllDocsResultRowTest extends PHPUnit_Framework_TestCase
 {
-	
+	/**
+	 * Placeholder test, keep until actual tests are written
+	 * 
+	 * @assert     true
+	 * 
+	 * @author     Simon Thulbourn <simon+github@thulbourn.com>
+	 */
+	public function testPlaceholder()
+	{
+		$this->assertTrue(true);
+	}
 }
 
 ?>
