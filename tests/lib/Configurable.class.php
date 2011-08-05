@@ -1,6 +1,6 @@
 <?php
 
-class TestPhpcouchConfigurable extends PhpcouchConfigurable
+class TestPhpcouchConfigurable extends phpcouch\ConfigurableAbstract
 {
 }
 

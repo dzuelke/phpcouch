@@ -1,6 +1,6 @@
 <?php
 
-class TestPhpcouchMutableRecord extends PhpcouchMutableRecord
+class TestPhpcouchMutableRecord extends phpcouch\record\MutableRecordAbstract
 {
 	public $_id;
 	

@@ -1,6 +1,6 @@
 <?php
 
-class TestPhpcouchRecord extends PhpcouchRecord
+class TestPhpcouchRecord extends phpcouch\record\Record
 {
 	public $_id;
 }

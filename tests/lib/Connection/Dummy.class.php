@@ -1,6 +1,6 @@
 <?php
 
-class TestPhpcouchDummyConnection extends PhpcouchServerConnection
+class TestPhpcouchDummyConnection extends \phpcouch\connection\Connection
 {
 }
 

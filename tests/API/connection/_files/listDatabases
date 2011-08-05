@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Server: CouchDB/0.9.0 (Erlang OTP/R13B)
+Date: Mon, 29 Jun 2009 15:52:07 GMT
+Content-Type: text/plain;charset=utf-8
+Content-Length: 8
+Cache-Control: must-revalidate
+
+["foo"]
