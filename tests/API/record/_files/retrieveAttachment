@@ -1,9 +1,0 @@
-HTTP/1.1 200 OK
-Server: CouchDB/0.9.0 (Erlang OTP/R13B)
-Etag: "2-516410318"
-Date: Tue, 30 Jun 2009 11:01:50 GMT
-Content-Type: text/plain;charset=utf-8
-Content-Length: 162
-Cache-Control: must-revalidate
-
-{"_id":"foo","_rev":"4-1945066994","_attachments":{"test.php":{"stub":true,"content_type":"text/php","length":1360}}}

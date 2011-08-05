@@ -1,6 +1,0 @@
-HTTP/1.1 201 Created
-Date: Thu, 17 Aug 2006 05:39:28 +0000GMT
-Content-Type: application/json
-Connection: close
-
-{"ok": true, "id": "some_doc_id", "rev": "946B7D1C"}
