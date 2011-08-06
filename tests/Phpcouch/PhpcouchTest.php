@@ -7,22 +7,22 @@ use phpcouch\adapter;
 
 /**
  * Phpcouch Test
- * 
+ *
  * @package    PHPCouch
  * @subpackage Tests
- * 
+ *
  * @author     Simon Thulbourn <simon+github@thulbourn.com>
  * @copyright  authors
- * 
+ *
  * @since      1.0.0
  */
 class PhpcouchTest extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * Tests bootstrap loading
-	 * 
+	 *
 	 * @assert     equals
-	 * 
+	 *
 	 * @author     Simon Thulbourn <simon+github@thulbourn.com>
 	 */
 	public function testBootstrap()
@@ -42,9 +42,9 @@ class PhpcouchTest extends PHPUnit_Framework_TestCase
 	
 	/**
 	 * Tests autoload
-	 * 
+	 *
 	 * @assert     true
-	 * 
+	 *
 	 * @author     Simon Thulbourn <simon+github@thulbourn.com>
 	 */
 	public function testAutoload()
@@ -78,9 +78,9 @@ class PhpcouchTest extends PHPUnit_Framework_TestCase
 	
 	/**
 	 * Test version string
-	 * 
+	 *
 	 * @assert     equals
-	 * 
+	 *
 	 * @author     Simon Thulbourn <simon+github@thulbourn.com>
 	 */
 	public function testVersionString()
@@ -97,9 +97,9 @@ class PhpcouchTest extends PHPUnit_Framework_TestCase
 	
 	/**
 	 * Tests register connection
-	 * 
+	 *
 	 * @assert     same
-	 * 
+	 *
 	 * @author     Simon Thulbourn <simon+github@thulbourn.com>
 	 */
 	public function testRegisterConnection()
@@ -113,9 +113,9 @@ class PhpcouchTest extends PHPUnit_Framework_TestCase
 	
 	/**
 	 * Tests register connection
-	 * 
+	 *
 	 * @assert     same
-	 * 
+	 *
 	 * @author     Simon Thulbourn <simon+github@thulbourn.com>
 	 */
 	public function testUnregisterConnection()
