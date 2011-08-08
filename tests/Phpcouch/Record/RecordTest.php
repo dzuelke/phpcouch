@@ -1,4 +1,11 @@
 <?php
+
+use phpcouch\Phpcouch;
+use phpcouch\Exception;
+use phpcouch\connection;
+use phpcouch\adapter;
+use phpcouch\record;
+
 /**
  * Phpcouch Test
  *
@@ -13,15 +20,89 @@
 class RecordTest extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * Placeholder test, keep until actual tests are written
-	 * 
-	 * @assert     true
-	 * 
-	 * @author     Simon Thulbourn <simon+github@thulbourn.com>
+	 * setup
 	 */
-	public function testPlaceholder()
+	public function setUp()
 	{
-		$this->assertTrue(true);
+		Phpcouch::bootstrap();
+	}
+	
+	/**
+	 * Tests connection get/set
+	 *
+	 * @assert       same
+	 *
+	 * @author       Simon Thulbourn <simon+github@thulbournm.com>
+	 */
+	public function testConnection()
+	{
+		$connection = $this->getMockBuilder('\phpcouch\connection\Connection')
+										->disableOriginalConstructor()
+										->getMock();
+		
+		$record = new record\Record($connection);
+		
+		$this->assertSame($record->getConnection(), $connection);
+	}
+	
+	/**
+	 * Tests overloading
+	 *
+	 * @assert       equals
+	 * @assert       null
+	 *
+	 * @author       Simon Thulbourn <simon+github@thulbournm.com>
+	 */
+	public function testOverload()
+	{
+		$data = array(
+			'foo' => 'bar',
+			'baz' => 'buzz'
+		);
+		
+		$connection = $this->getMockBuilder('\phpcouch\connection\Connection')
+										->disableOriginalConstructor()
+										->getMock();
+		
+		$record = new record\Record($connection);
+		
+		foreach($data as $k => $v) {
+			$record->{$k} = $v;
+			$this->assertEquals($record->{$k}, $v);
+			
+			unset($record->{$k});
+			$this->assertNull($record->{$k});
+		}
+	}
+	
+	/**
+	 * Tests AccessAccess interface
+	 *
+	 * @assert       equals
+	 * @assert       null
+	 *
+	 * @author       Simon Thulbourn <simon+github@thulbournm.com>
+	 */
+	public function testArrayAccess()
+	{
+		$data = array(
+			'foo' => 'bar',
+			'baz' => 'buzz'
+		);
+		
+		$connection = $this->getMockBuilder('\phpcouch\connection\Connection')
+										->disableOriginalConstructor()
+										->getMock();
+		
+		$record = new record\Record($connection);
+		
+		foreach($data as $k => $v) {
+			$record[$k] = $v;
+			$this->assertEquals($record[$k], $v);
+			
+			unset($record[$k]);
+			$this->assertNull($record[$k]);
+		}
 	}
 }
 
