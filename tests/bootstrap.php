@@ -18,7 +18,4 @@ use phpcouch\adapter;
 
 require '../lib/Phpcouch/Phpcouch.php';
 
-Phpcouch::bootstrap();
-
-
 ?>

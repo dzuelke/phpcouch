@@ -235,13 +235,17 @@ class HttpMessage
 	public function setHeader($name, $value, $replace = true)
 	{
 		$name = $this->normalizeHttpHeaderName($name);
+		
 		if(!isset($this->headers[$name]) || $replace) {
 			$this->headers[$name] = array();
 		}
-		if(is_array($value)) {
-			$this->headers[$name] = array_merge($this->headers[$name], $value);
-		} else {
-			$this->headers[$name][] = $value;
+		
+		if($replace) {
+			if(is_array($value)) {
+				$this->headers[$name] = array_merge($this->headers[$name], $value);
+			} else {
+				$this->headers[$name] = array($value);
+			}
 		}
 	}
 
