@@ -1,6 +1,9 @@
 <?php
 
-use phpcouch\http;
+use phpcouch\Phpcouch;
+use phpcouch\Exception;
+use phpcouch\connection;
+use phpcouch\adapter;
 
 /**
  * Phpcouch Test
@@ -20,7 +23,7 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
 	 */
 	public function setUp()
 	{
-		phpcouch\Phpcouch::bootstrap();
+		Phpcouch::bootstrap();
 	}
 	
 	/**
@@ -33,11 +36,11 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testConstructor()
 	{
-		$request = new phpcouch\http\HttpRequest();
+		$request = new \phpcouch\http\HttpRequest();
 		$this->assertNull($request->getDestination());
 		$this->assertEquals($request->getMethod(), 'GET');
 		
-		$request = new phpcouch\http\HttpRequest('http://example.org', phpcouch\http\HttpRequest::METHOD_DELETE);
+		$request = new \phpcouch\http\HttpRequest('http://example.org', \phpcouch\http\HttpRequest::METHOD_DELETE);
 		$this->assertEquals($request->getDestination(), 'http://example.org');
 		$this->assertEquals($request->getMethod(), 'DELETE');
 	}
@@ -51,7 +54,7 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testSetDestination()
 	{
-		$request = new phpcouch\http\HttpRequest();
+		$request = new \phpcouch\http\HttpRequest();
 		$request->setDestination('http://example.org');
 		
 		$this->assertEquals($request->getDestination(), 'http://example.org');
@@ -66,8 +69,8 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testSetMethod()
 	{
-		$request = new phpcouch\http\HttpRequest();
-		$request->setMethod(phpcouch\http\HttpRequest::METHOD_DELETE);
+		$request = new \phpcouch\http\HttpRequest();
+		$request->setMethod(\phpcouch\http\HttpRequest::METHOD_DELETE);
 		
 		$this->assertEquals($request->getMethod(), 'DELETE');
 	}
