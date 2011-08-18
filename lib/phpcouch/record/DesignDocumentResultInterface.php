@@ -2,7 +2,7 @@
 
 namespace phpcouch\record;
 
-interface ViewResultInterface
+interface DesignDocumentResultInterface
 {
 	public function getDatabase();
 }

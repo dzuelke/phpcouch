@@ -2,22 +2,22 @@
 
 namespace phpcouch\record;
 
-class ViewResultRow extends Record implements ViewResultRowInterface
+class DesignDocumentResultRow extends Record implements DesignDocumentResultRowInterface
 {
 	const DEFAULT_ACCESSOR = null;
 	
-	protected $viewResult;
+	protected $designDocumentResult;
 	
-	public function __construct(ViewResultInterface $viewResult = null)
+	public function __construct(ViewResultInterface $designDocumentResult = null)
 	{
-		parent::__construct($viewResult->getDatabase()->getConnection());
+		parent::__construct($designDocumentResult->getDatabase()->getConnection());
 		
-		$this->viewResult = $viewResult;
+		$this->designDocumentResult = $designDocumentResult;
 	}
 	
-	public function getViewResult()
+	public function getDesignDocumentResult()
 	{
-		return $this->viewResult;
+		return $this->designDocumentResult;
 	}
 	
 	public function getDocument($accessor = null)
@@ -42,7 +42,7 @@ class ViewResultRow extends Record implements ViewResultRowInterface
 			// exception
 		}
 		
-		$retval = new Document($this->getViewResult()->getDatabase());
+		$retval = new Document($this->getDesignDocumentResult()->getDatabase());
 		$retval->hydrate($doc);
 		
 		return $retval;

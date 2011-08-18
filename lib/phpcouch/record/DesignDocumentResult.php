@@ -2,9 +2,9 @@
 
 namespace phpcouch\record;
 
-class ViewResult extends Record implements ViewResultInterface, \IteratorAggregate
+class DesignDocumentResult extends Record implements DesignDocumentResultInterface, \IteratorAggregate
 {
-	const DEFAULT_VIEW_RESULT_ROW_CLASS = 'phpcouch\record\ViewResultRow';
+	const DEFAULT_DESIGNDOCUMENT_RESULT_ROW_CLASS = 'phpcouch\record\DesignDocumentResultRow';
 	
 	protected $database;
 	
@@ -25,7 +25,7 @@ class ViewResult extends Record implements ViewResultInterface, \IteratorAggrega
 		parent::hydrate($data);
 		
 		$newRows = array();
-		$cls = static::DEFAULT_VIEW_RESULT_ROW_CLASS;
+		$cls = static::DEFAULT_DESIGNDOCUMENT_RESULT_ROW_CLASS;
 		
 		if (isset($this->rows)) {
 			// cannot iterate with &$row as it's a __get() function

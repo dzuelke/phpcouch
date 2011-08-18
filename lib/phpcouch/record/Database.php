@@ -14,6 +14,7 @@ class Database extends Record
 	const URL_PATTERN_NEWDOCUMENT = '/%s/';
 	const URL_PATTERN_VIEW = '/%s/_design/%s/_view/%s';
 	const URL_PATTERN_CHANGES = '/%s/_changes';
+	const URL_PATTERN_DESIGNDOCUMENT = '/%s/_design/_%s/%s';
 	
 	public function __toString()
 	{
@@ -237,8 +238,8 @@ class Database extends Record
 	public function listDocuments(array $options = array())
 	{
 		// only build basic URL
-		// options etc are done in executeView()
-		return $this->executeView(self::URL_PATTERN_ALLDOCS, array($this->getName()), $options, 'phpcouch\record\AllDocsResult');
+		// options etc are done in executeDesignDocument()
+		return $this->executeDesignDocument(self::URL_PATTERN_ALLDOCS, array($this->getName()), $options, 'phpcouch\record\AllDocsResult');
 	}
 
 	/**
@@ -251,7 +252,7 @@ class Database extends Record
 	 */
 	public function showChanges(array $options = array())
 	{
-		return $this->executeView(self::URL_PATTERN_CHANGES, array($this->getName()), $options, 'phpcouch\record\AllDocsResult');
+		return $this->executeDesignDocument(self::URL_PATTERN_CHANGES, array($this->getName()), $options, 'phpcouch\record\AllDocsResult');
 	}
 	
 	public function callView($designDocument, $viewName, array $options = array())
@@ -261,16 +262,29 @@ class Database extends Record
 		}
 		
 		// only build basic URL
-		// options etc are done in executeView()
-		return $this->executeView(self::URL_PATTERN_VIEW, array($this->getName(), $designDocument, $viewName), $options);
+		// options etc are done in executeDesignDocument()
+		return $this->executeDesignDocument(self::URL_PATTERN_VIEW, array($this->getName(), $designDocument, $viewName), $options);
 	}
 	
-	protected function executeView($urlPattern, array $urlPatternValues, array $options = array(), $viewResultClass = null)
+	public function callDesignDocument($designDocument, $type, $name, array $options = array())
+	{
+		if($designDocument instanceof DocumentInterface) {
+			$designDocument = str_replace('_design/', '', $designDocument->getId());
+		}
+		
+		$type = (strpos($type, '_') === 0) ? substr($type, 1): $type;
+		
+		// only build basic URL
+		// options etc are done in executeDesignDocument()
+		return $this->executeDesignDocument(self::URL_PATTERN_DESIGNDOCUMENT, array($this->getName(), $designDocument, $type, $name), $options);
+	}
+	
+	protected function executeDesignDocument($urlPattern, array $urlPatternValues, array $options = array(), $designDocumentResultClass = null)
 	{
 		$con = $this->getConnection();
 		
-		if($viewResultClass === null) {
-			$viewResultClass = 'phpcouch\record\ViewResult';
+		if($designDocumentResultClass === null) {
+			$designDocumentResultClass = 'phpcouch\record\DesignDocumentResult';
 		}
 		
 		$boolCleanup = function($value) { return var_export((bool)$value, true); };
@@ -299,10 +313,10 @@ class Database extends Record
 		}
 		$request->setDestination($con->buildUrl($urlPattern, $urlPatternValues, $options));
 		
-		$viewResult = new $viewResultClass($this);
-		$viewResult->hydrate($con->sendRequest($request));
+		$designDocumentResult = new $designDocumentResultClass($this);
+		$designDocumentResult->hydrate($con->sendRequest($request));
 		
-		return $viewResult;
+		return $designDocumentResult;
 	}
 }
 
