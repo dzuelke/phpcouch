@@ -106,7 +106,8 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	public function buildUrl($template, array $values = array(), $options = array())
 	{
 		array_walk($values, function($value, $key) { if(!strlen($value)) { throw new InvalidArgumentException(sprintf('Empty value at offset %s', $key)); }});
-		$url = vsprintf('%s' . $template, array_merge(array($this->baseUrl), array_map('rawurlencode', $values)));
+		// $url = vsprintf('%s' . $template, array_merge(array($this->baseUrl), array_map('rawurlencode', $values)));
+		$url = vsprintf('%s' . $template, array_merge(array($this->baseUrl), $values));
 		
 		if($options && ($options = http_build_query($options)) !== '') {
 			$url .= '?' . $options;
