@@ -14,7 +14,7 @@ class Database extends Record
 	const URL_PATTERN_NEWDOCUMENT = '/%s/';
 	const URL_PATTERN_VIEW = '/%s/_design/%s/_view/%s';
 	const URL_PATTERN_CHANGES = '/%s/_changes';
-	const URL_PATTERN_DESIGNDOCUMENT = '/%s/_design/_%s/%s';
+	const URL_PATTERN_DESIGNDOCUMENT = '/%s/_design/%s/_%s/%s';
 	
 	public function __toString()
 	{

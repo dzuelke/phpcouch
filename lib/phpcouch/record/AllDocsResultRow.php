@@ -12,7 +12,7 @@ class AllDocsResultRow extends DesignDocumentResultRow
 			$retval = new Document($this->getDesignDocumentResult()->getDatabase());
 			$retval->hydrate($this->doc);
 		} else {
-			$retval = $this->getViewResult()->getDatabase()->retrieveDocument($this->id);
+			$retval = $this->getDesignDocumentResult()->getDatabase()->retrieveDocument($this->id);
 		}
 		
 		return $retval;

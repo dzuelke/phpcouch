@@ -8,7 +8,7 @@ class DesignDocumentResultRow extends Record implements DesignDocumentResultRowI
 	
 	protected $designDocumentResult;
 	
-	public function __construct(ViewResultInterface $designDocumentResult = null)
+	public function __construct(DesignDocumentResultInterface $designDocumentResult = null)
 	{
 		parent::__construct($designDocumentResult->getDatabase()->getConnection());
 		
