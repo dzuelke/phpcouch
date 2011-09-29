@@ -14,6 +14,7 @@ class Database extends Record
 	const URL_PATTERN_NEWDOCUMENT = '/%s/';
 	const URL_PATTERN_VIEW = '/%s/_design/%s/_view/%s';
 	const URL_PATTERN_CHANGES = '/%s/_changes';
+	const URL_PATTERN_BULKDOCS = '/%s/_bulk_docs';
 	
 	public function __toString()
 	{
@@ -82,6 +83,22 @@ class Database extends Record
 			// throw new Exception($e->getMessage(), $e->getCode(), $e);
 			// TODO: add $result
 		}
+	}
+	
+	/**
+	 * Mass-insert documents to the server
+	 *
+	 * @author      Niklas Närhinen
+	 **/
+	public function createDocuments(array $documents)
+	{
+		$con = $this->getConnection();
+		$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_BULKDOCS, array($this->getName())), HttpRequest::METHOD_POST);
+		$request->setContent(json_encode($documents));
+		$request->setContentType('application/json');
+		$result = $con->sendRequest($request);
+		
+		return isset($result->ok) && $result->ok === true;
 	}
 	
 	/**
