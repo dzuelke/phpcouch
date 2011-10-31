@@ -14,6 +14,7 @@ class Database extends Record
 	const URL_PATTERN_NEWDOCUMENT = '/%s/';
 	const URL_PATTERN_VIEW = '/%s/_design/%s/_view/%s';
 	const URL_PATTERN_CHANGES = '/%s/_changes';
+	const URL_PATTERN_COUCHDB_LUCENE_SEARCH = '/_fti/%s/%s/_design/%s/%s';
 	
 	public function __toString()
 	{
@@ -252,6 +253,17 @@ class Database extends Record
 	public function showChanges(array $options = array())
 	{
 		return $this->executeView(self::URL_PATTERN_CHANGES, array($this->getName()), $options, 'phpcouch\record\AllDocsResult');
+	}
+	
+	public function searchCouchdbLucene($luceneName, $designDocument, $indexName, $query, array $options = array())
+	{
+		if($designDocument instanceof DocumentInterface) {
+			$designDocument = str_replace('_design/', '', $designDocument->getId());
+		}
+		
+		$options['q'] = $query;
+		
+		return $this->executeView(self::URL_PATTERN_COUCHDB_LUCENE_SEARCH, array($luceneName, $this->getName(), $designDocument, $indexName), $options, '\phpcouch\record\CouchdbLuceneSearchResult');
 	}
 	
 	public function callView($designDocument, $viewName, array $options = array())
