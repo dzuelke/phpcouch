@@ -49,9 +49,14 @@ class Document extends MutableRecordAbstract implements DocumentInterface
 		return count($this->{self::ATTACHMENTS_FIELD});
 	}
 	
+	public function hasAttachment($name)
+	{
+		return isset($this->{self::ATTACHMENTS_FIELD}->$name);
+	}
+	
 	public function retrieveAttachment($name)
 	{
-		if(isset($this->{self::ATTACHMENTS_FIELD}[$name])) {
+		if($this->hasAttachment($name)) {
 			return $this->connection->retrieveAttachment($this, $name);
 		} else {
 			throw new Exception(sprintf('Unknown attachment "%s".', $name));
