@@ -259,7 +259,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function replicate($source, $target)
+	public function replicate($source, $target, array $options = array())
 	{
 		if (!filter_var($source, FILTER_VALIDATE_URL)) {
 			$source = $this->buildUrl(self::URL_PATTERN_DATABASE, array($source));
@@ -273,6 +273,9 @@ class Connection extends \phpcouch\ConfigurableAbstract
 			$request = new HttpRequest($this->buildUrl(self::URL_PATTERN_REPLICATE), HttpRequest::METHOD_POST);
 			
 			$values = array('source' => $source, 'target' => $target);
+			foreach ($options as $key => $value) {
+				$values[$key] = $value;
+			}
 			
 			$request->setContent(json_encode($values));
 			$request->setContentType('application/json');
