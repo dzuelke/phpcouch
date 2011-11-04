@@ -86,9 +86,13 @@ class Database extends Record
 	}
 	
 	/**
-	 * Mass-insert documents to the server
+	 * Mass-insert documents to the server by POSTing to _bulk_docs
 	 *
-	 * @author      Niklas Närhinen
+	 * @param      array The documents to mass-insert represented as arrays
+	 *
+	 * @return     bool Whether or not the POST was successful
+	 *
+	 * @author     Niklas Närhinen <niklas@narhinen.net>
 	 **/
 	public function createDocuments(array $documents)
 	{
