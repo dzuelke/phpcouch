@@ -16,6 +16,6 @@ use phpcouch\Exception;
 use phpcouch\connection;
 use phpcouch\adapter;
 
-require '../lib/Phpcouch/Phpcouch.php';
+require realpath(dirname(__FILE__) . '/../lib/Phpcouch/Phpcouch.php');
 
 ?>
