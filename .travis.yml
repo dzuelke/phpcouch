@@ -1,6 +1,6 @@
 language: php
 php: 5.3
-script: phpunit
+script: "sh -c 'cd tests && phpunit'"
 notifications:
   email:
     - niklas@narhinen.net
