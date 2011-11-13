@@ -16,6 +16,8 @@ use phpcouch\Exception;
 use phpcouch\connection;
 use phpcouch\adapter;
 
+error_reporting(E_ALL | E_STRICT);
+
 require '../lib/phpcouch/Phpcouch.php';
 
 ?>
