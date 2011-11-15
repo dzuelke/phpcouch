@@ -15,6 +15,7 @@ class Database extends Record
 	const URL_PATTERN_VIEW = '/%s/_design/%s/_view/%s';
 	const URL_PATTERN_CHANGES = '/%s/_changes';
 	const URL_PATTERN_COUCHDB_LUCENE_SEARCH = '/_fti/%s/%s/_design/%s/%s';
+	const URL_PATTERN_BULKDOCS = '/%s/_bulk_docs';
 	
 	public function __toString()
 	{
@@ -83,6 +84,26 @@ class Database extends Record
 			// throw new Exception($e->getMessage(), $e->getCode(), $e);
 			// TODO: add $result
 		}
+	}
+	
+	/**
+	 * Mass-insert documents to the server by POSTing to _bulk_docs
+	 *
+	 * @param      array The documents to mass-insert represented as arrays
+	 *
+	 * @return     bool Whether or not the POST was successful
+	 *
+	 * @author     Niklas Närhinen <niklas@narhinen.net>
+	 **/
+	public function createDocuments(array $documents)
+	{
+		$con = $this->getConnection();
+		$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_BULKDOCS, array($this->getName())), HttpRequest::METHOD_POST);
+		$request->setContent(json_encode($documents));
+		$request->setContentType('application/json');
+		$result = $con->sendRequest($request);
+		
+		return isset($result->ok) && $result->ok === true;
 	}
 	
 	/**
