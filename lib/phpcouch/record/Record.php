@@ -171,15 +171,23 @@ class Record implements RecordInterface, \ArrayAccess
 		return $retval;
 	}
 	
+	/**
+	 * Converts object to an array
+	 *
+	 * @param      mixed object to be converted
+	 * 
+	 * @return     mixed
+	 * 
+	 * @author     Niklas Närhinen <niklas@narhinen.net>
+	 * @since      1.0.0
+	 */
 	protected function objectToArray($obj)
 	{
-		if (is_object($obj)) {
+		if(is_object($obj)) {
 			$obj = get_object_vars($obj);
-		}
-		if (is_array($obj)) {
+		} elseif(is_array($obj)) {
 			return array_map(array($this, 'objectToArray'), $obj);
-		}
-		else {
+		} else {
 			return $obj;
 		}
 	}
