@@ -162,10 +162,26 @@ class Record implements RecordInterface, \ArrayAccess
 		$retval = array();
 		
 		foreach($this->data as $key => $value) {
-			$retval[$key] = $this->__get($key);
+			$val = $this->__get($key);
+			if (is_object($val)) {
+				$val = $this->objectToArray($val);
+			}
+			$retval[$key] = $val;
 		}
-		
 		return $retval;
+	}
+	
+	protected function objectToArray($obj)
+	{
+		if (is_object($obj)) {
+			$obj = get_object_vars($obj);
+		}
+		if (is_array($obj)) {
+			return array_map(array($this, 'objectToArray'), $obj);
+		}
+		else {
+			return $obj;
+		}
 	}
 	
 	/**
