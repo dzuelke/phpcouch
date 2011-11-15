@@ -185,7 +185,9 @@ class Record implements RecordInterface, \ArrayAccess
 	{
 		if(is_object($obj)) {
 			$obj = get_object_vars($obj);
-		} elseif(is_array($obj)) {
+		} 
+		
+		if(is_array($obj)) {
 			return array_map(array($this, 'objectToArray'), $obj);
 		} else {
 			return $obj;
