@@ -14,6 +14,7 @@ class Database extends Record
 	const URL_PATTERN_NEWDOCUMENT = '/%s/';
 	const URL_PATTERN_VIEW = '/%s/_design/%s/_view/%s';
 	const URL_PATTERN_LIST = '/%s/_design/%s/_list/%s/%s';
+	const URL_PATTERN_SHOW = '/%s/_design/%s/_show/%s/%s';
 	const URL_PATTERN_CHANGES = '/%s/_changes';
 	const URL_PATTERN_COUCHDB_LUCENE_SEARCH = '/_fti/%s/%s/_design/%s/%s';
 	const URL_PATTERN_BULKDOCS = '/%s/_bulk_docs';
@@ -306,6 +307,15 @@ class Database extends Record
 		}
 		
 		return $this->executeDesignDocument(self::URL_PATTERN_LIST, array($this->getName(), $designDocument, $listName, $viewName), $options, 'phpcouch\record\ListResult');
+	}
+	
+	public function callShow($designDocument, $showName, $id, array $options = array())
+	{
+		if($designDocument instanceof DocumentInterface) {
+			$designDocument = str_replace('_design/', '', $designDocument->getId());
+		}
+		
+		return $this->executeDesignDocument(self::URL_PATTERN_SHOW, array($this->getName(), $designDocument, $showName, $id), $options, 'phpcouch\record\ShowResult');
 	}
 	
 	protected function executeDesignDocument($urlPattern, array $urlPatternValues, array $options = array(), $viewResultClass = null)
