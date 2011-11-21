@@ -13,6 +13,7 @@ class Database extends Record
 	const URL_PATTERN_DOCUMENT = '/%s/%s';
 	const URL_PATTERN_NEWDOCUMENT = '/%s/';
 	const URL_PATTERN_VIEW = '/%s/_design/%s/_view/%s';
+	const URL_PATTERN_LIST = '/%s/_design/%s/_list/%s/%s';
 	const URL_PATTERN_CHANGES = '/%s/_changes';
 	const URL_PATTERN_COUCHDB_LUCENE_SEARCH = '/_fti/%s/%s/_design/%s/%s';
 	const URL_PATTERN_BULKDOCS = '/%s/_bulk_docs';
@@ -295,10 +296,19 @@ class Database extends Record
 		
 		// only build basic URL
 		// options etc are done in executeView()
-		return $this->executeView(self::URL_PATTERN_VIEW, array($this->getName(), $designDocument, $viewName), $options);
+		return $this->executeDesignDocument(self::URL_PATTERN_VIEW, array($this->getName(), $designDocument, $viewName), $options);
 	}
 	
-	protected function executeView($urlPattern, array $urlPatternValues, array $options = array(), $viewResultClass = null)
+	public function callList($designDocument, $listName, $viewName, array $options = array())
+	{
+		if($designDocument instanceof DocumentInterface) {
+			$designDocument = str_replace('_design/', '', $designDocument->getId());
+		}
+		
+		return $this->executeDesignDocument(self::URL_PATTERN_LIST, array($this->getName(), $designDocument, $listName, $viewName), $options, 'phpcouch\record\ListResult');
+	}
+	
+	protected function executeDesignDocument($urlPattern, array $urlPatternValues, array $options = array(), $viewResultClass = null)
 	{
 		$con = $this->getConnection();
 		
@@ -319,7 +329,7 @@ class Database extends Record
 			'group' => $boolCleanup,
 			'group_level' => 'intval',
 			'reduce' => $boolCleanup,
-			'include_docs' => $boolCleanup,
+			'include_docs' => $boolCleanup
 		);
 		array_walk($options, function(&$value, $key, $cleanup) { if(isset($cleanup[$key])) $value = $cleanup[$key]($value); }, $cleanup);
 		
