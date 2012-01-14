@@ -59,7 +59,7 @@ class CurlAdapter implements AdapterInterface {
 		$curl = curl_init($request->getDestination());
 		curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $request->getMethod());
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $options['header']);
-		#curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $request->getContent());
 		curl_setopt($curl, CURLOPT_USERAGENT, $options['user_agent']);
 		
