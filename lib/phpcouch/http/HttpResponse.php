@@ -150,6 +150,18 @@ class HttpResponse extends HttpMessage
 		$code = (string)$code;
 		return isset(static::$httpStatusCodes[$code]);
 	}
+	
+	/**
+	 * Get message for HTTP status code.
+	 *
+	 * @return     string The HTTP status message
+	 *
+	 * @author     Peter Limbach <peter.limbach@gmail.com>
+	 * @since      1.0.0
+	 */
+	public function getStatusMessage() {
+		return static::$httpStatusCodes[$this->statusCode];
+	}
 }
 
 ?>
