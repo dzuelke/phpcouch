@@ -96,12 +96,16 @@ class Database extends Record
 	 * @return     bool Whether or not the POST was successful
 	 *
 	 * @author     Niklas Närhinen <niklas@narhinen.net>
+	 * @author     Peter Limbach <peter.limbach@gmail.com>
 	 **/
 	public function createDocuments(array $documents)
 	{
+		foreach($documents as &$document) {
+			$document = $document->dehydrate();
+		}
 		$con = $this->getConnection();
 		$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_BULKDOCS, array($this->getName())), HttpRequest::METHOD_POST);
-		$request->setContent(json_encode($documents));
+		$request->setContent(json_encode(array('docs' => $documents)));
 		$request->setContentType('application/json');
 		$result = $con->sendRequest($request);
 		
