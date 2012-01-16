@@ -20,8 +20,16 @@ use \phpcouch\http\HttpServerErrorException;
  * @version    $Id$
  */
 
-class CurlAdapter implements AdapterInterface {
+class CurlAdapter implements AdapterInterface
+{
 	
+	/**
+	 * Constructor
+	 *
+	 * @param      array adapter options
+	 *
+	 * @author     Peter Limbach <peter.limbach@gmail.com>
+	 */
 	public function __construct(array $options = array()) {
 		$this->options =  array(
 			'header' => array(
@@ -41,6 +49,16 @@ class CurlAdapter implements AdapterInterface {
 			}
 		}
 	}
+	
+	/**
+	 * Perform the HTTP request
+	 *
+	 * @param      HttpRequest  HTTP request object
+	 *
+	 * @return     HttpResponse The response from the server as an indexed array of a content string and a headers array
+	 *
+	 * @author     Peter Limbach <peter.limbach@gmail.com>
+	 */
 	public function sendRequest(HttpRequest $request) {
 		$options = $this->options;
 		
@@ -91,4 +109,5 @@ class CurlAdapter implements AdapterInterface {
 		}
 	}
 }
+
 ?>
