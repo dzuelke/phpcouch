@@ -85,7 +85,12 @@ class CurlAdapter implements AdapterInterface
 			curl_setopt($curl, $cUrlOption, $value);
 		}
 		
-		$body     = curl_exec($curl);
+		$body = curl_exec($curl);
+		
+		if($body === false) {
+			throw new TransportException(curl_error($curl));
+		}
+		
 		$response = new HttpResponse();
 		$response->setContent($body);
 		
