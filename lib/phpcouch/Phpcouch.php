@@ -121,9 +121,9 @@ class Phpcouch
 	/**
 	 * Register a connection.
 	 *
-	 * @param      string                         The name of the connection.
-	 * @param      phpcouch\connection\Connection A connection instance.
-	 * @param      bool                           Whether or not to make this connection the default one.
+	 * @param      string                          The name of the connection.
+	 * @param      \phpcouch\connection\Connection A connection instance.
+	 * @param      bool                            Whether or not to make this connection the default one.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
@@ -142,7 +142,7 @@ class Phpcouch
 	 *
 	 * @param      string The name of the connection to remove.
 	 *
-	 * @return     phpcouch\connection\Connection The connection instance that was removed from the pool, or null if no connection of that name was registered.
+	 * @return     \phpcouch\connection\Connection The connection instance that was removed from the pool, or null if no connection of that name was registered.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
@@ -167,9 +167,9 @@ class Phpcouch
 	 *
 	 * @param      string The name of the connection, or null (default) if the default connection should be returned.
 	 *
-	 * @return     phpcouch\connection\Connection A connection instance, if found.
+	 * @return     \phpcouch\connection\Connection A connection instance, if found.
 	 *
-	 * @throws     PhpcouchException If no connection of this name was configured.
+	 * @throws     UnexpectedValueException If no connection of this name was configured.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
@@ -183,9 +183,9 @@ class Phpcouch
 		if($name !== null && isset(self::$connections[$name])) {
 			return self::$connections[$name];
 		} elseif($name === null) {
-			throw new Exception(sprintf('No default connection defined.'));
+			throw new UnexpectedValueException(sprintf('No default connection defined.'));
 		} else {
-			throw new Exception(sprintf('Connection "%s" not configured.', $name));
+			throw new UnexpectedValueException(sprintf('Connection "%s" not configured.', $name));
 		}
 	}
 	

@@ -53,9 +53,9 @@ class CurlAdapter implements AdapterInterface
 	/**
 	 * Perform the HTTP request
 	 *
-	 * @param      HttpRequest  HTTP request object
+	 * @param      \phpcouch\http\HttpRequest  HTTP request object
 	 *
-	 * @return     HttpResponse The response from the server as an indexed array of a content string and a headers array
+	 * @return     \phpcouch\http\HttpResponse The response from the server
 	 *
 	 * @author     Peter Limbach <peter.limbach@gmail.com>
 	 */

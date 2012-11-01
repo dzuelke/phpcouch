@@ -51,9 +51,9 @@ class HttpAdapter implements AdapterInterface
 	/**
 	 * Perform the HTTP request.
 	 *
-	 * @param      HttpRequest HTTP Request object
+	 * @param      \phpcouch\http\HttpRequest HTTP Request object
 	 *
-	 * @return     array  The response from the server as an indexed array of a content string and a headers array.
+	 * @return     \phpcouch\http\HttpResponse  The response from the server
 	 *
 	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
 	 * @since      1.0.0

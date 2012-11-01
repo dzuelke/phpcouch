@@ -2,7 +2,7 @@
 
 namespace phpcouch\record;
 
-use phpcouch\Exception;
+use phpcouch\InvalidArgumentException;
 use phpcouch\http\HttpRequest;
 
 class Database extends Record
@@ -40,7 +40,7 @@ class Database extends Record
 	/**
 	 * Create a new document on the server.
 	 *
-	 * @param      PhpcouchIDocument The document to store.
+	 * @param      DocumentInterface The document to store.
 	 *
 	 * @throws     ?
 	 *
@@ -81,7 +81,7 @@ class Database extends Record
 				throw new \Exception('Result not OK :(');
 				// TODO: add $result
 			}
-		} catch(Exception $e) {
+		} catch(\Exception $e) {
 			throw $e;
 			// throw new Exception($e->getMessage(), $e->getCode(), $e);
 			// TODO: add $result
@@ -91,7 +91,7 @@ class Database extends Record
 	/**
 	 * Mass-insert documents to the server by POSTing to _bulk_docs
 	 *
-	 * @param      array The documents to mass-insert represented as arrays
+	 * @param      DocumentInterface[] The documents to mass-insert represented as arrays
 	 *
 	 * @return     bool Whether or not the POST was successful
 	 *
@@ -118,7 +118,7 @@ class Database extends Record
 	 * @param      string The ID of the document.
 	 * @param      string Optional revision to fetch.
 	 *
-	 * @return     PhpcouchIDocument A document instance.
+	 * @return     DocumentInterface A document instance.
 	 *
 	 * @throws     ?
 	 *
@@ -190,7 +190,7 @@ class Database extends Record
 	/**
 	 * Save a modified document to the database.
 	 *
-	 * @param      PhpcouchIDocument The document to save.
+	 * @param      DocumentInterface The document to save.
 	 *
 	 * @throws     ?
 	 *
@@ -216,9 +216,9 @@ class Database extends Record
 	/**
 	 * Delete a document.
 	 *
-	 * @param      PhpcouchDocument The name of the document to delete.
+	 * @param      DocumentInterface The name of the document to delete.
 	 *
-	 * @return     PhpcouchIDocument The deletion stub document.
+	 * @return     DocumentInterface The deletion stub document.
 	 *
 	 * @throws     ?
 	 *
@@ -229,7 +229,7 @@ class Database extends Record
 	public function deleteDocument(DocumentInterface $doc)
 	{
 		if(!($doc instanceof DocumentInterface)) {
-			throw new Exception('Parameter supplied is not of type PhpcouchDocument');
+			throw new InvalidArgumentException('Parameter supplied is not of type PhpcouchDocument');
 		}
 		
 		$con = $this->getConnection();
@@ -242,7 +242,7 @@ class Database extends Record
 	/**
 	 * Make a new document instance with this connection set on it.
 	 *
-	 * @return     PhpcouchIDocument An empty document.
+	 * @return     Document An empty document.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
@@ -266,11 +266,13 @@ class Database extends Record
 	{
 		// only build basic URL
 		// options etc are done in executeView()
-		return $this->executeView(self::URL_PATTERN_ALLDOCS, array($this->getName()), $options, 'phpcouch\record\AllDocsResult');
+		return $this->executeDesignDocument(self::URL_PATTERN_ALLDOCS, array($this->getName()), $options, 'phpcouch\record\AllDocsResult');
 	}
-
+	
 	/**
 	 * Show all changes in the database since the last restart of CouchDB
+	 * 
+	 * @param      array An associative array of view options.
 	 * 
 	 * @return     AllDocsResult A list of document ids with their changes
 	 *
@@ -279,9 +281,17 @@ class Database extends Record
 	 */
 	public function showChanges(array $options = array())
 	{
-		return $this->executeView(self::URL_PATTERN_CHANGES, array($this->getName()), $options, 'phpcouch\record\AllDocsResult');
+		return $this->executeDesignDocument(self::URL_PATTERN_CHANGES, array($this->getName()), $options, 'phpcouch\record\AllDocsResult');
 	}
 	
+	/**
+	 * @param      string $luceneName
+	 * @param      DocumentInterface|string $designDocument
+	 * @param      string $indexName
+	 * @param      string $query
+	 * @param      array $options
+	 * @return ViewResultInterface
+	 */
 	public function searchCouchdbLucene($luceneName, $designDocument, $indexName, $query, array $options = array())
 	{
 		if($designDocument instanceof DocumentInterface) {
@@ -290,9 +300,15 @@ class Database extends Record
 		
 		$options['q'] = $query;
 		
-		return $this->executeView(self::URL_PATTERN_COUCHDB_LUCENE_SEARCH, array($luceneName, $this->getName(), $designDocument, $indexName), $options, '\phpcouch\record\CouchdbLuceneSearchResult');
+		return $this->executeDesignDocument(self::URL_PATTERN_COUCHDB_LUCENE_SEARCH, array($luceneName, $this->getName(), $designDocument, $indexName), $options, '\phpcouch\record\CouchdbLuceneSearchResult');
 	}
 	
+	/**
+	 * @param      DocumentInterface|string $designDocument
+	 * @param      string $viewName
+	 * @param      array $options
+	 * @return     ViewResultInterface
+	 */
 	public function callView($designDocument, $viewName, array $options = array())
 	{
 		if($designDocument instanceof DocumentInterface) {
@@ -304,6 +320,13 @@ class Database extends Record
 		return $this->executeDesignDocument(self::URL_PATTERN_VIEW, array($this->getName(), $designDocument, $viewName), $options);
 	}
 	
+	/**
+	 * @param      DocumentInterface|string $designDocument
+	 * @param      string $listName
+	 * @param      string $viewName
+	 * @param      array $options
+	 * @return     ViewResultInterface
+	 */
 	public function callList($designDocument, $listName, $viewName, array $options = array())
 	{
 		if($designDocument instanceof DocumentInterface) {
@@ -313,6 +336,13 @@ class Database extends Record
 		return $this->executeDesignDocument(self::URL_PATTERN_LIST, array($this->getName(), $designDocument, $listName, $viewName), $options, 'phpcouch\record\ListResult');
 	}
 	
+	/**
+	 * @param      DocumentInterface|string $designDocument
+	 * @param      string $showName
+	 * @param      string $id
+	 * @param      array $options
+	 * @return     ViewResultInterface
+	 */
 	public function callShow($designDocument, $showName, $id, array $options = array())
 	{
 		if($designDocument instanceof DocumentInterface) {
@@ -322,6 +352,13 @@ class Database extends Record
 		return $this->executeDesignDocument(self::URL_PATTERN_SHOW, array($this->getName(), $designDocument, $showName, $id), $options, 'phpcouch\record\ShowResult');
 	}
 	
+	/**
+	 * @param      string $urlPattern
+	 * @param      array $urlPatternValues
+	 * @param      array $options
+	 * @param      string  $viewResultClass
+	 * @return     ViewResultInterface
+	 */
 	protected function executeDesignDocument($urlPattern, array $urlPatternValues, array $options = array(), $viewResultClass = null)
 	{
 		$con = $this->getConnection();
