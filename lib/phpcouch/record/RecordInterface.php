@@ -83,7 +83,7 @@ interface RecordInterface
 	/**
 	 * Retrieve the connection associated with this record.
 	 *
-	 * @return     PhpcouchConnection The connection used by this record.
+	 * @return     \phpcouch\connection\Connection The connection used by this record.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
@@ -93,7 +93,7 @@ interface RecordInterface
 	/**
 	 * Set the connection to be used with this record.
 	 *
-	 * @param      PhpcouchConnection The connection to associate.
+	 * @param      \phpcouch\connection\Connection The connection to associate.
 	 *
 	 * @throws     ?
 	 *

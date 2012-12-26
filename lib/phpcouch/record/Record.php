@@ -7,7 +7,7 @@ use phpcouch\http\HttpResponse;
 class Record implements RecordInterface, \ArrayAccess
 {
 	/**
-	 * @var        PhpcouchConnection The connection associated with this record.
+	 * @var        \phpcouch\connection\Connection The connection associated with this record.
 	 */
 	protected $connection = null;
 	
@@ -19,7 +19,7 @@ class Record implements RecordInterface, \ArrayAccess
 	/**
 	 * Record constructor.
 	 *
-	 * @param      PhpcouchConnection An optional connection to associate with this record.
+	 * @param      \phpcouch\connection\Connection An optional connection to associate with this record.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
@@ -197,7 +197,7 @@ class Record implements RecordInterface, \ArrayAccess
 	/**
 	 * Retrieve the connection associated with this record.
 	 *
-	 * @return     PhpcouchConnection The connection used by this record.
+	 * @return     \phpcouch\connection\Connection The connection used by this record.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
@@ -210,7 +210,7 @@ class Record implements RecordInterface, \ArrayAccess
 	/**
 	 * Set the connection to be used with this record.
 	 *
-	 * @param      PhpcouchConnection The connection to associate.
+	 * @param      \phpcouch\connection\Connection The connection to associate.
 	 *
 	 * @throws     ?
 	 *

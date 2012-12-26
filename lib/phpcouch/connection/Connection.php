@@ -3,7 +3,7 @@
 namespace phpcouch\connection;
 
 use phpcouch\Exception, phpcouch\InvalidArgumentException;
-use phpcouch\http\HttpRequest, phpcouch\http\HttpResponse, phpcouch\http\HttpClientException, phpcouch\http\HttpServerException;
+use phpcouch\http\HttpRequest, phpcouch\http\HttpResponse, phpcouch\http\HttpErrorException, phpcouch\http\HttpClientErrorException, phpcouch\http\HttpServerErrorException;
 
 /**
  * The main connection class, representing a connection registered with PHPCouch.
@@ -30,7 +30,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	const URL_PATTERN_REPLICATE = '/_replicate';
 	
 	/**
-	 * @var        PhpcouchIAdapter An adapter to use with this connection.
+	 * @var        \phpcouch\adapter\AdapterInterface An adapter to use with this connection.
 	 */
 	protected $adapter = null;
 	
@@ -43,7 +43,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 * The connection constructor.
 	 *
 	 * @param      string           A URI to the server, or null for the CouchDB defaults (http://localhost:5984/)
-	 * @param      PhpcouchIAdapter The adapter to use with this connection, or null to use the default.
+	 * @param      \phpcouch\adapter\AdapterInterface The adapter to use with this connection, or null to use the default.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
@@ -54,7 +54,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 			$info = @parse_url($uri);
 			
 			if($info === false) {
-				throw new Exception(sprintf('Could not parse connection string "%s"', $uri));
+				throw new InvalidArgumentException(sprintf('Could not parse connection string "%s"', $uri));
 			}
 			
 			if(count($info) == 1 && isset($info['path'])) {
@@ -93,8 +93,8 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	/**
 	 * Fetch the adapter used with this connection.
 	 *
-	 * @return     PhpcouchIAdapter The adapter instance.
-	 *
+	 * @return     \phpcouch\adapter\AdapterInterface The adapter instance.
+	 * 
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
@@ -103,6 +103,13 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		return $this->adapter;
 	}
 	
+	/**
+	 * @param      string $template
+	 * @param      array $values
+	 * @param      array $options
+	 * @return     string
+	 * @throws     \phpcouch\InvalidArgumentException
+	 */
 	public function buildUrl($template, array $values = array(), $options = array())
 	{
 		array_walk($values, function($value, $key) { if(!strlen($value)) { throw new InvalidArgumentException(sprintf('Empty value at offset %s', $key)); }});
@@ -120,6 +127,8 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 *
 	 * @param      string The name of the database to create.
 	 *
+	 * @return     \phpcouch\record\Database The database instance.
+	 * 
 	 * @throws     ?
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
@@ -147,7 +156,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 			// TODO: catch and throw appropriate exceptions
 			throw $e;
 			// throw new whatever\Exception($e->getMessage(), $e->getCode(), $e);
-		} catch(HttpClientErrorException $e) {
+		} catch(HttpServerErrorException $e) {
 			// TODO: catch and throw appropriate exceptions
 			throw $e;
 			// throw new whatever\Exception($e->getMessage(), $e->getCode(), $e);
@@ -159,8 +168,8 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 *
 	 * @param      string The database name.
 	 *
-	 * @return     PhpcouchDatabase The database instance.
-	 *
+	 * @return     \phpcouch\record\Database The database instance.
+	 * 
 	 * @throws     ?
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
@@ -179,7 +188,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 *
 	 * @param      string The name of the database to delete.
 	 *
-	 * @throws     ?
+	 * @return     mixed
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
@@ -192,6 +201,10 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		return $this->sendRequest($request);
 	}
 	
+	/**
+	 * @param int $count
+	 * @return \phpcouch\record\Record
+	 */
 	public function retrieveUuids($count = 1)
 	{
 		// TODO: catch exceptions
@@ -200,6 +213,9 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		return $record;
 	}
 	
+	/**
+	 * @return \phpcouch\record\Database
+	 */
 	public function retrieveInfo()
 	{
 		// TODO: catch exceptions
@@ -208,6 +224,9 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		return $database;
 	}
 	
+	/**
+	 * @return \phpcouch\record\Record
+	 */
 	public function retrieveConfig()
 	{
 		// TODO: catch exceptions
@@ -216,6 +235,9 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		return $record;
 	}
 	
+	/**
+	 * @return \phpcouch\record\Record
+	 */
 	public function retrieveStats()
 	{
 		// TODO: catch exceptions
@@ -242,6 +264,10 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		return json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_ALLDBS)))->getContent());
 	}
 	
+	/**
+	 * @param \phpcouch\http\HttpRequest $request
+	 * @return mixed
+	 */
 	public function sendRequest(\phpcouch\http\HttpRequest $request)
 	{
 		// TODO: should we wrap exceptions here? I'm not sure really.
@@ -253,6 +279,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 	 * 
 	 * @param      string either a url to the remote db or the name of the local db
 	 * @param      string either a url to the remote db or the name of the local db
+	 * @param      array An associative array of options
 	 *
 	 * @throws     HttpErrorException
 	 * 
@@ -284,9 +311,9 @@ class Connection extends \phpcouch\ConfigurableAbstract
 			$result->hydrate($this->sendRequest($request));
 			
 			if(!isset($result->ok) && $result->ok !== true) {
-				throw new HttpErrorException('Cannot replicate these items');
+				throw new \Exception('Cannot replicate these items');
 			}
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			throw $e;
 		}
 	}

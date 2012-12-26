@@ -2,14 +2,20 @@
 
 namespace phpcouch\record;
 
-use phpcouch\exception;
+use phpcouch\UnexpectedValueException;
 
 class Document extends MutableRecordAbstract implements DocumentInterface
 {
 	const ATTACHMENTS_FIELD = '_attachments';
 	
+	/**
+	 * @var Database
+	 */
 	protected $database;
 	
+	/**
+	 * @param Database $database
+	 */
 	public function __construct(Database $database = null)
 	{
 		parent::__construct($database->getConnection());
@@ -34,32 +40,50 @@ class Document extends MutableRecordAbstract implements DocumentInterface
 		$this->isModified = false;
 	}
 	
+	/**
+	 * @return Database
+	 */
 	public function getDatabase()
 	{
 		return $this->database;
 	}
 	
+	/**
+	 * @return array
+	 */
 	public function getAttachments()
 	{
 		return $this->{self::ATTACHMENTS_FIELD};
 	}
 	
+	/**
+	 * @return int
+	 */
 	public function hasAttachments()
 	{
 		return count($this->{self::ATTACHMENTS_FIELD});
 	}
 	
+	/**
+	 * @param string $name
+	 * @return bool
+	 */
 	public function hasAttachment($name)
 	{
 		return isset($this->{self::ATTACHMENTS_FIELD}->$name);
 	}
 	
+	/**
+	 * @param string $name
+	 * @return mixed
+	 * @throws \phpcouch\UnexpectedValueException
+	 */
 	public function retrieveAttachment($name)
 	{
 		if($this->hasAttachment($name)) {
 			return $this->connection->retrieveAttachment($this, $name);
 		} else {
-			throw new Exception(sprintf('Unknown attachment "%s".', $name));
+			throw new UnexpectedValueException(sprintf('Unknown attachment "%s".', $name));
 		}
 	}
 	

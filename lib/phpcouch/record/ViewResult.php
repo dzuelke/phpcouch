@@ -6,8 +6,14 @@ class ViewResult extends Record implements ViewResultInterface, \IteratorAggrega
 {
 	const DEFAULT_VIEW_RESULT_ROW_CLASS = 'phpcouch\record\ViewResultRow';
 	
+	/**
+	 * @var Database
+	 */
 	protected $database;
 	
+	/**
+	 * @param Database $database
+	 */
 	public function __construct(Database $database = null)
 	{
 		parent::__construct($database->getConnection());
@@ -15,6 +21,9 @@ class ViewResult extends Record implements ViewResultInterface, \IteratorAggrega
 		$this->database = $database;
 	}
 	
+	/**
+	 * @return Database
+	 */
 	public function getDatabase()
 	{
 		return $this->database;

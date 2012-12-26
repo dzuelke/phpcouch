@@ -55,12 +55,9 @@ class PhpAdapter implements AdapterInterface
 	/**
 	 * Perform the HTTP request.
 	 *
-	 * @param      string The HTTP method to use.
-	 * @param      string The URL to call.
-	 * @param      array  Optional HTTP headers.
-	 * @param      string Optional request body payload.
+	 * @param      \phpcouch\http\HttpRequest  The request to send
 	 *
-	 * @return     array  The response from the server as an indexed array of a content string and a headers array.
+	 * @return     \phpcouch\http\HttpResponse  The response from the server
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @author     Simon Thulbourn <simon.thulbourn@bitextender.com>
