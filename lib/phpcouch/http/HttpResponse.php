@@ -64,7 +64,7 @@ class HttpResponse extends HttpMessage
 	 * Constructor.
 	 * Accepts an optional preceding response.
 	 *
-	 * @param      phpcouch\http\HttpResponse The preceding response.
+	 * @param      \phpcouch\http\HttpResponse The preceding response.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
@@ -80,7 +80,7 @@ class HttpResponse extends HttpMessage
 	 * Gets the response that preceded this one in the same HTTP request.
 	 * Happens for instance when a redirect occurs.
 	 *
-	 * @return     phpcouch\http\HttpResponse The preceding response, if there was one, null otherwise.
+	 * @return     \phpcouch\http\HttpResponse The preceding response, if there was one, null otherwise.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
@@ -107,7 +107,7 @@ class HttpResponse extends HttpMessage
 	 * Sets the response that preceded this one in the same HTTP request.
 	 * Happens for instance when a redirect occurs.
 	 *
-	 * @param      phpcouch\http\HttpResponse The preceding response.
+	 * @param      \phpcouch\http\HttpResponse The preceding response.
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0

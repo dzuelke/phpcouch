@@ -6,8 +6,14 @@ class ViewResultRow extends Record implements ViewResultRowInterface
 {
 	const DEFAULT_ACCESSOR = null;
 	
+	/**
+	 * @var ViewResultInterface
+	 */
 	protected $viewResult;
 	
+	/**
+	 * @param ViewResultInterface $viewResult
+	 */
 	public function __construct(ViewResultInterface $viewResult = null)
 	{
 		parent::__construct($viewResult->getDatabase()->getConnection());
@@ -15,11 +21,18 @@ class ViewResultRow extends Record implements ViewResultRowInterface
 		$this->viewResult = $viewResult;
 	}
 	
+	/**
+	 * @return ViewResultInterface
+	 */
 	public function getViewResult()
 	{
 		return $this->viewResult;
 	}
 	
+	/**
+	 * @param mixed $accessor
+	 * @return Document
+	 */
 	public function getDocument($accessor = null)
 	{
 		if($accessor === null) {

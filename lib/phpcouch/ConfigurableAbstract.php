@@ -25,6 +25,7 @@ abstract class ConfigurableAbstract implements RegistryInterface
 	 * Get a configuration value.
 	 *
 	 * @param      string The name of the configuration directive.
+	 * @param      string A default value for the configuration directive.
 	 *
 	 * @return     mixed The value of the directive, or null if not set.
 	 *
