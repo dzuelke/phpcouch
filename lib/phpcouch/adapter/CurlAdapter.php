@@ -57,6 +57,8 @@ class CurlAdapter implements AdapterInterface
 	 *
 	 * @return     \phpcouch\http\HttpResponse The response from the server
 	 *
+	 * @throws     TransportException
+	 *
 	 * @author     Peter Limbach <peter.limbach@gmail.com>
 	 */
 	public function sendRequest(HttpRequest $request) {

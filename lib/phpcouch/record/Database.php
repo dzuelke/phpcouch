@@ -290,7 +290,7 @@ class Database extends Record
 	 * @param      string $indexName
 	 * @param      string $query
 	 * @param      array $options
-	 * @return ViewResultInterface
+	 * @return     ViewResultInterface
 	 */
 	public function searchCouchdbLucene($luceneName, $designDocument, $indexName, $query, array $options = array())
 	{
