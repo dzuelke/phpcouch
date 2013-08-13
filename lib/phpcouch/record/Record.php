@@ -139,7 +139,7 @@ class Record implements RecordInterface, \ArrayAccess
 		if($data instanceof RecordInterface) {
 			$data = $data->toArray();
 		} elseif($data instanceof HttpResponse && $data->getContentType() == 'application/json') {
-			$data = json_decode($data->getContent());
+			$data = json_decode($data->getContent(), true);
 		} elseif(is_object($data)) {
 			$data = get_object_vars($data);
 		}

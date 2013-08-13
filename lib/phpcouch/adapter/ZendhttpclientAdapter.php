@@ -112,7 +112,7 @@ class ZendhttpclientAdapter implements AdapterInterface
 			throw new Exception('Too many redirects');
 		} else {
 			// finally, decode the JSON body and return it
-			return json_decode($r->getBody());
+			return json_decode($r->getBody(), true);
 		}
 	}
 	
