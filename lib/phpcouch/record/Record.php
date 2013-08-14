@@ -163,9 +163,7 @@ class Record implements RecordInterface, \ArrayAccess
 		
 		foreach($this->data as $key => $value) {
 			$val = $this->__get($key);
-			if (is_object($val)) {
-				$val = $this->objectToArray($val);
-			}
+			$val = $this->objectToArray($val);
 			$retval[$key] = $val;
 		}
 		return $retval;
