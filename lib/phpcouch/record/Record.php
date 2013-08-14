@@ -165,9 +165,7 @@ class Record implements RecordInterface, \ArrayAccess
 			$retval = array();
 			foreach($this->data as $key => $value) {
 				$val = $this->__get($key);
-				if (is_object($val) || is_array($val)) {
-					$val = $this->objectToArray($val);
-				}
+				$val = $this->objectToArray($val);
 				$retval[$key] = $val;
 			}
 		}
@@ -186,12 +184,18 @@ class Record implements RecordInterface, \ArrayAccess
 	 */
 	protected function objectToArray($obj)
 	{
-		if(is_object($obj)) {
+		// 3x as fast as using is_object()
+		if((object)$obj === $obj) {
 			$obj = get_object_vars($obj);
 		} 
 		
-		if(is_array($obj)) {
-			return array_map(array($this, 'objectToArray'), $obj);
+		// 3x as fast as using is_array()
+		if((array)$obj === $obj) {
+			$ret = array();
+			foreach($obj as $k => $v) {
+				$ret[$k] = $this->objectToArray($v);
+			}
+			return $ret;
 		} else {
 			return $obj;
 		}
