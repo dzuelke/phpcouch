@@ -28,12 +28,13 @@ class ViewResultRow extends Record implements ViewResultRowInterface
 	{
 		return $this->viewResult;
 	}
-	
+
 	/**
 	 * @param mixed $accessor
-	 * @return Document
+	 * @param bool  $retrieve
+	 * @return Document|null
 	 */
-	public function getDocument($accessor = null)
+	public function getDocument($accessor = null, $retrieve = false)
 	{
 		if($accessor === null) {
 			$accessor = static::DEFAULT_ACCESSOR;
@@ -42,7 +43,8 @@ class ViewResultRow extends Record implements ViewResultRowInterface
 		if($accessor === null) {
 			// the value contains the document itself
 			$doc = $this->value;
-			if (!$doc) { // if the view didn't emit the actual doc as value but was called with include_docs=true
+			// if the view didn't emit the actual doc as value but was called with include_docs=true
+			if(!$doc || (!isset($doc->_id) && !isset($doc['_id']))) {
 				$doc = $this->doc;
 			}
 		} elseif(is_callable($accessor)) {
@@ -58,10 +60,17 @@ class ViewResultRow extends Record implements ViewResultRowInterface
 			// exception
 		}
 		
-		$retval = new Document($this->getViewResult()->getDatabase());
-		$retval->hydrate($doc);
-		
-		return $retval;
+		if($doc) {
+			$retval = new Document($this->getViewResult()->getDatabase());
+			$retval->hydrate($doc);
+			
+			return $retval;
+		} elseif($retrieve) {
+			// the view didn't emit the actual doc as value and the view wasn't called with include_docs=true
+			return $this->viewResult->getDatabase()->retrieveDocument($this->id);
+		} else {
+			return null;
+		}
 	}
 }
 

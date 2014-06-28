@@ -139,7 +139,7 @@ class Record implements RecordInterface, \ArrayAccess
 		if($data instanceof RecordInterface) {
 			$data = $data->toArray();
 		} elseif($data instanceof HttpResponse && $data->getContentType() == 'application/json') {
-			$data = json_decode($data->getContent());
+			$data = json_decode($data->getContent(), $this->connection->getOption('use_arrays', false));
 		} elseif(is_object($data)) {
 			$data = get_object_vars($data);
 		}
@@ -159,14 +159,15 @@ class Record implements RecordInterface, \ArrayAccess
 	 */
 	public function toArray()
 	{
-		$retval = array();
-		
-		foreach($this->data as $key => $value) {
-			$val = $this->__get($key);
-			if (is_object($val)) {
+		if($this->connection->getOption('use_arrays', false)) {
+			return $this->data;
+		} else {
+			$retval = array();
+			foreach($this->data as $key => $value) {
+				$val = $this->__get($key);
 				$val = $this->objectToArray($val);
+				$retval[$key] = $val;
 			}
-			$retval[$key] = $val;
 		}
 		return $retval;
 	}
@@ -183,12 +184,18 @@ class Record implements RecordInterface, \ArrayAccess
 	 */
 	protected function objectToArray($obj)
 	{
-		if(is_object($obj)) {
+		// 3x as fast as using is_object()
+		if((object)$obj === $obj) {
 			$obj = get_object_vars($obj);
 		} 
 		
-		if(is_array($obj)) {
-			return array_map(array($this, 'objectToArray'), $obj);
+		// 3x as fast as using is_array()
+		if((array)$obj === $obj) {
+			$ret = array();
+			foreach($obj as $k => $v) {
+				$ret[$k] = $this->objectToArray($v);
+			}
+			return $ret;
 		} else {
 			return $obj;
 		}

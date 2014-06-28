@@ -48,7 +48,7 @@ class ShowResult extends Record
 		$contentType = $data->getContentType();
 		if(preg_match('#^application/json#', $contentType)) {
 			// we want to suppress any errors
-			$json = @json_decode($data->getContent());
+			$json = @json_decode($data->getContent(), $this->database->getConnection()->getOption('use_arrays', false));
 			
 			// check for errors and fallback to plaintext if needed
 			if(json_last_error() == JSON_ERROR_NONE) {

@@ -81,7 +81,7 @@ class Document extends MutableRecordAbstract implements DocumentInterface
 	public function retrieveAttachment($name)
 	{
 		if($this->hasAttachment($name)) {
-			return $this->connection->retrieveAttachment($this, $name);
+			return $this->database->retrieveAttachment($this, $name);
 		} else {
 			throw new UnexpectedValueException(sprintf('Unknown attachment "%s".', $name));
 		}
