@@ -43,7 +43,8 @@ class ViewResultRow extends Record implements ViewResultRowInterface
 		if($accessor === null) {
 			// the value contains the document itself
 			$doc = $this->value;
-			if (!$doc) { // if the view didn't emit the actual doc as value but was called with include_docs=true
+			// if the view didn't emit the actual doc as value but was called with include_docs=true
+			if(!$doc || (!isset($doc->_id) && !isset($doc['_id']))) {
 				$doc = $this->doc;
 			}
 		} elseif(is_callable($accessor)) {
