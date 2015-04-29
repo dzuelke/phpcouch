@@ -261,7 +261,7 @@ class Connection extends \phpcouch\ConfigurableAbstract
 		// TODO: catch exceptions
 		// special case: _all_dbs is simply an array, not a struct
 		// thus we also return a simple array of values here
-		return json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_ALLDBS)))->getContent());
+		return json_decode($this->sendRequest(new HttpRequest($this->buildUrl(self::URL_PATTERN_ALLDBS)))->getContent(), $this->getOption('use_arrays', false));
 	}
 	
 	/**

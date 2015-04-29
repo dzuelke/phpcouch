@@ -139,7 +139,7 @@ class Record implements RecordInterface, \ArrayAccess
 		if($data instanceof RecordInterface) {
 			$data = $data->toArray();
 		} elseif($data instanceof HttpResponse && $data->getContentType() == 'application/json') {
-			$data = json_decode($data->getContent());
+			$data = json_decode($data->getContent(), $this->connection->getOption('use_arrays', false));
 		} elseif(is_object($data)) {
 			$data = get_object_vars($data);
 		}
@@ -159,14 +159,17 @@ class Record implements RecordInterface, \ArrayAccess
 	 */
 	public function toArray()
 	{
-		$retval = array();
-		
-		foreach($this->data as $key => $value) {
-			$val = $this->__get($key);
-			if (is_object($val)) {
-				$val = $this->objectToArray($val);
+		if($this->connection->getOption('use_arrays', false)) {
+			return $this->data;
+		} else {
+			$retval = array();
+			foreach($this->data as $key => $value) {
+				$val = $this->__get($key);
+				if (is_object($val)) {
+					$val = $this->objectToArray($val);
+				}
+				$retval[$key] = $val;
 			}
-			$retval[$key] = $val;
 		}
 		return $retval;
 	}
