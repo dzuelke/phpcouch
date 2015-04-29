@@ -117,6 +117,7 @@ class Database extends Record
 	 *
 	 * @param      string The ID of the document.
 	 * @param      string Optional revision to fetch.
+	 * @param      array  Optional additional options.
 	 *
 	 * @return     DocumentInterface A document instance.
 	 *
@@ -125,10 +126,21 @@ class Database extends Record
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function retrieveDocument($id, $rev = null)
+	public function retrieveDocument($id, $rev = null, array $options = array())
 	{
 		if(strpos($id, '_') === 0) {
 			throw new InvalidArgumentException('CouchDB document IDs must not start with an underscore.');
+		}
+
+		if($options) {
+			$boolCleanup = function($value) { return var_export((bool)$value, true); };
+			$cleanup = array(
+				'revs' => $boolCleanup,
+				'revs_info' => $boolCleanup,
+				'attachments' => $boolCleanup,
+				'atts_since' => 'json_encode',
+			);
+			array_walk($options, function(&$value, $key, $cleanup) { if(isset($cleanup[$key])) $value = $cleanup[$key]($value); }, $cleanup);
 		}
 
 		$con = $this->getConnection();
@@ -147,7 +159,7 @@ class Database extends Record
 						),
 						array(
 							'rev' => $rev,
-						)
+						) + $options
 					)
 				)
 			)
