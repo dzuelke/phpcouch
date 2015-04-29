@@ -127,6 +127,10 @@ class Database extends Record
 	 */
 	public function retrieveDocument($id, $rev = null)
 	{
+		if(strpos($id, '_') === 0) {
+			throw new InvalidArgumentException('CouchDB document IDs must not start with an underscore.');
+		}
+
 		$con = $this->getConnection();
 		
 		$document = $this->newDocument();
@@ -171,6 +175,8 @@ class Database extends Record
 		
 		if($id instanceof DocumentInterface) {
 			$id = $id->_id;
+		} elseif(strpos($id, '_') === 0) {
+			throw new InvalidArgumentException('CouchDB document IDs must not start with an underscore.');
 		}
 		
 		return $con->sendRequest(
