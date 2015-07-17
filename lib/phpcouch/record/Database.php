@@ -204,6 +204,44 @@ class Database extends Record
 			)
 		)->getContent();
 	}
+
+	/**
+	 *
+	 * Store Attachment
+	 *
+	 * @param       string $name
+	 * @param       DocumentInterface $document
+	 * @param       mixed $data
+	 * @param       string $contentType
+	 *
+	 * @return mixed
+	 *
+	 * @author
+	 */
+	public function storeAttachment($name, DocumentInterface $document, $data, $contentType = null)
+	{
+		$con = $this->getConnection();
+
+		$request = new HttpRequest(
+			$con->buildUrl(
+				self::URL_PATTERN_ATTACHMENT,
+				array(
+					$this->getName(),
+					$document->_id,
+					$name,
+				),
+				array(
+					'rev' => $document->_rev,
+				)
+			),
+			HttpRequest::METHOD_PUT
+		);
+
+		$request->setHeader('Content-Type', $contentType);
+		$request->setContent($data);
+
+		return $con->sendRequest($request);
+	}
 	
 	/**
 	 * Save a modified document to the database.
