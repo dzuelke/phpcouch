@@ -237,7 +237,9 @@ class Database extends Record
 			HttpRequest::METHOD_PUT
 		);
 
-		$request->setHeader('Content-Type', $contentType);
+		if($contentType) {
+			$request->setHeader('Content-Type', $contentType);
+		}
 		$request->setContent($data);
 
 		return $con->sendRequest($request);
