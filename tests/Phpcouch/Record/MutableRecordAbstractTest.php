@@ -44,6 +44,10 @@ class MutableRecordAbstractTest extends PHPUnit_Framework_TestCase
 		$mutableRecord = $this->getMockBuilder('\phpcouch\record\MutableRecordAbstract')
 											->disableOriginalConstructor()
 											->getMockForAbstractClass();
+		$connection = $this->getMockBuilder('\phpcouch\connection\Connection')
+										->disableOriginalConstructor()
+										->getMock();	
+		$mutableRecord->setConnection($connection);
 		
 		$mutableRecord->hydrate($data);
 		
@@ -96,7 +100,7 @@ class MutableRecordAbstractTest extends PHPUnit_Framework_TestCase
 		$mutableRecord = $this->getMockBuilder('\phpcouch\record\MutableRecordAbstract')
 											->disableOriginalConstructor()
 											->getMockForAbstractClass();
-		
+											
 		$mutableRecord->hydrate($data);
 		
 		
