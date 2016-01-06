@@ -1,8 +1,8 @@
 {
-    "name": "dzuelke/PHPCouch",
+    "name": "dzuelke/phpcouch",
     "type": "library",
     "description": "A CouchDB library for PHP",
-    "homepage": "https://github.com/dzuelke/PHPCouch",
+    "homepage": "https://github.com/dzuelke/phpcouch",
     "license": "MIT",
     "authors": [
         {"name":"David Zuelke"},
