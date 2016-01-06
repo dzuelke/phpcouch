@@ -296,6 +296,52 @@ class Database extends Record
 		$request->setHeader('If-Match', $doc->_rev);
 		return $con->sendRequest($request);
 	}
+
+	/**
+	 * Retrieve an attachment of a document.
+	 *
+	 * @param      string The name of the attachment.
+	 * @param      string|DocumentInterface The document or document ID.
+	 * @param      string The document revision.
+	 *                        
+	 * @return     string The new document revision.
+	 *
+	 * @author     Thomas Bachem <mail@thomasbachem.com>
+	 */
+	public function deleteAttachment($name, $doc, $rev = null)
+	{
+		$con = $this->getConnection();
+		
+		if($doc instanceof DocumentInterface) {
+			$id = $doc->_id;
+			if(!$rev) {
+				$rev = $doc->_rev;
+			}
+		} else {
+			$id = $doc;
+		}
+		
+		if(strpos($id, '_') === 0) {
+			throw new InvalidArgumentException('CouchDB document IDs must not start with an underscore.');
+		}
+		
+		if(!$rev) {
+			throw new InvalidArgumentException('Please supply a document revision to delete an attachment.');
+		}
+		
+		$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_ATTACHMENT, array($this->getName(), $id, $name)), HttpRequest::METHOD_DELETE);
+		$request->setHeader('If-Match', $rev);
+		$response = $con->sendRequest($request);
+		
+		$result = new Record($this->getConnection());
+		$result->hydrate($response);
+		
+		if(isset($result->ok) && $result->ok === true) {
+			return $result->rev;
+		} else {
+			throw new UnexpectedValueException('Deletion of the document failed.');
+		}
+	}
 	
 	/**
 	 * Make a new document instance with this connection set on it.
