@@ -87,6 +87,35 @@ class HttpRequest extends HttpMessage
 	{
 		$this->method = $method;
 	}
+	
+	/**
+	 * Set the content for this message.
+	 *
+	 * @param      mixed The content to be sent in this message.
+	 */
+	public function setContent($content) {
+		if(is_array($content)) {
+			// Create a multipart/related request
+			$body = '';
+			
+			$boundary = md5(uniqid(mt_rand(), true));
+			
+			foreach($content as $i => $part) {
+				$body .= '--' . $boundary . "\r\n";
+				if($i == 0 && ($contentType = $this->getContentType())) {
+					// Use content type for first part only
+					$body .= 'Content-Type: ' . $contentType . "\r\n";
+				}
+				$body .= "\r\n";
+				$body .= $part . "\r\n";
+			}
+			
+			$content = $body . '--' . $boundary . '--' . "\r\n";
+			$this->setContentType('multipart/related;boundary="' . $boundary . '"');
+		}
+		
+		parent::setContent($content);
+	}
 }
 
 ?>

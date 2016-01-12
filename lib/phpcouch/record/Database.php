@@ -249,18 +249,41 @@ class Database extends Record
 	 * Save a modified document to the database.
 	 *
 	 * @param      DocumentInterface The document to save.
+	 * @param      array Optional array of attachments data to send in a multipart request.
 	 *
 	 * @throws     ?
 	 *
 	 * @author     David Zülke <david.zuelke@bitextender.com>
 	 * @since      1.0.0
 	 */
-	public function updateDocument(DocumentInterface $document)
+	public function updateDocument(DocumentInterface $document, array $attachmentsData = array())
 	{
 		$con = $this->getConnection();
 		
+		$values = $document->dehydrate();
+		
+		if($attachmentsData) {
+			if(!isset($values['_attachments']) || !is_array($values['_attachments']) || count($values['_attachments']) != count($attachmentsData)) {
+				throw new InvalidArgumentException('Attachment data without matching "_attachments" entries given.');
+			}
+			
+			reset($attachmentsData);
+			foreach($values['_attachments'] as &$attachment) {
+				$attachment['follows'] = true;
+				if(!isset($attachment['length'])) {
+					$attachment['length'] = strlen(current($attachmentsData));
+				}
+				next($attachmentsData);
+			}
+		}
+		
 		$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $document->_id)), HttpRequest::METHOD_PUT);
-		$request->setContent(json_encode($document->dehydrate()));
+		$request->setContentType('application/json');
+		if(!$attachmentsData) {
+			$request->setContent(json_encode($values));
+		} else {
+			$request->setContent(array_merge(array(json_encode($values)), $attachmentsData));
+		}
 		
 		$response = $con->sendRequest($request);
 		
