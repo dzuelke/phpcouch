@@ -69,6 +69,11 @@ class PhpAdapter implements AdapterInterface
 		$options['http']['method'] = $request->getMethod();
 		
 		if(null !== ($payload = $request->getContent())) {
+			if(is_resource($payload)) {
+				// This adapter has no real stream support as of now
+				$payload = stream_get_contents($payload, -1, 0);
+			}
+			
 			$options['http']['content'] = $payload;
 			$options['http']['header'][] = 'Content-Length: ' . strlen($payload);
 		}

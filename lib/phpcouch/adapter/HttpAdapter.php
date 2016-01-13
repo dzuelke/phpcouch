@@ -74,6 +74,11 @@ class HttpAdapter implements AdapterInterface
 		}
 		
 		if(null !== ($payload = $request->getContent())) {
+			if(is_resource($payload)) {
+				// This adapter has no real stream support as of now
+				$payload = stream_get_contents($payload, -1 ,0);
+			}
+			
 			if ('PUT' == $request->getMethod()) {
 				$internalRequest->setPutData($payload);
 			} elseif ('POST' == $request->getMethod()) {

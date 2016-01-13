@@ -64,9 +64,16 @@ class CurlAdapter implements AdapterInterface
 	public function sendRequest(HttpRequest $request) {
 		$options = $this->options;
 		
-		if(null !== ($payload = $request->getContent())) {
-			$options['content'] = $payload;
-			$options['header'][] = 'Content-Length: ' . strlen($payload);
+		$content = $request->getContent();
+		if($content !== null) {
+			if(is_resource($content)) {
+				$stat = fstat($content);
+				$length = $stat['size'];
+			} else {
+				$length = strlen($content);
+			}
+			
+			$options['header'][] = 'Content-Length: ' . $length;
 		}
 		
 		// additional headers
@@ -77,10 +84,21 @@ class CurlAdapter implements AdapterInterface
 		}
 		
 		$curl = curl_init($request->getDestination());
-		curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $request->getMethod());
+		if(is_resource($content) && $request->getMethod() == HttpRequest::METHOD_PUT) {
+			// cURL needs this in combination with CURLOPT_INFILE
+			curl_setopt($curl, CURLOPT_PUT, true);
+		} else {
+			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $request->getMethod());
+		}
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $options['header']);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, $request->getContent());
+		if(is_resource($content)) {
+			rewind($content);
+			curl_setopt($curl, CURLOPT_INFILE, $content);
+			curl_setopt($curl, CURLOPT_INFILESIZE, $length);
+		} else {
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $content);
+		}
 		curl_setopt($curl, CURLOPT_USERAGENT, $options['user_agent']);
 		
 		foreach($options['curl'] as $cUrlOption => $value) {

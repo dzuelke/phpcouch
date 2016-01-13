@@ -273,7 +273,12 @@ class Database extends Record
 				if(isset($attachmentsData[$name])) {
 					$attachment['follows'] = true;
 					if(!isset($attachment['length'])) {
-						$attachment['length'] = strlen($attachmentsData[$name]);
+						if(is_resource($attachmentsData[$name])) {
+							$stat = fstat($attachmentsData[$name]);
+							$attachment['length'] = $stat['size'];
+						} else {
+							$attachment['length'] = strlen($attachmentsData[$name]);
+						}
 					}
 					
 					$orderedAttachmentsData[] = $attachmentsData[$name];

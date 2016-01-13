@@ -96,21 +96,38 @@ class HttpRequest extends HttpMessage
 	public function setContent($content) {
 		if(is_array($content)) {
 			// Create a multipart/related request
-			$body = '';
+			// (use a temp stream as the data might be huge and concatting it would double the memory usage)
+			$fp = fopen('php://temp', 'w+');
 			
 			$boundary = md5(uniqid(mt_rand(), true));
 			
 			foreach($content as $i => $part) {
-				$body .= '--' . $boundary . "\r\n";
+				fwrite($fp, '--');
+				fwrite($fp, $boundary);
+				fwrite($fp, "\r\n");
+				
 				if($i == 0 && ($contentType = $this->getContentType())) {
-					// Use content type for first part only
-					$body .= 'Content-Type: ' . $contentType . "\r\n";
+					// Use content type for first part only (the document)
+					fwrite($fp, 'Content-Type: ');
+					fwrite($fp, $contentType);
+					fwrite($fp, "\r\n");
 				}
-				$body .= "\r\n";
-				$body .= $part . "\r\n";
+				
+				fwrite($fp, "\r\n");
+				if(is_resource($part)) {
+					stream_copy_to_stream($part, $fp, -1, 0);
+				} else {
+					fwrite($fp, $part);
+				}
+				fwrite($fp, "\r\n");
 			}
 			
-			$content = $body . '--' . $boundary . '--' . "\r\n";
+			fwrite($fp, '--');
+			fwrite($fp, $boundary);
+			fwrite($fp, '--');
+			fwrite($fp, "\r\n");
+			
+			$content = $fp;
 			$this->setContentType('multipart/related;boundary="' . $boundary . '"');
 		}
 		
