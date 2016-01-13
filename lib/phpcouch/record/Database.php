@@ -262,27 +262,33 @@ class Database extends Record
 		
 		$values = $document->dehydrate();
 		
+		// Handle multipart attachments data
+		$orderedAttachmentsData = array();
 		if($attachmentsData) {
-			if(!isset($values['_attachments']) || !is_array($values['_attachments']) || count($values['_attachments']) != count($attachmentsData)) {
-				throw new InvalidArgumentException('Attachment data without matching "_attachments" entries given.');
+			if(!isset($values['_attachments']) || !is_array($values['_attachments'])) {
+				throw new InvalidArgumentException('Attachment data without "_attachments" entries given.');
 			}
 			
-			reset($attachmentsData);
-			foreach($values['_attachments'] as &$attachment) {
-				$attachment['follows'] = true;
-				if(!isset($attachment['length'])) {
-					$attachment['length'] = strlen(current($attachmentsData));
+			foreach($values['_attachments'] as $name => &$attachment) {
+				if(isset($attachmentsData[$name])) {
+					$attachment['follows'] = true;
+					if(!isset($attachment['length'])) {
+						$attachment['length'] = strlen($attachmentsData[$name]);
+					}
+					
+					$orderedAttachmentsData[] = $attachmentsData[$name];
+				} elseif(!empty($attachment['follows'])) {
+					throw new InvalidArgumentException(sprintf('"_attachments" entry without matching attachment data for file "%s".', $name));
 				}
-				next($attachmentsData);
 			}
 		}
 		
 		$request = new HttpRequest($con->buildUrl(self::URL_PATTERN_DOCUMENT, array($this->getName(), $document->_id)), HttpRequest::METHOD_PUT);
 		$request->setContentType('application/json');
-		if(!$attachmentsData) {
+		if(!$orderedAttachmentsData) {
 			$request->setContent(json_encode($values));
 		} else {
-			$request->setContent(array_merge(array(json_encode($values)), $attachmentsData));
+			$request->setContent(array_merge(array(json_encode($values)), $orderedAttachmentsData));
 		}
 		
 		$response = $con->sendRequest($request);
