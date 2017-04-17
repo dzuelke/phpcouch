@@ -159,7 +159,7 @@ class Record implements RecordInterface, \ArrayAccess
 	 */
 	public function toArray()
 	{
-		if($this->connection->getOption('use_arrays', false)) {
+		if($this->connection && $this->connection->getOption('use_arrays', false)) {
 			return $this->data;
 		} else {
 			$retval = array();
